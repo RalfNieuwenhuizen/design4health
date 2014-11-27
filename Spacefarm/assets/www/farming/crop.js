@@ -27,7 +27,7 @@ farming.Crop.prototype.dead = false;
 farming.Crop.prototype.start = function(type){
     this.startTime = this.getCurrentTime();
     this.type = type;
-    this.prop = this.crops[type];
+    this.prop = CROPS[type];
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
@@ -58,7 +58,7 @@ farming.Crop.prototype.die = function(){
     this.dead = true;
     this.showProgress();
 }
-farming.Crop.prototype.timePassed = function(){
+farming.Crop.prototype.tick = function(){
     this.showProgress();
 }
 farming.Crop.prototype.harvest = function(){
@@ -68,10 +68,10 @@ farming.Crop.prototype.harvest = function(){
     this.showProgress();
     return false;
 }
-
-farming.Crop.prototype.crops = {
+var CROPS = {
     apple_tree : {
         name: 'Apple tree',
+        key: 'apple_tree',
         growth_phases: 3,
         cost: 20,
         revenue: 10,
@@ -86,6 +86,7 @@ farming.Crop.prototype.crops = {
     },
     wheat : {
         name: 'Wheat',
+        key: 'wheat',
         growth_phases: 2,
         cost: 10,
         revenue: 15,

@@ -17,6 +17,3 @@ farming.Scene = function(game) {
 
 goog.inherits(farming.Scene,lime.Scene);
 
-farming.Scene.prototype.timePassed = function(currentTime){
-
-}

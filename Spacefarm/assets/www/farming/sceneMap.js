@@ -5,6 +5,7 @@ goog.provide('farming.SceneMap');
 goog.require('farming.Scene');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
+goog.require('farming.Button');
 
 /**
  * Scene elements
@@ -26,7 +27,7 @@ farming.SceneMap.prototype.settings = {
     mapSize: 20,
     tiles: {
         width: 200,
-        height: 116
+        height: 106
     },
     controls: {
         height: 30
@@ -76,7 +77,7 @@ farming.SceneMap.prototype.drawLand = function () {
     var min = 0;
     var max = 0;
     var z = 0;
-    while (true) {
+    while (true) { // put the tiles on the map in zig-zag (from top to bottom), important for 3D overlay of the items
         if (max < this.settings.mapSize) {
             max++;
         } else if (min < this.settings.mapSize) {
@@ -87,25 +88,27 @@ farming.SceneMap.prototype.drawLand = function () {
         for (var x = min; x < max; x++) {
             var y = max - x + min - 1;
             if (typeof this.tiles[x] == 'undefined') this.tiles[x] = [];
-            this.tiles[x][y] = new farming.Tile(this.settings, this.player).setPosition(this.twoDToScreen(x, y));
+            this.tiles[x][y] = new farming.Tile(this.game, this.settings).setPosition(this.twoDToScreen(x, y));
             this.landLayer.appendChild(this.tiles[x][y]);
             if (middle.x == x && middle.y == y) {
                 this.landLayer.appendChild(farm.setPosition(this.twoDToScreen(x, y)));
             }
         }
     }
-    /*for (var x = middle.x-2; x < middle.x+2; x++) {
+    for (var x = middle.x-2; x < middle.x+2; x++) {
         for (var y = middle.y-2; y < middle.y+2; y++) {
             if(x == middle.x+1 && y == middle.y+1) continue;
             this.tiles[x][y].disable();
         }
-    }*/
+    }
     var scene = this;
     //drag land elements
-    goog.events.listen(this.landLayer, ['mousedown', 'touchstart'], function (e) {
+    goog.events.listen(this.landLayer, ['mousedown', 'touchstart'], function (e) { // clicking on the map and dragging it
         var oldPos = this.getPosition();
         e.startDrag(false);
         var drag = function (e) {
+        	var y = e.position.y + this.getPosition().y;
+        	if(y > scene.game.screen.height - scene.settings.controls.height) return;
             var newPos = this.getPosition();
             var xDiff = newPos.x - oldPos.x;
             var yDiff = newPos.y - oldPos.y;
@@ -116,13 +119,13 @@ farming.SceneMap.prototype.drawLand = function () {
                 if(tile.isRipe()) {
                     scene.game.showHarvest(tile);
                 } else {
-                    tile.setCrop(new farming.Crop(Math.random() >  0.5 ? 'wheat' : 'apple_tree'));
+                    tile.addCrop(new farming.Crop(Math.random() >  0.5 ? 'wheat' : 'apple_tree'));
                 }
             }
         }
         e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
     });
-    scene.tiles[12][12].setCrop(new farming.Crop('wheat'));
+    scene.tiles[12][12].addCrop(new farming.Crop('wheat'));
     this.appendChild(this.landLayer);
 
 }
@@ -138,25 +141,23 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(controlArea);
 
 
-    //money
+    // Money
     this.moneyLabel = new lime.Label().setFontColor('#E8FC08')
         .setPosition(this.game.screen.width-50, this.game.screen.height - this.settings.controls.height / 2);
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyLabel);
     this.updateControls();
+    
+    // Clonebutton
+    this.cloneButton = new farming.Button('Clone').setColor('#999999')
+    		.setPosition(100, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(80,20).setAction(this.game.showClone,this.game);
+    this.controlsLayer.appendChild(this.cloneButton);
 }
 
 farming.SceneMap.prototype.updateControls = function(){
     this.moneyLabel.setText('$' + this.game.player.coins);
 }
-farming.SceneMap.prototype.timePassed = function(currentTime){
-    for (var x = 0; x < this.settings.mapSize; x++) {
-        for (var y = 0; y < this.settings.mapSize; y++) {
-            if(this.tiles[x][y]) this.tiles[x][y].timePassed(currentTime);
-        }
-    }
-}
-
 
 farming.SceneMap.prototype.tiles = [];
 

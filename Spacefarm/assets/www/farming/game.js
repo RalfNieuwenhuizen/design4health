@@ -9,6 +9,7 @@ goog.require('lime.Layer');
 goog.require('lime.transitions.MoveInDown');
 goog.require('farming.SceneMap');
 goog.require('farming.SceneHarvest');
+goog.require('farming.SceneClone');
 
 /**
  * Land elements
@@ -23,7 +24,7 @@ farming.Game = function() {
 
     this.player = {
         coins: 100,
-        currentCrop: 0
+        currentCrops : ['apple_tree','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat']
     }
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
@@ -31,19 +32,35 @@ farming.Game = function() {
     this.director.setDisplayFPS(false);
     this.sceneMap = new farming.SceneMap(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
+    this.sceneClone = new farming.SceneClone(this);
     this.director.replaceScene(this.sceneMap);
     var game = this;
     lime.scheduleManager.scheduleWithDelay(function() {
-        var scene = game.director.getCurrentScene();
-        if(scene) scene.timePassed();
-    }, this, 1000*1);
+        for(var i in this.tickables) {
+            if(this.tickables[i]) this.tickables[i].tick();
+        }
+    }, this, 1000*0.5);
 }
+
+farming.Game.prototype.tickables = [];
 
 farming.Game.prototype.showHarvest = function(tile){
     this.sceneHarvest.showExercise(tile);
     this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
 }
+
 farming.Game.prototype.hideHarvest = function(){
+    console.log(this.director.getCurrentScene());
+    if(this.director.getCurrentScene() != this.sceneHarvest) return;
+    this.director.popScene();
+}
+
+farming.Game.prototype.showClone = function(game){
+	game.director.pushScene(game.sceneClone);
+}
+
+farming.Game.prototype.hideClone = function(){
+    if(this.director.getCurrentScene() != this.sceneClone) return;
     this.director.popScene();
 }
 

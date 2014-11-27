@@ -4,10 +4,7 @@
 goog.provide('farming.SceneHarvest');
 
 goog.require('lime.Sprite');
-goog.require('farming.Exercise');
-goog.require('farming.Button');
 goog.require('lime.Layer');
-goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
 
@@ -52,34 +49,25 @@ farming.SceneHarvest.prototype.showExercise = function(tile) {
 }
 
 farming.SceneHarvest.prototype.startHarvesting = function(scene) {
+    if(scene.exercise) return;
+    console.log('Starting harvest');
     scene.finishButton.setHidden(false);
-
-    /* binding accelerometer code */
-    /* on succesful finish call scene.finishHarvesting(scene); */
-    
-    scene.exercise = new farming.Exercise(
-    scene.tile.crop.prop.exercise.callback, 
-    scene, 
-    scene.finishHarvesting, scene.cancelHarvesting); 
-    
+    scene.exercise = new farming.Exercise(scene.tile.crop.prop.exercise.callback, scene,  scene.finishHarvesting, scene.cancelHarvesting);
     
 }
 
      
 
 farming.SceneHarvest.prototype.cancelHarvesting = function(scene) {
-	if(scene.exercise) {
-		scene.exercise.stopWatch();
-		scene.exercise = null;
-	}
     scene.game.hideHarvest();
 
 }
 farming.SceneHarvest.prototype.finishHarvesting = function(scene) {
-    console.log(scene);
+    if(!scene.exercise) return;
+    scene.exercise = null;
     scene.game.addCoins(scene.tile.crop.prop.revenue);
     if(scene.tile.crop.harvest()) {
-        scene.tile.setCrop(null);
+        scene.tile.removeCrop();
     }
     scene.game.hideHarvest();
 }
