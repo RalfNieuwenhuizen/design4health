@@ -79,8 +79,14 @@ var CROPS = {
         time_to_death: 5,
         harvests: 3,
         exercise: {
-            title : 'Arm stretching',
-            description : 'Alternate arms, reaching as high as you can and as low as you can.',
+            title : '\"Apple Picking\"',
+            description : 'Start from standing up straight' +
+            '\n\n Raise one arm (with the phone in hand) as high as you can, while you raise your opposite ' +
+            'knee until you have a 90 degrees angle both between legs and core and between upper ' +
+            'and lower leg' +
+            '\n\n Finally, try to keep this stance while standing on your toes' +
+            '\n\n Repeat on the other side (switch the phone hand!)',
+            example_frames: 7,
             callback : 'harvestAppleTree'
         }
     },
@@ -94,8 +100,14 @@ var CROPS = {
         time_to_death: 10,
         harvests: 1,
         exercise: {
-            title : 'Rotating arms',
-            description : 'Rotate both arms to stretch your shoulders, biceps and triceps.',
+            title : 'Arm circles',
+            description : 'Stand up and extend your arms straight out by the sides. The arms should be parallel to ' +
+            'the floor and perpendicular to your torso' +
+            '\n\n Slowly start to make circles of about 1 foot in diameter with each outstretched arm. ' +
+            'Breathe normally as you perform the movement' +
+            '\n\n Continue the circular motion of the outstretched arms for about ten seconds' +
+            '\n\n Then reverse the movement, going the opposite direction',
+            example_frames: 20,
             callback : 'harvestWheat'
         }
     }
