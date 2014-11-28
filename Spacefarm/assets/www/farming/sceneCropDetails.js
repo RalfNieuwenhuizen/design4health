@@ -43,7 +43,7 @@ farming.SceneCropDetails = function (game) {
   //      callback : 'harvestAppleTree' 
     
     this.closeButton = new farming.Button('X').setColor('#999999')
-    		.setPosition(center.x + game.getFullSize(0.3).width, center.y - game.getFullSize(0.3).height)
+    		.setPosition(center.x + game.getFullSize(0.33).width, center.y - game.getFullSize(0.32).height)
     		.setSize(20,20);
     this.closeButton.setAction(this.closeDetails, this); 
     // show text crop.cost, crop.revenue, etc.
