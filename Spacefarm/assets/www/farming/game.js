@@ -67,10 +67,9 @@ farming.Game.prototype.hideClone = function(){
 }
 
 // Show details of the crop
-farming.Game.prototype.showCropDetails = function(input){
-	game = input.game;
-	crop = input.cropProps;
-	game.director.pushScene(game.sceneCropDetails);
+farming.Game.prototype.showCropDetails = function(crop){
+	this.sceneCropDetails.showDetails(crop);
+	this.director.pushScene(this.sceneCropDetails, lime.transitions.MoveInDown);
 }
 
 farming.Game.prototype.hideDetails = function(){
