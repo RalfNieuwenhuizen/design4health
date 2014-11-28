@@ -1,0 +1,3 @@
+[submodule "Spacefarm/assets/www/closure"]
+	path = Spacefarm/assets/www/closure
+	url = git@github.com:metamolecular/closure-library.git
