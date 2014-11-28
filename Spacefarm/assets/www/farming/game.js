@@ -10,6 +10,7 @@ goog.require('lime.transitions.MoveInDown');
 goog.require('farming.SceneMap');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
+goog.require('farming.SceneCropDetails');
 
 /**
  * Land elements
@@ -33,6 +34,7 @@ farming.Game = function() {
     this.sceneMap = new farming.SceneMap(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
+    this.sceneCropDetails = new farming.SceneCropDetails(this);
     this.director.replaceScene(this.sceneMap);
     var game = this;
     lime.scheduleManager.scheduleWithDelay(function() {
@@ -63,6 +65,21 @@ farming.Game.prototype.hideClone = function(){
     if(this.director.getCurrentScene() != this.sceneClone) return;
     this.director.popScene();
 }
+
+// Show details of the crop
+farming.Game.prototype.showCropDetails = function(input){
+	game = input.game;
+	crop = input.cropProps;
+	game.director.pushScene(game.sceneCropDetails);
+}
+
+farming.Game.prototype.hideDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
+    this.director.popScene();
+}
+
+// Close details of the crop
+// todo
 
 farming.Game.prototype.addCoins = function(amount) {
     this.player.coins += amount;

@@ -10,6 +10,7 @@ goog.require('lime.Layer');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
+goog.require('farming.SceneCropDetails');
 
 /**
  * Scene elements
@@ -50,5 +51,26 @@ farming.SceneClone.prototype.closeClone = function(scene) {
 
 farming.SceneClone.prototype.drawCrop = function(cropProps, position) {
 	var cropIcon = new lime.Sprite().setFill('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
-	this.windowLayer.appendChild(cropIcon);
+	
+	// Create button to clone the icon
+	this.cloneButton = new farming.Button('Clone').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
+	this.cloneButton.setAction(this.startClone, {'cropProps': cropProps,'game': this} );
+	
+	// Create button to get details about the icon
+	this.cloneDetails = new farming.Button('Details').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
+	this.cloneDetails.setAction(this.game.showCropDetails, {'cropProps': cropProps,'game': this.game} );
+	
+	this.windowLayer.appendChild(cropIcon).appendChild(this.cloneButton).appendChild(this.cloneDetails);
 }
+
+//Defines action for Clone button, receives properties of the crop and scene
+//farming.SceneCropDetails.prototype.startClone = function(input) {
+//	input.cropProps;
+//	input.screen;
+//}
+
+//Defines action for Clone Details button, receives properties of the crop array[0] and scene array[1]
+//farming.SceneCropDetails.prototype.cloneDetails = function(input){
+//	input.cropProps;
+//	input.screen;
+//}

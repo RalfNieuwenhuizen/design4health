@@ -52,11 +52,8 @@ farming.SceneHarvest.prototype.startHarvesting = function(scene) {
     if(scene.exercise) return;
     console.log('Starting harvest');
     scene.finishButton.setHidden(false);
-    scene.exercise = new farming.Exercise(scene.tile.crop.prop.exercise.callback, scene,  scene.finishHarvesting, scene.cancelHarvesting);
-    
+    scene.exercise = new farming.Exercise(scene.tile.crop.prop.exercise.callback, scene,  scene.finishHarvesting, scene.cancelHarvesting);    
 }
-
-     
 
 farming.SceneHarvest.prototype.cancelHarvesting = function(scene) {
     scene.game.hideHarvest();
