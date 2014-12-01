@@ -7,6 +7,7 @@ goog.require('lime.Sprite');
 goog.require('lime.animation.KeyframeAnimation');
 goog.require('lime.Layer');
 goog.require('farming.Crop');
+goog.require('farming.Exercise');
 goog.require('farming.Scene');
 
 /**
@@ -46,12 +47,10 @@ farming.SceneHarvest.prototype.game = null;
 farming.SceneHarvest.prototype.exercise = null;
 
 farming.SceneHarvest.prototype.showExercise = function(tile) {
-    this.title.setText('Harvesting '+tile.crop.prop.name+': '+tile.crop.prop.exercise.title);
-    this.description.setText(tile.crop.prop.exercise.description);
-    var animation = new lime.animation.KeyframeAnimation().setDelay(0.5);
-    for(var i = 0; i < tile.crop.prop.exercise.example_frames; i++) {
-        animation.addFrame('images/exercises/'+tile.crop.prop.key+'/'+i+'.png');
-    }
+    var exercise = EXERCISES[tile.crop.prop.exercise.key]
+    this.title.setText('Harvesting '+tile.crop.prop.name+': '+exercise.title);
+    this.description.setText(exercise.description);
+    var animation = farming.Exercise.prototype.getAnimation(tile.crop.prop.exercise.key, 0.3);
     this.animation.runAction(animation);
     this.tile = tile;
     this.finishButton.setHidden(true);
@@ -71,7 +70,10 @@ farming.SceneHarvest.prototype.cancelHarvesting = function(scene) {
 farming.SceneHarvest.prototype.finishHarvesting = function(scene) {
     if(!scene.exercise) return;
     scene.exercise = null;
-    scene.game.addCoins(scene.tile.crop.prop.revenue);
+    var crop = scene.tile.crop.prop;
+    scene.game.addCoins(crop.revenue);
+    if(crop.revenue_item)
+        scene.game.addItem(crop.revenue_item, 1);
     if(scene.tile.crop.harvest()) {
         scene.tile.removeCrop();
     }

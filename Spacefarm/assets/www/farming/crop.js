@@ -75,18 +75,12 @@ var CROPS = {
         growth_phases: 3,
         cost: 20,
         revenue: 10,
+        revenue_item: 'space_apple',
         time_to_ripe: 5,
         time_to_death: 5,
         harvests: 3,
         exercise: {
-            title : '\"Apple Picking\"',
-            description : 'Start from standing up straight' +
-            '\n\n Raise one arm (with the phone in hand) as high as you can, while you raise your opposite ' +
-            'knee until you have a 90 degrees angle both between legs and core and between upper ' +
-            'and lower leg' +
-            '\n\n Finally, try to keep this stance while standing on your toes' +
-            '\n\n Repeat on the other side (switch the phone hand!)',
-            example_frames: 7,
+            key : 'apple_picking',
             callback : 'harvestAppleTree'
         }
     },
@@ -96,18 +90,12 @@ var CROPS = {
         growth_phases: 2,
         cost: 10,
         revenue: 15,
+        revenue_item: 'space_wheat',
         time_to_ripe: 1,
         time_to_death: 10,
         harvests: 1,
         exercise: {
-            title : '\"Arm circles\"',
-            description : 'Stand up and extend your arms straight out by the sides. The arms should be parallel to ' +
-            'the floor and perpendicular to your torso' +
-            '\n\n Slowly start to make circles of about 1 foot in diameter with each outstretched arm. ' +
-            'Breathe normally as you perform the movement' +
-            '\n\n Continue the circular motion of the outstretched arms for about ten seconds' +
-            '\n\n Then reverse the movement, going the opposite direction',
-            example_frames: 20,
+            key : 'arm_circles',
             callback : 'harvestWheat'
         }
     }

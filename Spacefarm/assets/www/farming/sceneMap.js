@@ -155,7 +155,7 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Money
     this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
-        .setSize(25, 25).setPosition(this.game.screen.width-90, this.game.screen.height - this.settings.controls.height / 2);
+        .setSize(25, 25).setPosition(this.game.screen.width-80, this.game.screen.height - this.settings.controls.height / 2);
     this.moneyLabel = new lime.Label().setFontColor('#E8FC08')
         .setPosition(this.game.screen.width-50, this.game.screen.height - this.settings.controls.height / 2);
    
@@ -177,15 +177,27 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(this.cloningScreen);
     this.updateControls();
     
+    // Farmbutton
+    this.farmButton = new farming.Button('Farm').setColor('#999999')
+    		.setPosition(40, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(80,20).setAction(this.game.showFarm,this.game);
+    this.controlsLayer.appendChild(this.farmButton);
+
     // Clonebutton
     this.cloneButton = new farming.Button('Clone').setColor('#999999')
-    		.setPosition(100, this.game.screen.height - this.settings.controls.height / 2)
+    		.setPosition(140, this.game.screen.height - this.settings.controls.height / 2)
     		.setSize(80,20).setAction(this.game.showClone,this.game);
     this.controlsLayer.appendChild(this.cloneButton);
+
+    // Challengebutton
+    this.challengeButton = new farming.Button('Challenges').setColor('#999999')
+    		.setPosition(240, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(80,20).setAction(this.game.showChallenge, this.game);
+    this.controlsLayer.appendChild(this.challengeButton);
 }
 
 farming.SceneMap.prototype.updateControls = function(){
-    this.moneyLabel.setText('$' + this.game.player.coins);
+    this.moneyLabel.setText(this.game.player.coins);
 }
 
 farming.SceneMap.prototype.tiles = [];
@@ -210,7 +222,7 @@ farming.SceneMap.prototype.isoToTwoD = function (x, y) {
     );
 }
 farming.SceneMap.prototype.moneyAnimation = function (amount) {
-    var animation = new lime.animation.KeyframeAnimation().setDelay(0.05);
+    var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
     for(var i = 5; i >= 0; i--) {
         animation.addFrame('images/coin_small/'+i+'.png');
     }
