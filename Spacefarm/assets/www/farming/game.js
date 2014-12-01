@@ -82,10 +82,12 @@ farming.Game.prototype.hideDetails = function(){
 // todo
 
 farming.Game.prototype.addCoins = function(amount) {
+    this.sceneMap.moneyAnimation(amount);
     this.player.coins += amount;
     this.sceneMap.updateControls();
 }
 farming.Game.prototype.removeCoins = function(amount) {
+    this.sceneMap.moneyAnimation(amount);
     if(this.player.coins < amount) return false;
     this.player.coins -= amount;
     this.sceneMap.updateControls();

@@ -27,7 +27,7 @@ farming.SceneMap.prototype.settings = {
     mapSize: 20,
     tiles: {
         width: 200,
-        height: 106
+        height: 116
     },
     controls: {
         height: 30
@@ -72,7 +72,7 @@ farming.SceneMap.prototype.drawLand = function () {
      }*/
     var middle = this.calculate('middleTile');
 
-    var farm = new lime.Sprite().setAnchorPoint(0.5, 0.70).setSize(400, 293).setFill('images/farm.png');
+    var farm = new lime.Sprite().setAnchorPoint(0.25, 0.579).setSize(400, 278).setFill('images/farm.png');
 
     var min = 0;
     var max = 0;
@@ -95,9 +95,8 @@ farming.SceneMap.prototype.drawLand = function () {
             }
         }
     }
-    for (var x = middle.x-2; x < middle.x+2; x++) {
-        for (var y = middle.y-2; y < middle.y+2; y++) {
-            if(x == middle.x+1 && y == middle.y+1) continue;
+    for (var x = middle.x; x < middle.x+2; x++) {
+        for (var y = middle.y-1; y < middle.y+1; y++) {
             this.tiles[x][y].disable();
         }
     }
@@ -142,9 +141,12 @@ farming.SceneMap.prototype.drawControls = function () {
 
 
     // Money
+    this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
+        .setSize(25, 25).setPosition(this.game.screen.width-90, this.game.screen.height - this.settings.controls.height / 2);
     this.moneyLabel = new lime.Label().setFontColor('#E8FC08')
         .setPosition(this.game.screen.width-50, this.game.screen.height - this.settings.controls.height / 2);
     //updating money indicator
+    this.controlsLayer.appendChild(this.moneyImage);
     this.controlsLayer.appendChild(this.moneyLabel);
     this.updateControls();
     
@@ -179,4 +181,12 @@ farming.SceneMap.prototype.isoToTwoD = function (x, y) {
         (2 * y + x) / 2,
         (2 * y - x) / 2
     );
+}
+farming.SceneMap.prototype.moneyAnimation = function (amount) {
+    var animation = new lime.animation.KeyframeAnimation().setDelay(0.05);
+    for(var i = 5; i >= 0; i--) {
+        animation.addFrame('images/coin_small/'+i+'.png');
+    }
+    animation.setLooping(false);
+    this.moneyImage.runAction(animation);
 }
