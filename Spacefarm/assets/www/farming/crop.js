@@ -7,7 +7,7 @@ goog.require('lime.Sprite');
  */
 farming.Crop = function(type) {
     goog.base(this);
-    this.setAnchorPoint(0.5, 0.72);
+    this.setAnchorPoint(0.5, 0.58);
     this.setSize(120, 120);
 
 	var crop = this;
@@ -32,7 +32,7 @@ farming.Crop.prototype.start = function(type){
 }
 farming.Crop.prototype.showProgress = function(){
     var progress = this.getProgress();
-    var suffix = this.isDead() ? '_dead' : this.isRotten() ? '_rotten' : progress == 1 ? '_ripe' : this.timesHarvested == 0 ? Math.floor(progress*this.prop.growth_phases+1) : this.prop.growth_phases;
+    var suffix = this.isDead() ? '_dead' : this.isRotten() ? '_rotten' : progress == 1 ? '_ripe' : this.timesHarvested == 0 ? Math.floor(progress*this.prop.growth_phases) : this.prop.growth_phases - 1;
     this.setFill('images/'+this.type+suffix+'.png');
 }
 farming.Crop.prototype.getCurrentTime = function(){
