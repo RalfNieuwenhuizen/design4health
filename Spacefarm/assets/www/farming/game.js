@@ -25,7 +25,7 @@ farming.Game = function() {
 
     this.player = {
         coins: 100,
-        currentCrops : ['apple_tree','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat']
+        currentCrops : ['apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat']
     }
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
@@ -69,7 +69,7 @@ farming.Game.prototype.hideClone = function(){
 // Show details of the crop
 farming.Game.prototype.showCropDetails = function(crop){
 	this.sceneCropDetails.showDetails(crop);
-	this.director.pushScene(this.sceneCropDetails, lime.transitions.MoveInDown);
+	this.director.pushScene(this.sceneCropDetails);
 }
 
 farming.Game.prototype.hideDetails = function(){
