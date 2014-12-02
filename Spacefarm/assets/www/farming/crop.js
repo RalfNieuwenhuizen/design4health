@@ -100,7 +100,7 @@ var CROPS = {
         time_to_death: 10,
         harvests: 1,
         exercise: {
-            title : 'Arm circles',
+            title : '\"Arm circles\"',
             description : 'Stand up and extend your arms straight out by the sides. The arms should be parallel to ' +
             'the floor and perpendicular to your torso' +
             '\n\n Slowly start to make circles of about 1 foot in diameter with each outstretched arm. ' +

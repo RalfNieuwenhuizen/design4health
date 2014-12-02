@@ -1,5 +1,7 @@
 /**
- * 
+ * 	TODO: Show number of pages and current page
+ *  TODO: Enable clone button
+ *  TODO: Enable instruction screens for new players
  */
 goog.provide('farming.SceneClone');
 
@@ -30,8 +32,8 @@ farming.SceneClone = function (game) {
     this.title.setText('Clone');
     
     this.closeButton = new farming.Button('X').setColor('#999999')
-    		.setPosition(center.x + game.getFullSize(0.33).width, center.y - game.getFullSize(0.32).height)
-    		.setSize(20,20);
+    		.setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+    		.setSize(30,30);
     
     this.nextButton = new farming.Button('Next').setColor('#999999')
     		.setPosition(new goog.math.Coordinate( 250, 150))
@@ -51,7 +53,7 @@ farming.SceneClone = function (game) {
     this.closeButton.setAction(this.closeClone, this);
     this.nextButton.setAction(this.nextClone, this);
     this.prevButton.setAction(this.prevClone, this);
-    // Set the page the clonescreen is showing
+    // Set the number of the page the clonescreen is showing to first
     this.page = 1;  
     
     // Draw the crops
@@ -76,6 +78,7 @@ farming.SceneClone.prototype.nextClone = function(scene) {
     if(scene.page >= Math.ceil(nCrops/6))
     	return
     
+    // Remove all previous crops of other pages and adjust the current page
     scene.w.removeAllChildren();
     scene.page += 1;
     var i;
@@ -89,12 +92,7 @@ farming.SceneClone.prototype.nextClone = function(scene) {
     	scene.w.appendChild(scene.prevButton);
 
     // Print six crops to the screen (in layer w) according to the number of the page
-    scene.drawCrop(scene);
-
-//	for(i=6*(scene.page-1); i < Math.min(nCrops,scene.page*6); i++) {
-//    	var prop = CROPS[scene.game.player.currentCrops[i]];
-//   	scene.drawCrop(prop, new goog.math.Coordinate( ((i%6)%3)*150 - 150, Math.floor((i%6)/3)*100 - 50))
-//	}	 
+    scene.drawCrop(scene);	 
 }
 
 // Set action for the previous button
@@ -145,7 +143,7 @@ farming.SceneClone.prototype.drawCrop = function(scene) {
 		scene.cloneDetails = new farming.Button('Details').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
 		scene.cloneDetails.setAction(scene.showCropDetails, {'cropProps' : cropProps, 'game' : scene.game});
 		
-		// Add all to the w-layer
+		// Add crop with button to the w-layer
 		scene.w.appendChild(cropIcon).appendChild(scene.cloneButton).appendChild(scene.cloneDetails);
 	}
 }
@@ -155,19 +153,8 @@ farming.SceneClone.prototype.showCropDetails = function(object) {
     object.game.showCropDetails(object.cropProps);
 }
 
-
-// OLD FUNCTION, ONLY BACKUP
-farming.SceneClone.prototype.drawCropOld = function(cropProps, position) {
-	var cropIcon = new lime.Sprite().setFill('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
-	
-	// Create button to clone the icon
-	this.cloneButton = new farming.Button('Clone').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
-	this.cloneButton.setAction(this.startClone, {'cropProps': cropProps,'game': this.game} );
-	
-	// Create button to get details about the icon
-	this.cloneDetails = new farming.Button('Details').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
-	this.cloneDetails.setAction(this.showCropDetails, {'cropProps' : cropProps, 'game' : this.game});
-	
-	// Add all to the w-layer
-	this.w.appendChild(cropIcon).appendChild(this.cloneButton).appendChild(this.cloneDetails);
+// Function to clone a product
+farming.SceneClone.prototype.startClone = function(object) {
+	//object.game.startCloning(object.cropProps);
+	object.game.sceneMap.startCloning(object.cropProps);
 }

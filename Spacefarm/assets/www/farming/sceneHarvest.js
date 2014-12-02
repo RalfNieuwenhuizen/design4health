@@ -38,9 +38,8 @@ farming.SceneHarvest = function (game) {
     this.startButton.setAction(this.startHarvesting, this);
     this.cancelButton.setAction(this.cancelHarvesting, this);
     this.finishButton.setAction(this.finishHarvesting, this);
-
-
 }
+
 goog.inherits(farming.SceneHarvest, farming.Scene);
 
 farming.SceneHarvest.prototype.game = null;
