@@ -19,6 +19,7 @@ farming.SceneMap = function (game) {
     this.drawLand();
     this.drawControls();
 
+    this.game.tickables.push(this);
 }
 goog.inherits(farming.SceneMap, farming.Scene);
 
@@ -138,7 +139,6 @@ farming.SceneMap.prototype.drawLand = function () {
         e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
     });
     
-    //scene.tiles[12][12].addCrop(new farming.Crop('wheat'));
     this.appendChild(this.landLayer);
 
 }
@@ -194,6 +194,12 @@ farming.SceneMap.prototype.drawControls = function () {
     		.setPosition(240, this.game.screen.height - this.settings.controls.height / 2)
     		.setSize(80,20).setAction(this.game.showChallenge, this.game);
     this.controlsLayer.appendChild(this.challengeButton);
+
+    // Current challenge indicator
+    this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill('#CC2222')
+        .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
+        .setHidden(true).setAction(this.game.showChallenge, this.game);
+    this.controlsLayer.appendChild(this.challengeIndicator);
 }
 
 farming.SceneMap.prototype.updateControls = function(){
@@ -252,4 +258,17 @@ farming.SceneMap.prototype.noMoneyAnimation = function () {
     this.noCoinsWarning.setOpacity(1);	
 	var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
     this.noCoinsWarning.runAction(fadeAway);
+}
+}
+
+//In this function you can define all things that have to updated over time
+farming.SceneMap.prototype.tick = function(){
+    this.showCurrentChallenge();
+}
+farming.SceneMap.prototype.showCurrentChallenge = function(){
+    if(this.game.currentChallenge) {
+        this.challengeIndicator.setHidden(false);
+    } else {
+        this.challengeIndicator.setHidden(true);
+    }
 }

@@ -20,7 +20,7 @@ farming.Button.prototype.parent = null;
 
 farming.Button.prototype.setAction = function(action, target){
     goog.events.listen(this, ['mousedown', 'touchstart'], function (e) {
-        e.swallow(['touchend', 'mouseup'], function(){ action(target, e) });
+        e.swallow(['touchend', 'mouseup'], function(){ action(target, e) }, true);
     });
     return this;
 }
