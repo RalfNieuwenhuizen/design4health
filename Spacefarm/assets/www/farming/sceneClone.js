@@ -13,7 +13,6 @@ goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
 goog.require('farming.SceneCropDetails');
-goog.require('lime.ui.Scroller');
 
 /**
  * Scene elements
@@ -136,11 +135,11 @@ farming.SceneClone.prototype.drawCrop = function(scene) {
 		var cropIcon = new lime.Sprite().setFill('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
 		
 		// Create button to clone the icon
-		scene.cloneButton = new farming.Button('Clone').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
+		scene.cloneButton = new farming.Button('Clone').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
 		scene.cloneButton.setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
 		
 		// Create button to get details about the icon
-		scene.cloneDetails = new farming.Button('Details').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
+		scene.cloneDetails = new farming.Button('Details').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
 		scene.cloneDetails.setAction(scene.showCropDetails, {'cropProps' : cropProps, 'game' : scene.game});
 		
 		// Add crop with button to the w-layer

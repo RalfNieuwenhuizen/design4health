@@ -140,7 +140,7 @@ farming.Game.prototype.showChallenge = function(game){
         game.showChallengeCurrent({'challenge': game.currentChallenge, 'game': game});
     }
 }
-farming.Game.prototype.pickChallenge = function(input){
+farming.Game.prototype.selectChallenge = function(input){
     //TODO pick challenge
     input.game.currentChallenge = input.challenge;
     if(input.game.director.getCurrentScene() != input.game.sceneChallengeDetails) return;

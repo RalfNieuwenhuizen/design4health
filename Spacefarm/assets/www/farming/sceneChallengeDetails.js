@@ -32,16 +32,16 @@ farming.SceneChallengeDetails = function (game) {
     this.backButton = new farming.Button('Back').setColor('#999999')
         .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
         .setSize(80,20);
-    this.cancelButton = new farming.Button('Cancel').setColor('#999999')
+    this.cancelButton = new farming.Button('Give up').setColor('#999999')
         .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
         .setSize(80,20).setHidden(true);
-    this.pickButton = new farming.Button('Pick').setColor('#0000FF')
+    this.selectButton = new farming.Button('Select').setColor('#2222CC')
         .setPosition(center.x - 10 + game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
         .setSize(80,20).setHidden(true);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title).appendChild(this.description)
-        .appendChild(this.pickButton)
+        .appendChild(this.selectButton)
         .appendChild(this.closeButton)
         .appendChild(this.cancelButton)
         .appendChild(this.backButton);
@@ -66,7 +66,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
         this.cancelButton.setHidden(false);
         this.exercisesDone = challenge.exercisesDone;
     } else {
-        this.pickButton.setAction(this.game.pickChallenge, {
+        this.selectButton.setAction(this.game.selectChallenge, {
             'challenge': challenge,
             'game': this.game
         }).setHidden(false);
@@ -129,7 +129,7 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
             doButton.setAction(this.game.doExercise, {
                 'exercise': exercise,
                 'game': this.game
-            }).setColor('#0000FF');
+            }).setColor('#2222CC');
         }
     }
 
