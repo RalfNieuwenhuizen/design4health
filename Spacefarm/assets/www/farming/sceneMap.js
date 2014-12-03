@@ -6,7 +6,8 @@ goog.require('farming.Scene');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Button');
-goog.require('farming.SceneCloneOnMap')
+goog.require('farming.SceneCloneOnMap');
+goog.require('lime.animation.FadeTo');
 
 /**
  * Scene elements
@@ -118,12 +119,19 @@ farming.SceneMap.prototype.drawLand = function () {
                 if(tile.isRipe()) {
                     scene.game.showHarvest(tile);
                 } else {
+                	currentCrop = scene.game.currentCrop;
                 	// If there is no current crop to be cloned, return
-                	if(scene.game.currentCrop == null)
+                	if(currentCrop == null)
                 		return
                 				
-                	// If there is a current crop, this can be planted			
-                	tile.addCrop(new farming.Crop(scene.game.currentCrop.key));
+                	// If there is a current crop and the amount of money is sufficient, this can be planted	
+                	if(currentCrop.cost <= scene.game.player.coins){
+                		scene.game.removeCoins(currentCrop.cost);
+                		tile.addCrop(new farming.Crop(currentCrop.key));
+                	}	
+                	else{
+                		scene.noMoneyAnimation();
+                	}
                 }
             }
         }
@@ -158,9 +166,13 @@ farming.SceneMap.prototype.drawControls = function () {
     this.cloningText = new lime.Label().setSize(100,25).setPosition(0,40);
     this.cloningClose = new farming.Button('X').setColor('#999999').setPosition(57,-32).setSize(30,30).setAction(this.stopCloning,this);
     
+    this.noCoinsWarning = new lime.Label().setFill(200,0,0,0.3).setFontColor('#000000').setFontWeight('bold').setFontSize(20).setSize(150,50).setPosition(450,50)
+    		.setText('Insufficient Money').setAlign('center').setOpacity(0);
+    
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyImage);
     this.controlsLayer.appendChild(this.moneyLabel);
+    this.controlsLayer.appendChild(this.noCoinsWarning);
     
     this.controlsLayer.appendChild(this.cloningScreen);
     this.updateControls();
@@ -207,7 +219,6 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
 }
 
 farming.SceneMap.prototype.startCloning = function (crop) {
-	//this.sceneCloneOnMap.startCloning(this);
 	this.game.hideClone();
 	this.cloningTitle.setText(crop.name);
 	this.cloningText.setText('Cost: '+crop.cost);
@@ -217,8 +228,16 @@ farming.SceneMap.prototype.startCloning = function (crop) {
 	this.game.currentCrop = crop;
 }
 
+// Shut the screen down for cloning
 farming.SceneMap.prototype.stopCloning = function(scene) {
 	scene.cloningScreen.setFill(211,211,211,0);
 	scene.cloningScreen.removeAllChildren();
 	scene.game.currentCrop = null;
+}
+
+// Warning when trying to plant but there is no money
+farming.SceneMap.prototype.noMoneyAnimation = function () {
+    this.noCoinsWarning.setOpacity(1);	
+	var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
+    this.noCoinsWarning.runAction(fadeAway);
 }
