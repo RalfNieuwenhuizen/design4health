@@ -13,7 +13,6 @@ goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
 goog.require('farming.SceneCropDetails');
-goog.require('lime.ui.Scroller');
 
 /**
  * Scene elements
@@ -27,34 +26,31 @@ farming.SceneClone = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    var mask = new lime.Sprite().setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition().x, game.getCenterPosition().y);
     this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
     this.title.setText('Clone');
-    
+
     this.closeButton = new farming.Button('X').setColor('#999999')
-    		.setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-    		.setSize(30,30);
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
     
     this.nextButton = new farming.Button('Next').setColor('#999999')
-    		.setPosition(new goog.math.Coordinate( 250, 150))
+        .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
     		.setSize(50,30);
     
     this.prevButton = new farming.Button('Prev').setColor('#999999')
-    		.setPosition(new goog.math.Coordinate( -250, 150))
+        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
     		.setSize(50,30);
     
     this.w.appendChild(this.nextButton);
     
-    this.windowLayer.setMask(mask);
-    
-    this.windowLayer.appendChild(mask).appendChild(this.w)
+    this.windowLayer.appendChild(this.w)
     	.appendChild(this.title).appendChild(this.closeButton);
     
     this.closeButton.setAction(this.closeClone, this);
     this.nextButton.setAction(this.nextClone, this);
     this.prevButton.setAction(this.prevClone, this);
     // Set the number of the page the clonescreen is showing to first
-    this.page = 1;  
+    this.page = 1;
     
     // Draw the crops
     this.drawCrop(this);
@@ -136,11 +132,11 @@ farming.SceneClone.prototype.drawCrop = function(scene) {
 		var cropIcon = new lime.Sprite().setFill('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
 		
 		// Create button to clone the icon
-		scene.cloneButton = new farming.Button('Clone').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
+		scene.cloneButton = new farming.Button('Clone').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
 		scene.cloneButton.setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
 		
 		// Create button to get details about the icon
-		scene.cloneDetails = new farming.Button('Details').setColor('#0000FF').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
+		scene.cloneDetails = new farming.Button('Details').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
 		scene.cloneDetails.setAction(scene.showCropDetails, {'cropProps' : cropProps, 'game' : scene.game});
 		
 		// Add crop with button to the w-layer

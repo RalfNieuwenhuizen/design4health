@@ -6,6 +6,7 @@ goog.require('farming.Scene');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Button');
+goog.require('farming.Label');
 goog.require('farming.SceneCloneOnMap');
 goog.require('lime.animation.FadeTo');
 
@@ -19,6 +20,8 @@ farming.SceneMap = function (game) {
     this.drawLand();
     this.drawControls();
 
+    // make the map updateable
+    this.game.tickables.push(this);
 }
 goog.inherits(farming.SceneMap, farming.Scene);
 
@@ -138,7 +141,6 @@ farming.SceneMap.prototype.drawLand = function () {
         e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
     });
     
-    //scene.tiles[12][12].addCrop(new farming.Crop('wheat'));
     this.appendChild(this.landLayer);
 
 }
@@ -155,7 +157,7 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Money
     this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
-        .setSize(25, 25).setPosition(this.game.screen.width-90, this.game.screen.height - this.settings.controls.height / 2);
+        .setSize(25, 25).setPosition(this.game.screen.width-80, this.game.screen.height - this.settings.controls.height / 2);
     this.moneyLabel = new lime.Label().setFontColor('#E8FC08')
         .setPosition(this.game.screen.width-50, this.game.screen.height - this.settings.controls.height / 2);
    
@@ -177,15 +179,43 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(this.cloningScreen);
     this.updateControls();
     
+    // Farmbutton
+    this.farmButton = new farming.Button('Farm').setColor('#999999')
+    		.setPosition(50, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showFarm, this);
+    this.controlsLayer.appendChild(this.farmButton);
+
     // Clonebutton
     this.cloneButton = new farming.Button('Clone').setColor('#999999')
-    		.setPosition(100, this.game.screen.height - this.settings.controls.height / 2)
-    		.setSize(80,20).setAction(this.game.showClone,this.game);
+    		.setPosition(150, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
+
+    // Challengebutton
+    this.challengeButton = new farming.Button('Challenges').setColor('#999999')
+    		.setPosition(250, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showChallenge, this);
+    this.controlsLayer.appendChild(this.challengeButton);
+
+    // Current challenge indicator
+    this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill('#CC2222')
+        .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
+        .setHidden(true).setAction(this.showChallenge, this);
+    this.controlsLayer.appendChild(this.challengeIndicator);
+}
+
+farming.SceneMap.prototype.showFarm = function(scene) {
+    scene.game.showFarm();
+}
+farming.SceneMap.prototype.showClone = function(scene) {
+    scene.game.showClone();
+}
+farming.SceneMap.prototype.showChallenge = function(scene) {
+    scene.game.showChallenge();
 }
 
 farming.SceneMap.prototype.updateControls = function(){
-    this.moneyLabel.setText('$' + this.game.player.coins);
+    this.moneyLabel.setText(this.game.player.coins);
 }
 
 farming.SceneMap.prototype.tiles = [];
@@ -209,8 +239,10 @@ farming.SceneMap.prototype.isoToTwoD = function (x, y) {
         (2 * y - x) / 2
     );
 }
+
+// flipping the small coin in the controls panel
 farming.SceneMap.prototype.moneyAnimation = function (amount) {
-    var animation = new lime.animation.KeyframeAnimation().setDelay(0.05);
+    var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
     for(var i = 5; i >= 0; i--) {
         animation.addFrame('images/coin_small/'+i+'.png');
     }
@@ -240,4 +272,18 @@ farming.SceneMap.prototype.noMoneyAnimation = function () {
     this.noCoinsWarning.setOpacity(1);	
 	var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
     this.noCoinsWarning.runAction(fadeAway);
+}
+
+//In this function you can define all things that have to updated over time
+farming.SceneMap.prototype.tick = function(){
+    this.showCurrentChallenge();
+}
+
+// function for showing or hiding the current challenge indicator
+farming.SceneMap.prototype.showCurrentChallenge = function(){
+    if(this.game.player.currentChallenge) {
+        this.challengeIndicator.setHidden(false);
+    } else {
+        this.challengeIndicator.setHidden(true);
+    }
 }
