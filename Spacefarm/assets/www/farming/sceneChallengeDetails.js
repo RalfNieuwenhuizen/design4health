@@ -32,7 +32,7 @@ farming.SceneChallengeDetails = function (game) {
     this.backButton = new farming.Button('Back').setColor('#999999')
         .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
         .setSize(80,20);
-    this.cancelButton = new farming.Button('Give up').setColor('#999999')
+    this.giveUpButton = new farming.Button('Give up').setColor('#999999')
         .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
         .setSize(80,20).setHidden(true);
     this.selectButton = new farming.Button('Select').setColor('#2222CC')
@@ -43,28 +43,30 @@ farming.SceneChallengeDetails = function (game) {
         .appendChild(w).appendChild(this.title).appendChild(this.description)
         .appendChild(this.selectButton)
         .appendChild(this.closeButton)
-        .appendChild(this.cancelButton)
+        .appendChild(this.giveUpButton)
         .appendChild(this.backButton);
 
     this.closeButton.setAction(this.game.closeChallengeDetails, this.game);
     this.backButton.setAction(this.game.backChallengeDetails, this.game);
-    this.cancelButton.setAction(this.game.cancelChallenge, {'challenge': this.game.currentChallenge, 'game': this.game});
+    this.giveUpButton.setAction(this.game.giveUpChallenge, {'challenge': this.game.player.currentChallenge, 'game': this.game});
 }
 goog.inherits(farming.SceneChallengeDetails, farming.Scene);
 
 farming.SceneChallengeDetails.prototype.game = null;
-farming.SceneChallengeDetails.prototype.challenge = null;
-farming.SceneChallengeDetails.prototype.exercisesDone = null;
 
+// update the screen -- set opt_active true iff there is an active challenge
 farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_active) {
+    if(this.drawLayer)
+        this.windowLayer.removeChild(this.drawLayer);
+    this.drawLayer = new lime.Layer();
+    this.windowLayer.appendChild(this.drawLayer);
     this.challenge = challenge;
     var title = opt_active ? 'Current challenge: '+challenge.name : challenge.name;
     this.title.setText(title);
     this.description.setText(challenge.description + "\n" + farming.Challenge.prototype.bodypart(challenge.type));
     if(opt_active) {
         this.backButton.setHidden(true);
-        this.cancelButton.setHidden(false);
-        this.exercisesDone = challenge.exercisesDone;
+        this.giveUpButton.setHidden(false);
     } else {
         this.selectButton.setAction(this.game.selectChallenge, {
             'challenge': challenge,
@@ -91,12 +93,13 @@ farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt
     var itemIcon = new lime.Sprite().setFill('images/items/'+item.key+'.png').setSize(30, 30).setPosition(position);
     var itemLabel = new lime.Label().setText(item.number).setSize(10, 10).setPosition(position.x + 13, position.y - 13);
 
+    // there is an active challenge
     if(opt_active) {
         var currentNumber = this.game.getInventory(item.key);
         var color = currentNumber >= item.number ? '#22CC22' : '#CC2222';
         itemLabel.setText(currentNumber + '/' + item.number).setFontColor(color);
     }
-    this.windowLayer.appendChild(itemIcon).appendChild(itemLabel);
+    this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
 farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, position, opt_active) {
     var props = EXERCISES[exercise.key];
@@ -121,29 +124,52 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
         numberLabel.setText(props.duration + '\"');
     }
 
+    // there is an active challenge
     if(opt_active) {
         doButton.setHidden(false);
-        if (this.exercisesDone && this.exercisesDone[exercise]) {
+        if (!this.game.player.currentChallenge.exercisesDone)
+            this.game.player.currentChallenge.exercisesDone = [];
+        if (this.exerciseDone(exercise.key)) {
             doButton.setColor('#22CC22');
-        } else if (this.sufficientItems()) {
-            doButton.setAction(this.game.doExercise, {
-                'exercise': exercise,
+        } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
+            doButton.setAction(this.game.showExercise, {
+                'exercise': exercise.key,
                 'game': this.game
             }).setColor('#2222CC');
         }
     }
 
-    this.windowLayer.appendChild(exerciseIcon).appendChild(exerciseName).appendChild(exerciseDescription)
+    this.drawLayer.appendChild(exerciseIcon).appendChild(exerciseName).appendChild(exerciseDescription)
         .appendChild(numberIcon).appendChild(numberLabel).appendChild(doButton);
 
 }
 
+// return true iff all items required for this challenge are available
 farming.SceneChallengeDetails.prototype.sufficientItems = function () {
     for(var i in this.challenge.requirements) {
         var requirement = this.challenge.requirements[i];
         if(requirement.type === 'item') {
             if(!this.game.hasItem(requirement.key, requirement.number))
                 return false;
+        }
+    }
+    return true;
+}
+
+// return true iff exercise is done
+farming.SceneChallengeDetails.prototype.exerciseDone = function (exercise) {
+    return this.game.player.currentChallenge.exercisesDone.indexOf(exercise) > -1;
+}
+
+// return true iff exercise is not yet done and prerequisite are fullfilled.
+farming.SceneChallengeDetails.prototype.exerciseDoable = function (exercise) {
+    for(var i in this.challenge.requirements) {
+        var requirement = this.challenge.requirements[i];
+        if(requirement.type === 'exercise') {
+            if(requirement.key != exercise && !this.exerciseDone(requirement.key))
+                return false;
+            else
+                return !this.exerciseDone(exercise);
         }
     }
     return true;

@@ -39,8 +39,8 @@ goog.inherits(farming.SceneFarm, farming.Scene);
 
 farming.SceneFarm.prototype.game = null;
 
+// redraw the inventory
 farming.SceneFarm.prototype.redraw = function (inventory) {
-    console.log(inventory);
     var center = this.game.getCenterPosition();
     var items = 0;
     var obj = Object.keys(inventory);

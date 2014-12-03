@@ -40,7 +40,8 @@ farming.Game = function() {
             back: 0,
             abs: 0,
         },
-        inventory : {}
+        inventory : {},
+        currentChallenge : null
     }
     
     // TODO Not yet used
@@ -53,6 +54,7 @@ farming.Game = function() {
     //Define all the scenes
     this.sceneMap = new farming.SceneMap(this);
     this.sceneFarm = new farming.SceneFarm(this);
+    this.sceneExercise = new farming.SceneExercise(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
     this.sceneCloneOnMap = new farming.SceneCloneOnMap(this);
@@ -71,7 +73,6 @@ farming.Game = function() {
 }
 
 farming.Game.prototype.tickables = [];
-farming.Game.prototype.currentChallenge = null;
 
 // -- farm --
 farming.Game.prototype.showFarm = function(game){
@@ -85,16 +86,29 @@ farming.Game.prototype.closeFarm = function(game){
 }
 // -- end farm --
 
-farming.Game.prototype.showHarvest = function(tile){
-    this.sceneHarvest.showExercise(tile);
-    this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
+// -- harvest --
+farming.Game.prototype.showHarvest = function(game, tile){
+    game.sceneHarvest.showExercise(tile);
+    game.director.pushScene(game.sceneHarvest, lime.transitions.MoveInDown);
 }
 
-farming.Game.prototype.hideHarvest = function(){
-    console.log(this.director.getCurrentScene());
-    if(this.director.getCurrentScene() != this.sceneHarvest) return;
-    this.director.popScene();
+farming.Game.prototype.hideHarvest = function(game){
+    if(game.director.getCurrentScene() != game.sceneHarvest) return;
+    game.director.popScene();
 }
+// -- end harvest --
+
+// -- exercise --
+farming.Game.prototype.showExercise = function(input){
+    input.game.sceneExercise.showExercise(input.exercise);
+    input.game.director.pushScene(input.game.sceneExercise);
+}
+
+farming.Game.prototype.hideExercise = function(game){
+    if(game.director.getCurrentScene() != game.sceneExercise) return;
+    game.director.popScene();
+}
+// -- end exercise --
 
 farming.Game.prototype.showClone = function(game){
     game.director.pushScene(game.sceneClone);
@@ -133,55 +147,52 @@ farming.Game.prototype.closeCloning = function(){
 
 
 // -- Challenge screen --
+// if there is no current challenge, show the list of challenges, otherwise show the current challenge
 farming.Game.prototype.showChallenge = function(game){
-    if(!game.currentChallenge) {
+    if(!game.player.currentChallenge) {
         game.director.pushScene(game.sceneChallenge);
     } else {
-        game.showChallengeCurrent({'challenge': game.currentChallenge, 'game': game});
+        game.showChallengeDetails({'challenge': game.player.currentChallenge, 'game': game});
     }
 }
+// set the current challenge and close all challenge screens
 farming.Game.prototype.selectChallenge = function(input){
-    //TODO pick challenge
-    input.game.currentChallenge = input.challenge;
+    input.game.player.currentChallenge = input.challenge;
     if(input.game.director.getCurrentScene() != input.game.sceneChallengeDetails) return;
     input.game.director.popScene();
     if(input.game.director.getCurrentScene() != input.game.sceneChallenge) return;
     input.game.director.popScene();
 }
-farming.Game.prototype.cancelChallenge = function(input){
-    //TODO cancel challenge
-    input.game.currentChallenge = null;
+// remove the current challenge and close all challenge screens
+farming.Game.prototype.giveUpChallenge = function(input){
+    input.game.player.currentChallenge = null;
     if(input.game.director.getCurrentScene() != input.game.sceneChallengeDetails) return;
     input.game.director.popScene();
     if(input.game.director.getCurrentScene() != input.game.sceneChallenge) return;
     input.game.director.popScene();
 }
+// close the challenge overview screen
 farming.Game.prototype.closeChallenge = function(game){
     if(game.director.getCurrentScene() != game.sceneChallenge) return;
     game.director.popScene();
 }
+// show the challenge details screen for input.challenge
 farming.Game.prototype.showChallengeDetails = function(input){
     input.game.sceneChallengeDetails = new farming.SceneChallengeDetails(input.game);
-    input.game.sceneChallengeDetails.setChallenge(input.challenge);
+    input.game.sceneChallengeDetails.setChallenge(input.challenge, !!(input.game.player.currentChallenge));
     input.game.director.pushScene(input.game.sceneChallengeDetails);
 }
-farming.Game.prototype.showChallengeCurrent = function(input){
-    input.game.sceneChallengeDetails = new farming.SceneChallengeDetails(input.game);
-    input.game.sceneChallengeDetails.setChallenge(input.challenge, true);
-    input.game.director.pushScene(input.game.sceneChallengeDetails);
-}
+// go back from the details screen to the overview screen
 farming.Game.prototype.backChallengeDetails = function(game){
     if(game.director.getCurrentScene() != game.sceneChallengeDetails) return;
     game.director.popScene();
 }
+// go back from the details screen to the map screen
 farming.Game.prototype.closeChallengeDetails = function(game){
     if(game.director.getCurrentScene() != game.sceneChallengeDetails) return;
     game.director.popScene();
     if(game.director.getCurrentScene() != game.sceneChallenge) return;
     game.director.popScene();
-}
-farming.Game.prototype.doExercise = function(input){
-    console.log('doExercise', input.exercise);
 }
 // -- end challenge screen --
 
@@ -217,6 +228,7 @@ farming.Game.prototype.addItem = function(type, amount) {
 farming.Game.prototype.removeItem = function(type, amount) {
     if(!this.hasItem(type, amount)) return false;
     this.player.inventory[type] -= amount;
+    return this.player.inventory[type];
 }
 farming.Game.prototype.getInventory = function(type) {
     if(type) {
@@ -233,6 +245,23 @@ farming.Game.prototype.hasItem = function(type, amount) {
     return this.player.inventory[type] >= amount;
 }
 
+// -- BODY --
+farming.Game.prototype.addPoints = function(bodypart, amount) {
+    if(this.player.body[bodypart]) {
+        this.player.body[bodypart] += amount;
+    } else {
+        this.player.body[bodypart] = amount;
+    }
+    return this.player.body[bodypart];
+}
+farming.Game.prototype.getPoints = function(bodypart) {
+    if(this.player.body[bodypart])
+        return this.player.body[bodypart];
+
+    return 0;
+}
+
+// -- Game methods --
 farming.Game.prototype.getFullSize = function(percent) {
     var ratio = typeof percent == 'undefined' ? 1 : percent;
     return new goog.math.Size(this.screen.width * ratio, this.screen.height * ratio);

@@ -45,6 +45,7 @@ goog.inherits(farming.SceneChallenge, farming.Scene);
 farming.SceneChallenge.prototype.game = null;
 
 farming.SceneChallenge.prototype.drawChallenge = function(challengeProps, position) {
+    //TODO create challenge icons
     //var challengeIcon = new lime.Sprite().setFill('images/'+challengeProps.key+'.png').setSize(100, 60).setPosition(position);
     var challengeIcon = new lime.Sprite().setFill('images/wheat_ripe.png').setSize(100, 60).setPosition(position);
     var challengeTitle = new lime.Label().setPosition(position.x, position.y + 33).setText(challengeProps.name);

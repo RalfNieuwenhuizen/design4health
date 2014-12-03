@@ -1,7 +1,8 @@
 goog.provide('farming.Exercise');
 
 /**
- * Land elements
+ * Exercise accelerometer object
+ * Function name callbackName should exist in this class
  *
  * @param {} gameObj
  */
@@ -42,9 +43,9 @@ farming.Exercise.prototype.getAnimation = function (key, delay) {
     }
     return animation;
 }
-farming.Exercise.prototype.harvestAppleTree = function (acceleration, exercise) {
+farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
-    console.log('Harvesting apples callback:' + "\n" + 'Acceleration X: ' + acceleration.x + "\n" +
+    console.log('Apple picking callback:' + "\n" + 'Acceleration X: ' + acceleration.x + "\n" +
         'Acceleration Y: ' + acceleration.y + "\n" +
         'Acceleration Z: ' + acceleration.z + "\n" +
         'Timestamp: ' + acceleration.timestamp + "\n");
@@ -53,9 +54,19 @@ farming.Exercise.prototype.harvestAppleTree = function (acceleration, exercise) 
         exercise.stopWatch();
     }
 }
-farming.Exercise.prototype.harvestWheat = function (acceleration, exercise) {
+farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
-    console.log('Harvesting wheat callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
+    console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
+        'Acceleration Z: ' + acceleration.z + " " +
+        'Timestamp: ' + acceleration.timestamp);
+    if (acceleration.y > 5) {
+        exercise.onExerciseSuccess(exercise.target);
+        exercise.stopWatch();
+    }
+}
+farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
+    if(!exercise.watchID && !exercise.fakeWebWatchID) return;
+    console.log('Rocket jumps callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
     if (acceleration.y > 5) {

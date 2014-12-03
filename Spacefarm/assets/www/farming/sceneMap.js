@@ -19,6 +19,7 @@ farming.SceneMap = function (game) {
     this.drawLand();
     this.drawControls();
 
+    // make the map updateable
     this.game.tickables.push(this);
 }
 goog.inherits(farming.SceneMap, farming.Scene);
@@ -118,7 +119,7 @@ farming.SceneMap.prototype.drawLand = function () {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
                 var tile = scene.tiles[focus.x][focus.y];
                 if(tile.isRipe()) {
-                    scene.game.showHarvest(tile);
+                    scene.game.showHarvest(scene.game, tile);
                 } else {
                 	currentCrop = scene.game.currentCrop;
                 	// If there is no current crop to be cloned, return
@@ -227,6 +228,8 @@ farming.SceneMap.prototype.isoToTwoD = function (x, y) {
         (2 * y - x) / 2
     );
 }
+
+// flipping the small coin in the controls panel
 farming.SceneMap.prototype.moneyAnimation = function (amount) {
     var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
     for(var i = 5; i >= 0; i--) {
@@ -259,14 +262,15 @@ farming.SceneMap.prototype.noMoneyAnimation = function () {
 	var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
     this.noCoinsWarning.runAction(fadeAway);
 }
-}
 
 //In this function you can define all things that have to updated over time
 farming.SceneMap.prototype.tick = function(){
     this.showCurrentChallenge();
 }
+
+// function for showing or hiding the current challenge indicator
 farming.SceneMap.prototype.showCurrentChallenge = function(){
-    if(this.game.currentChallenge) {
+    if(this.game.player.currentChallenge) {
         this.challengeIndicator.setHidden(false);
     } else {
         this.challengeIndicator.setHidden(true);
