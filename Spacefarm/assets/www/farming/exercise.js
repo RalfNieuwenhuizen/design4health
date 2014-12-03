@@ -6,13 +6,34 @@ goog.provide('farming.Exercise');
  *
  * @param {} gameObj
  */
+
+
+ 
+    //
+    //var appleFirst= 0;
+    //var appleLast=0;
+    //var appleAcc=[];
+   // var appleRep=0;
+    //variables to count acceleration for wheat exercise
+    //var wheatFirst= 0;
+    //var wheatLast=0;
+    //var wheatAcc=[];
+    //var wheatRep=0;
+
+    // variables to measure acceleration 
+
+    var first= 0;
+    var last=0;
+    var acc=[];
+    var rep=0;
 farming.Exercise = function (callbackName, target, onExerciseSuccess, onExerciseCancel) {
     var callback = this[callbackName];
     this.target = target;
     this.onExerciseSuccess = onExerciseSuccess;
     this.onExerciseCancel = onExerciseCancel;
     var exercise = this;
-    var options = { frequency: 500 };
+    //var options = { frequency: 500 };
+    var options = { frequency: 1000};
     if (typeof navigator.accelerometer == 'undefined') {
         exercise.fakeWebWatchID = setInterval(function () {
             callback({x: 100, y: 100, z: 100, timestamp: 0}, exercise)
@@ -49,27 +70,93 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
         'Acceleration Y: ' + acceleration.y + "\n" +
         'Acceleration Z: ' + acceleration.z + "\n" +
         'Timestamp: ' + acceleration.timestamp + "\n");
-    if (acceleration.y > 10) {
+
+
+    acc.push(acceleration.y);
+            first= acc[0];
+        //var listLimit = 15;
+        //if (accvalues.length > listLimit) {
+        //accvalues.splice(0, 1); }
+        
+        last= acc[acc.length-1];
+        console.log('first value of array' +first + 'last value of array' +last);
+        console.log('array length is:' +acc.length);
+  
+    //if (acceleration.y > 10) {
+    //if(last>5){
+    if(Math.abs(last-first)> 3)
+    {
+    rep= rep+1;
+    console.log('repetitions for apple are:' +rep);
+     }
+    
+    if (rep >=10) {
+        rep=0;
+        acc=[];
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
     }
+    
 }
 farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
-    if (acceleration.y > 5) {
+
+        acc.push(acceleration.x);
+        first= acc[0];
+        //var listLimit = 15;
+        //if (accvalues.length > listLimit) {
+        //accvalues.splice(0, 1); }
+        
+        last= acc[acc.length-1];
+        console.log('first value of array' +first + 'last value of array' +last);
+        console.log('array length is:' +acc.length);
+  
+    //if (acceleration.y > 10) {
+    //if(last>5){
+    if(Math.abs(last-first)> 10)
+    {
+    rep= rep+1;
+    console.log('repetitions for wheat are:' +rep);
+     }
+    
+    if (rep >=2) {
+        rep=0;
+        acc=[];
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
     }
+    
 }
 farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Rocket jumps callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
-    if (acceleration.y > 5) {
+    
+        acc.push(acceleration.y);
+        first= acc[0];
+        //var listLimit = 15;
+        //if (accvalues.length > listLimit) {
+        //accvalues.splice(0, 1); }
+        
+        last= acc[acc.length-1];
+        console.log('first value of array' +first + 'last value of array' +last);
+        console.log('array length is:' +acc.length);
+  
+    //if (acceleration.y > 10) {
+    //if(last>5){
+    if(Math.abs(last-first)> 5)
+    {
+    rep= rep+1;
+    console.log('repetitions for rocket_jumps are:' +rep);
+     }
+    
+    if (rep >=10) {
+        rep=0;
+        acc=[];
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
     }
