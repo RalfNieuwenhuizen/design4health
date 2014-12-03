@@ -11,6 +11,7 @@ goog.require('farming.SceneMap');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
 goog.require('farming.SceneCropDetails');
+goog.require('farming.SceneCloneOnMap');
 
 /**
  * Land elements
@@ -25,8 +26,11 @@ farming.Game = function() {
 
     this.player = {
         coins: 100,
-        currentCrops : ['apple_tree','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat','wheat']
+        currentCrops : ['apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat','wheat','wheat','wheat','apple_tree','wheat']
     }
+    
+    // Not yet used
+    this.currentCrop = null;
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
     this.director.makeMobileWebAppCapable()
@@ -35,6 +39,7 @@ farming.Game = function() {
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
     this.sceneCropDetails = new farming.SceneCropDetails(this);
+    this.sceneCloneOnMap = new farming.SceneCloneOnMap(this);
     this.director.replaceScene(this.sceneMap);
     var game = this;
     lime.scheduleManager.scheduleWithDelay(function() {
@@ -67,10 +72,9 @@ farming.Game.prototype.hideClone = function(){
 }
 
 // Show details of the crop
-farming.Game.prototype.showCropDetails = function(input){
-	game = input.game;
-	crop = input.cropProps;
-	game.director.pushScene(game.sceneCropDetails);
+farming.Game.prototype.showCropDetails = function(crop){
+	this.sceneCropDetails.showDetails(crop);
+	this.director.pushScene(this.sceneCropDetails);
 }
 
 farming.Game.prototype.hideDetails = function(){
@@ -78,8 +82,20 @@ farming.Game.prototype.hideDetails = function(){
     this.director.popScene();
 }
 
-// Close details of the crop
-// todo
+// Show cloning screen
+farming.Game.prototype.startCloning = function(crop){
+	this.hideClone();
+	//this.sceneCloneOnMap.startCloning(crop);
+	this.sceneCropDetails.showDetails(crop);
+	//this.director.pushScene(this.sceneCloneOnMap);
+	//this.sceneCropDetails.showDetails(crop);
+	//this.director.pushScene(this.sceneCropDetails);
+}
+
+farming.Game.prototype.closeCloning = function(){
+	if(this.director.getCurrentScene() != this.sceneCloneOnMap) return;
+	this.director.popScene();
+}
 
 farming.Game.prototype.addCoins = function(amount) {
     this.sceneMap.moneyAnimation(amount);
