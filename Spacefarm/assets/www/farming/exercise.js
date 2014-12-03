@@ -99,7 +99,7 @@ var EXERCISES = {
         points: 1 //points awarded to 'type' region
     },
     arm_circles: {
-        title : 'Arm circles',
+        title : '\"Arm circles\"',
         description : 'Stand up and extend your arms straight out by the sides. The arms should be parallel to ' +
         'the floor and perpendicular to your torso.' +
         '\n\n Slowly start to make circles of about 1 foot in diameter with each outstretched arm ' +

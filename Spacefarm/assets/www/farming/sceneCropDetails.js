@@ -9,6 +9,7 @@ goog.require('lime.Layer');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
+goog.require('farming.Exercise');
 goog.require('farming.SceneClone');
 
 farming.SceneCropDetails = function (game) {
@@ -65,7 +66,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
     this.cropRipeTime.setText('Time to ripe: '+crop.time_to_ripe);
     this.cropDeathTime.setText('Time to death: '+crop.time_to_death);
     this.cropHarvests.setText('Number of harvests: '+crop.harvests);
-    this.cropExercises.setText('Exercises: '+crop.exercise.title);
+    this.cropExercises.setText('Exercises: '+EXERCISES[crop.exercise.key].title);
     
     var game = this.game;
     var center = game.getCenterPosition();
