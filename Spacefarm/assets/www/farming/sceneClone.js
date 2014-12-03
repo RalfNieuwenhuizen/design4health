@@ -26,34 +26,31 @@ farming.SceneClone = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    var mask = new lime.Sprite().setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition().x, game.getCenterPosition().y);
     this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
     this.title.setText('Clone');
-    
+
     this.closeButton = new farming.Button('X').setColor('#999999')
-    		.setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-    		.setSize(30,30);
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
     
     this.nextButton = new farming.Button('Next').setColor('#999999')
-    		.setPosition(new goog.math.Coordinate( 250, 150))
+        .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
     		.setSize(50,30);
     
     this.prevButton = new farming.Button('Prev').setColor('#999999')
-    		.setPosition(new goog.math.Coordinate( -250, 150))
+        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
     		.setSize(50,30);
     
     this.w.appendChild(this.nextButton);
     
-    this.windowLayer.setMask(mask);
-    
-    this.windowLayer.appendChild(mask).appendChild(this.w)
+    this.windowLayer.appendChild(this.w)
     	.appendChild(this.title).appendChild(this.closeButton);
     
     this.closeButton.setAction(this.closeClone, this);
     this.nextButton.setAction(this.nextClone, this);
     this.prevButton.setAction(this.prevClone, this);
     // Set the number of the page the clonescreen is showing to first
-    this.page = 1;  
+    this.page = 1;
     
     // Draw the crops
     this.drawCrop(this);

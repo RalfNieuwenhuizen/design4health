@@ -27,32 +27,56 @@ farming.SceneChallengeDetails = function (game) {
     this.description = new lime.Label().setPosition(center.x, center.y * 0.5).setMultiline(true);
 
     this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.3).width, center.y - game.getFullSize(0.3).height)
-        .setSize(20,20);
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
     this.backButton = new farming.Button('Back').setColor('#999999')
-        .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
-        .setSize(80,20);
+        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
+        .setSize(50,30);
     this.giveUpButton = new farming.Button('Give up').setColor('#999999')
-        .setPosition(center.x + 10 - game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
-        .setSize(80,20).setHidden(true);
+        .setPosition(center.x + 5 - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
+        .setSize(60,30).setHidden(true);
     this.selectButton = new farming.Button('Select').setColor('#2222CC')
-        .setPosition(center.x - 10 + game.getFullSize(0.3).width, center.y + game.getFullSize(0.3).height)
-        .setSize(80,20).setHidden(true);
+        .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
+        .setSize(50,30).setHidden(true);
+    this.completeButton = new farming.Button('Complete!').setColor('#22CC22')
+        .setPosition(center.x, center.y + game.getFullSize(0.31).height)
+        .setSize(80,30).setHidden(true);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title).appendChild(this.description)
         .appendChild(this.selectButton)
         .appendChild(this.closeButton)
         .appendChild(this.giveUpButton)
+        .appendChild(this.completeButton)
         .appendChild(this.backButton);
 
-    this.closeButton.setAction(this.game.closeChallengeDetails, this.game);
-    this.backButton.setAction(this.game.backChallengeDetails, this.game);
-    this.giveUpButton.setAction(this.game.giveUpChallenge, {'challenge': this.game.player.currentChallenge, 'game': this.game});
+    this.closeButton.setAction(this.closeChallengeDetails, this);
+    this.backButton.setAction(this.backChallengeDetails, this);
+    this.giveUpButton.setAction(this.giveUpChallenge, this);
+    this.completeButton.setAction(this.completeChallenge, this);
 }
 goog.inherits(farming.SceneChallengeDetails, farming.Scene);
 
 farming.SceneChallengeDetails.prototype.game = null;
+
+farming.SceneChallengeDetails.prototype.closeChallengeDetails = function (scene) {
+    scene.game.closeChallengeDetails();
+}
+farming.SceneChallengeDetails.prototype.backChallengeDetails = function (scene) {
+    scene.game.backChallengeDetails();
+}
+farming.SceneChallengeDetails.prototype.giveUpChallenge = function (scene) {
+    scene.game.giveUpChallenge();
+}
+farming.SceneChallengeDetails.prototype.completeChallenge = function (scene) {
+    scene.game.completeChallenge();
+}
+farming.SceneChallengeDetails.prototype.selectChallenge = function (input) {
+    input.scene.game.selectChallenge(input.challenge);
+}
+farming.SceneChallengeDetails.prototype.showExercise = function (input) {
+    input.scene.game.showExercise(input.exercise);
+}
 
 // update the screen -- set opt_active true iff there is an active challenge
 farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_active) {
@@ -68,9 +92,9 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
     } else {
-        this.selectButton.setAction(this.game.selectChallenge, {
+        this.selectButton.setAction(this.selectChallenge, {
             'challenge': challenge,
-            'game': this.game
+            'scene': this
         }).setHidden(false);
     }
 
@@ -111,8 +135,8 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
     var animation = farming.Exercise.prototype.getAnimation(exercise.key, 0.3);
     exerciseIcon.runAction(animation);
     var doButton = new farming.Button('Do!').setColor('#999999')
-        .setPosition(position.x + 50, position.y + 95)
-        .setSize(80,20).setHidden(true);
+        .setPosition(position.x + 70, position.y + 90)
+        .setSize(50,30).setHidden(true);
 
     var numberIcon = new lime.Sprite().setSize(10, 10).setPosition(position.x - 130, position.y * 1.35);
     var numberLabel = new lime.Label().setSize(10, 10).setPosition(position.x - 110, position.y * 1.35);
@@ -132,10 +156,16 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
         if (this.exerciseDone(exercise.key)) {
             doButton.setColor('#22CC22');
         } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
-            doButton.setAction(this.game.showExercise, {
+            doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
-                'game': this.game
+                'scene': this
             }).setColor('#2222CC');
+        }
+
+        if (this.challengeDone()) {
+            //TODO woohoo
+            this.giveUpButton.setHidden(true);
+            this.completeButton.setHidden(false);
         }
     }
 
@@ -170,6 +200,20 @@ farming.SceneChallengeDetails.prototype.exerciseDoable = function (exercise) {
                 return false;
             else
                 return !this.exerciseDone(exercise);
+        }
+    }
+    return true;
+}
+
+farming.SceneChallengeDetails.prototype.challengeDone = function () {
+    for(var i in this.challenge.requirements) {
+        var requirement = this.challenge.requirements[i];
+        if(requirement.type === 'item') {
+            if(!this.game.hasItem(requirement.key, requirement.number))
+                return false;
+        } else if(requirement.type === 'exercise') {
+            if(!this.exerciseDone(requirement.key))
+                return false;
         }
     }
     return true;

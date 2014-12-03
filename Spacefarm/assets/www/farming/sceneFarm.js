@@ -25,9 +25,9 @@ farming.SceneFarm = function (game) {
     this.title.setText('Inventory');
 
     this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.3).width, center.y - game.getFullSize(0.3).height)
-        .setSize(20,20);
-    this.closeButton.setAction(this.game.closeFarm, this.game);
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
+    this.closeButton.setAction(this.closeFarm, this);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title)
@@ -39,6 +39,9 @@ goog.inherits(farming.SceneFarm, farming.Scene);
 
 farming.SceneFarm.prototype.game = null;
 
+farming.SceneFarm.prototype.closeFarm = function(scene) {
+    scene.game.closeFarm();
+}
 // redraw the inventory
 farming.SceneFarm.prototype.redraw = function (inventory) {
     var center = this.game.getCenterPosition();

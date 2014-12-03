@@ -75,43 +75,43 @@ farming.Game = function() {
 farming.Game.prototype.tickables = [];
 
 // -- farm --
-farming.Game.prototype.showFarm = function(game){
-    game.sceneFarm.redraw(game.player.inventory);
-    game.director.pushScene(game.sceneFarm);
+farming.Game.prototype.showFarm = function(){
+    this.sceneFarm.redraw(this.player.inventory);
+    this.director.pushScene(this.sceneFarm);
 }
 
-farming.Game.prototype.closeFarm = function(game){
-    if(game.director.getCurrentScene() != game.sceneFarm) return;
-    game.director.popScene();
+farming.Game.prototype.closeFarm = function(){
+    if(this.director.getCurrentScene() != this.sceneFarm) return;
+    this.director.popScene();
 }
 // -- end farm --
 
 // -- harvest --
-farming.Game.prototype.showHarvest = function(game, tile){
-    game.sceneHarvest.showExercise(tile);
-    game.director.pushScene(game.sceneHarvest, lime.transitions.MoveInDown);
+farming.Game.prototype.showHarvest = function(tile){
+    this.sceneHarvest.showExercise(tile);
+    this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
 }
 
-farming.Game.prototype.hideHarvest = function(game){
-    if(game.director.getCurrentScene() != game.sceneHarvest) return;
-    game.director.popScene();
+farming.Game.prototype.hideHarvest = function(){
+    if(this.director.getCurrentScene() != this.sceneHarvest) return;
+    this.director.popScene();
 }
 // -- end harvest --
 
 // -- exercise --
-farming.Game.prototype.showExercise = function(input){
-    input.game.sceneExercise.showExercise(input.exercise);
-    input.game.director.pushScene(input.game.sceneExercise);
+farming.Game.prototype.showExercise = function(exercise){
+    this.sceneExercise.showExercise(exercise);
+    this.director.pushScene(this.sceneExercise);
 }
 
-farming.Game.prototype.hideExercise = function(game){
-    if(game.director.getCurrentScene() != game.sceneExercise) return;
-    game.director.popScene();
+farming.Game.prototype.hideExercise = function(){
+    if(this.director.getCurrentScene() != this.sceneExercise) return;
+    this.director.popScene();
 }
 // -- end exercise --
 
-farming.Game.prototype.showClone = function(game){
-    game.director.pushScene(game.sceneClone);
+farming.Game.prototype.showClone = function(){
+    this.director.pushScene(this.sceneClone);
 }
 
 farming.Game.prototype.hideClone = function(){
@@ -124,9 +124,14 @@ farming.Game.prototype.showCropDetails = function(crop){
 	this.sceneCropDetails.showDetails(crop);
 	this.director.pushScene(this.sceneCropDetails);
 }
-
-farming.Game.prototype.hideCropDetails = function(){
+farming.Game.prototype.backCropDetails = function(){
     if(this.director.getCurrentScene() != this.sceneCropDetails) return;
+    this.director.popScene();
+}
+farming.Game.prototype.closeCropDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneClone) return;
     this.director.popScene();
 }
 
@@ -148,51 +153,68 @@ farming.Game.prototype.closeCloning = function(){
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
-farming.Game.prototype.showChallenge = function(game){
-    if(!game.player.currentChallenge) {
-        game.director.pushScene(game.sceneChallenge);
+farming.Game.prototype.showChallenge = function(){
+    if(!this.player.currentChallenge) {
+        this.director.pushScene(this.sceneChallenge);
     } else {
-        game.showChallengeDetails({'challenge': game.player.currentChallenge, 'game': game});
+        this.showChallengeDetails(this.player.currentChallenge);
     }
 }
 // set the current challenge and close all challenge screens
-farming.Game.prototype.selectChallenge = function(input){
-    input.game.player.currentChallenge = input.challenge;
-    if(input.game.director.getCurrentScene() != input.game.sceneChallengeDetails) return;
-    input.game.director.popScene();
-    if(input.game.director.getCurrentScene() != input.game.sceneChallenge) return;
-    input.game.director.popScene();
+farming.Game.prototype.selectChallenge = function(challenge){
+    this.player.currentChallenge = challenge;
+    if(this.director.getCurrentScene() != this.sceneChallengeDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneChallenge) return;
+    this.director.popScene();
 }
 // remove the current challenge and close all challenge screens
-farming.Game.prototype.giveUpChallenge = function(input){
-    input.game.player.currentChallenge = null;
-    if(input.game.director.getCurrentScene() != input.game.sceneChallengeDetails) return;
-    input.game.director.popScene();
-    if(input.game.director.getCurrentScene() != input.game.sceneChallenge) return;
-    input.game.director.popScene();
+farming.Game.prototype.giveUpChallenge = function(){
+    this.player.currentChallenge = null;
+    if(this.director.getCurrentScene() != this.sceneChallengeDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneChallenge) return;
+    this.director.popScene();
+}
+// complete the current challenge, remove all the items and close all challenge screens
+farming.Game.prototype.completeChallenge = function(){
+    var challenge = this.player.currentChallenge;
+    for(var i in challenge.requirements) {
+        var requirement = challenge.requirements[i];
+        if(requirement.type === 'item') {
+            this.removeItem(requirement.key, requirement.number);
+        } else if(requirement.type === 'exercise') {
+            // points already granted
+        }
+    }
+    this.player.currentChallenge = null;
+    if(this.director.getCurrentScene() != this.sceneChallengeDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneChallenge) return;
+    this.director.popScene();
 }
 // close the challenge overview screen
-farming.Game.prototype.closeChallenge = function(game){
-    if(game.director.getCurrentScene() != game.sceneChallenge) return;
-    game.director.popScene();
+farming.Game.prototype.closeChallenge = function(){
+    if(this.director.getCurrentScene() != this.sceneChallenge) return;
+    this.director.popScene();
 }
 // show the challenge details screen for input.challenge
-farming.Game.prototype.showChallengeDetails = function(input){
-    input.game.sceneChallengeDetails = new farming.SceneChallengeDetails(input.game);
-    input.game.sceneChallengeDetails.setChallenge(input.challenge, !!(input.game.player.currentChallenge));
-    input.game.director.pushScene(input.game.sceneChallengeDetails);
+farming.Game.prototype.showChallengeDetails = function(challenge){
+    this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
+    this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
+    this.director.pushScene(this.sceneChallengeDetails);
 }
 // go back from the details screen to the overview screen
-farming.Game.prototype.backChallengeDetails = function(game){
-    if(game.director.getCurrentScene() != game.sceneChallengeDetails) return;
-    game.director.popScene();
+farming.Game.prototype.backChallengeDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneChallengeDetails) return;
+    this.director.popScene();
 }
 // go back from the details screen to the map screen
-farming.Game.prototype.closeChallengeDetails = function(game){
-    if(game.director.getCurrentScene() != game.sceneChallengeDetails) return;
-    game.director.popScene();
-    if(game.director.getCurrentScene() != game.sceneChallenge) return;
-    game.director.popScene();
+farming.Game.prototype.closeChallengeDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneChallengeDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneChallenge) return;
+    this.director.popScene();
 }
 // -- end challenge screen --
 

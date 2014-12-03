@@ -30,14 +30,19 @@ farming.SceneCropDetails = function (game) {
     this.cropDeathTime = new lime.Label().setFontSize(11).setPosition(center.x, center.y + 20); 
     this.cropHarvests = new lime.Label().setFontSize(11).setPosition(center.x, center.y + 40);
     this.cropExercises = new lime.Label().setFontSize(11).setPosition(center.x, center.y + 60);
-    
+
     this.closeButton = new farming.Button('X').setColor('#999999')
-    		.setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-    		.setSize(30,30);
-    this.closeButton.setAction(this.closeDetails, this); 
-    
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
+    this.backButton = new farming.Button('Back').setColor('#999999')
+        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
+        .setSize(50,30);
+
+    this.backButton.setAction(this.backDetails, this);
+    this.closeButton.setAction(this.closeDetails, this);
+
     this.windowLayer
-    .appendChild(w).appendChild(this.title).appendChild(this.closeButton).appendChild(this.cropIcon).appendChild(this.cropName).appendChild(this.cropCost)
+    .appendChild(w).appendChild(this.title).appendChild(this.closeButton).appendChild(this.backButton).appendChild(this.cropIcon).appendChild(this.cropName).appendChild(this.cropCost)
     .appendChild(this.cropRevenue).appendChild(this.cropRipeTime).appendChild(this.cropDeathTime).appendChild(this.cropHarvests).appendChild(this.cropExercises);
 }
 
@@ -45,8 +50,11 @@ goog.inherits(farming.SceneCropDetails, farming.Scene);
 
 farming.SceneCropDetails.prototype.game = null;
 
+farming.SceneCropDetails.prototype.backDetails = function(scene) {
+    scene.game.backCropDetails();
+}
 farming.SceneCropDetails.prototype.closeDetails = function(scene) {
-    scene.game.hideDetails();
+    scene.game.closeCropDetails();
 }
 
 farming.SceneCropDetails.prototype.showDetails = function(crop) {

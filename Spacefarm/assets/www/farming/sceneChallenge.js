@@ -26,9 +26,9 @@ farming.SceneChallenge = function (game) {
     this.title.setText('Challenges');
 
     this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.3).width, center.y - game.getFullSize(0.3).height)
-        .setSize(20,20);
-    this.closeButton.setAction(this.game.closeChallenge, this.game);
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
+    this.closeButton.setAction(this.closeChallenge, this);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title)
@@ -52,7 +52,14 @@ farming.SceneChallenge.prototype.drawChallenge = function(challengeProps, positi
 
     // Create button to get details about the icon
     this.detailsButton = new farming.Button('Details').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x,position.y + 50)).setSize(60,20);
-    this.detailsButton.setAction(this.game.showChallengeDetails, {'challenge': challengeProps,'game': this.game} );
+    this.detailsButton.setAction(this.showChallengeDetails, {'challenge': challengeProps,'scene': this} );
 
     this.windowLayer.appendChild(challengeIcon).appendChild(challengeTitle).appendChild(this.detailsButton);
+}
+
+farming.SceneChallenge.prototype.showChallengeDetails = function(input) {
+    input.scene.game.showChallengeDetails(input.challenge);
+}
+farming.SceneChallenge.prototype.closeChallenge = function(scene) {
+    scene.game.closeChallenge();
 }

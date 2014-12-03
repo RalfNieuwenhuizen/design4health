@@ -24,19 +24,21 @@ farming.SceneExercise = function (game) {
     this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
     this.description = new lime.Label().setFontSize(12).setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4)).setAlign('left').setMultiline(true);
     this.animation = new lime.Sprite().setSize(game.getFullSize(0.5).height*0.75, game.getFullSize(0.5).height).setPosition(center.x*1.4, center.y);
-    this.cancelButton = new farming.Button('Back').setColor('#999999').setPosition(center.x * 0.5, center.y * 1.5).setSize(100,40);
-    this.startButton = new farming.Button('Start').setColor('#00ff00').setPosition(center.x, center.y * 1.5).setSize(100,40);
-    this.finishButton = new farming.Button('Fake finish').setColor('#999999').setPosition(center.x*1.5, center.y * 1.5).setSize(100,40);
+    this.closeButton = new farming.Button('X').setColor('#999999')
+        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
+        .setSize(30,30);
+    this.startButton = new farming.Button('Start').setColor('#00ff00').setPosition(center.x, center.y * 1.55).setSize(100,40);
+    this.finishButton = new farming.Button('Fake finish').setColor('#999999').setPosition(center.x*1.55, center.y * 1.55).setSize(100,40);
     windowLayer
         .appendChild(w).appendChild(this.title)
         .appendChild(this.description)
         .appendChild(this.animation)
         .appendChild(this.startButton)
-        .appendChild(this.cancelButton)
+        .appendChild(this.closeButton)
         .appendChild(this.finishButton);
 
     this.startButton.setAction(this.startExercise, this);
-    this.cancelButton.setAction(this.cancelExercise, this);
+    this.closeButton.setAction(this.closeExercise, this);
     this.finishButton.setAction(this.finishExercise, this);
 
 
@@ -62,11 +64,11 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     //TODO remove the fake finish button
     scene.finishButton.setHidden(false);
 
-    scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.cancelExercise);
+    scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }
 
-farming.SceneExercise.prototype.cancelExercise = function(scene) {
-    scene.game.hideExercise(scene.game);
+farming.SceneExercise.prototype.closeExercise = function(scene) {
+    scene.game.hideExercise();
 
 }
 farming.SceneExercise.prototype.finishExercise = function(scene) {
@@ -84,7 +86,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     }
 
     scene.exercise = null;
-    scene.game.hideExercise(scene.game);
+    scene.game.hideExercise();
     if (scene.game.director.getCurrentScene() == scene.game.sceneChallengeDetails && scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
 }

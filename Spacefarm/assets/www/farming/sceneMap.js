@@ -6,6 +6,7 @@ goog.require('farming.Scene');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Button');
+goog.require('farming.Label');
 goog.require('farming.SceneCloneOnMap');
 goog.require('lime.animation.FadeTo');
 
@@ -119,7 +120,7 @@ farming.SceneMap.prototype.drawLand = function () {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
                 var tile = scene.tiles[focus.x][focus.y];
                 if(tile.isRipe()) {
-                    scene.game.showHarvest(scene.game, tile);
+                    scene.game.showHarvest(tile);
                 } else {
                 	currentCrop = scene.game.currentCrop;
                 	// If there is no current crop to be cloned, return
@@ -180,27 +181,37 @@ farming.SceneMap.prototype.drawControls = function () {
     
     // Farmbutton
     this.farmButton = new farming.Button('Farm').setColor('#999999')
-    		.setPosition(40, this.game.screen.height - this.settings.controls.height / 2)
-    		.setSize(80,20).setAction(this.game.showFarm,this.game);
+    		.setPosition(50, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
 
     // Clonebutton
     this.cloneButton = new farming.Button('Clone').setColor('#999999')
-    		.setPosition(140, this.game.screen.height - this.settings.controls.height / 2)
-    		.setSize(80,20).setAction(this.game.showClone,this.game);
+    		.setPosition(150, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
 
     // Challengebutton
     this.challengeButton = new farming.Button('Challenges').setColor('#999999')
-    		.setPosition(240, this.game.screen.height - this.settings.controls.height / 2)
-    		.setSize(80,20).setAction(this.game.showChallenge, this.game);
+    		.setPosition(250, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeButton);
 
     // Current challenge indicator
     this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill('#CC2222')
         .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
-        .setHidden(true).setAction(this.game.showChallenge, this.game);
+        .setHidden(true).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeIndicator);
+}
+
+farming.SceneMap.prototype.showFarm = function(scene) {
+    scene.game.showFarm();
+}
+farming.SceneMap.prototype.showClone = function(scene) {
+    scene.game.showClone();
+}
+farming.SceneMap.prototype.showChallenge = function(scene) {
+    scene.game.showChallenge();
 }
 
 farming.SceneMap.prototype.updateControls = function(){
