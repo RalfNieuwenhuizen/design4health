@@ -111,6 +111,7 @@ farming.Game.prototype.hideExercise = function(){
 }
 // -- end exercise --
 
+// -- clone --
 farming.Game.prototype.showClone = function(){
     this.director.pushScene(this.sceneClone);
 }
@@ -120,15 +121,19 @@ farming.Game.prototype.hideClone = function(){
     this.director.popScene();
 }
 
-// Show details of the crop
+// Start cloning a crop
+farming.Game.prototype.startCloning = function(crop){
+	this.hideClone();
+	this.sceneCropDetails.showDetails(crop);
+}
+// -- end clone --
+
+// -- cropdetails --
 farming.Game.prototype.showCropDetails = function(crop){
     this.sceneCropDetails.showDetails(crop);
     this.director.pushScene(this.sceneCropDetails);
 }
-farming.Game.prototype.backCropDetails = function(){
-    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
-    this.director.popScene();
-}
+
 farming.Game.prototype.closeCropDetails = function(){
     if(this.director.getCurrentScene() != this.sceneCropDetails) return;
     this.director.popScene();
@@ -136,11 +141,11 @@ farming.Game.prototype.closeCropDetails = function(){
     this.director.popScene();
 }
 
-// Show cloning screen
-farming.Game.prototype.startCloning = function(crop){
-	this.hideClone();
-	this.sceneCropDetails.showDetails(crop);
+farming.Game.prototype.backCropDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
+    this.director.popScene();
 }
+// -- end cropdetails --
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
