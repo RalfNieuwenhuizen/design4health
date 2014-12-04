@@ -208,7 +208,7 @@ farming.SceneMap.prototype.drawControls = function () {
         .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
         .setHidden(true).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeIndicator);
-    
+
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor('#999999')
     		.setPosition(350, this.game.screen.height - this.settings.controls.height / 2)
