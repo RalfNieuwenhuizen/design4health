@@ -44,6 +44,10 @@ farming.SceneFarm.prototype.closeFarm = function(scene) {
 }
 // redraw the inventory
 farming.SceneFarm.prototype.redraw = function (inventory) {
+    if(this.drawLayer)
+        this.windowLayer.removeChild(this.drawLayer);
+    this.drawLayer = new lime.Layer();
+    this.windowLayer.appendChild(this.drawLayer);
     var center = this.game.getCenterPosition();
     var items = 0;
     var obj = Object.keys(inventory);
@@ -57,11 +61,15 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
             }
         }
     }
+    if (items == 0) {
+        var noItems = new lime.Label('You have not collected any items yet, go harvesting!').setFontSize(14).setPosition(center.x, center.y * 0.7);
+        this.drawLayer.appendChild(noItems);
+    }
 }
 farming.SceneFarm.prototype.drawItem = function (item, number, position) {
     var prop = ITEMS[item];
     var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(50, 50).setPosition(position);
     var itemLabel = new lime.Label().setText(number).setSize(10, 10).setPosition(position.x + 20, position.y - 20);
     //TODO sell button and stuff
-    this.windowLayer.appendChild(itemIcon).appendChild(itemLabel);
+    this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
