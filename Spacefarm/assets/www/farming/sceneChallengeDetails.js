@@ -35,7 +35,7 @@ farming.SceneChallengeDetails = function (game) {
     this.giveUpButton = new farming.Button('Give up').setColor('#999999')
         .setPosition(center.x + 5 - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
         .setSize(60,30).setHidden(true);
-    this.selectButton = new farming.Button('Select').setColor('#2222CC')
+    this.selectButton = new farming.Button('Select').setColor('#22CC22')
         .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
         .setSize(50,30).setHidden(true);
     this.completeButton = new farming.Button('Complete!').setColor('#22CC22')
@@ -111,6 +111,10 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             exercises++;
         }
     }
+    if(opt_active && !this.sufficientItems()) {
+        var insufficientItemsWarning = new lime.Label().setText('First gather all items').setFontColor('#CC2222').setPosition(center.x, center.y * 0.63);
+        this.drawLayer.appendChild(insufficientItemsWarning);
+    }
 };
 
 farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt_active) {
@@ -150,16 +154,15 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
 
     // there is an active challenge
     if(opt_active) {
-        doButton.setHidden(false);
         if (!this.game.player.currentChallenge.exercisesDone)
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
-            doButton.setColor('#22CC22');
+            doButton.setColor('#22CC22').setText('Done').setHidden(false);
         } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
             doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
                 'scene': this
-            }).setColor('#2222CC');
+            }).setColor('#22CC22').setText('Do!').setHidden(false);
         }
 
         if (this.challengeDone()) {

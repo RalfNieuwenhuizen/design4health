@@ -51,7 +51,7 @@ farming.SceneChallenge.prototype.drawChallenge = function(challengeProps, positi
     var challengeTitle = new lime.Label().setPosition(position.x, position.y + 33).setText(challengeProps.name);
 
     // Create button to get details about the icon
-    this.detailsButton = new farming.Button('Details').setColor('#2222CC').setPosition(new goog.math.Coordinate(position.x,position.y + 50)).setSize(60,20);
+    this.detailsButton = new farming.Button('Details').setColor('#999999').setPosition(new goog.math.Coordinate(position.x,position.y + 50)).setSize(60,20);
     this.detailsButton.setAction(this.showChallengeDetails, {'challenge': challengeProps,'scene': this} );
 
     this.windowLayer.appendChild(challengeIcon).appendChild(challengeTitle).appendChild(this.detailsButton);
