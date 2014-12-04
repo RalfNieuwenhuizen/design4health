@@ -7,7 +7,6 @@ goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Button');
 goog.require('farming.Label');
-goog.require('farming.SceneCloneOnMap');
 goog.require('lime.animation.FadeTo');
 
 /**

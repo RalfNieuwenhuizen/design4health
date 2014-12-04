@@ -11,11 +11,9 @@ goog.require('farming.SceneMap');
 goog.require('farming.SceneFarm');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
-goog.require('farming.SceneCloneOnMap');
 goog.require('farming.SceneCropDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
-
 goog.require('farming.Crop');
 goog.require('farming.Challenge');
 
@@ -44,10 +42,11 @@ farming.Game = function() {
             space_wheat: 10,
             space_apple: 10,
         },
-        currentChallenge : null
+        currentChallenge : null,
+        introPhase: 0 // Used to check for introductional screens
     }
-
-    // TODO Not yet used
+    
+    // Current crop defines the crop the user is building, initiated in clone screen
     this.currentCrop = null;
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
@@ -60,7 +59,6 @@ farming.Game = function() {
     this.sceneExercise = new farming.SceneExercise(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
-    this.sceneCloneOnMap = new farming.SceneCloneOnMap(this);
     this.sceneCropDetails = new farming.SceneCropDetails(this);
     this.sceneChallenge = new farming.SceneChallenge(this);
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
@@ -140,19 +138,9 @@ farming.Game.prototype.closeCropDetails = function(){
 
 // Show cloning screen
 farming.Game.prototype.startCloning = function(crop){
-    this.hideClone();
-    //this.sceneCloneOnMap.startCloning(crop);
-    this.sceneCropDetails.showDetails(crop);
-    //this.director.pushScene(this.sceneCloneOnMap);
-    //this.sceneCropDetails.showDetails(crop);
-    //this.director.pushScene(this.sceneCropDetails);
+	this.hideClone();
+	this.sceneCropDetails.showDetails(crop);
 }
-
-farming.Game.prototype.closeCloning = function(){
-    if(this.director.getCurrentScene() != this.sceneCloneOnMap) return;
-    this.director.popScene();
-}
-
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
