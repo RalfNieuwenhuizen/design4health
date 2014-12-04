@@ -49,7 +49,7 @@ farming.Introduction.prototype.intro0 = function(){
 	this.text.setFontWeight('bold').setText("2542 AD \n \n"
 					+ "Your uncle was one of the first people \n"
 					+ "to buy land in an unknown planet and decided to \n"
-					+ "turn it into a farm to facilitate the earth’s \n"
+					+ "turn it into a farm to facilitate the earthï¿½s \n"
 					+ "growing needs of foods. As years went by the farm \n "
 					+ "became very profitable and produced the most \n"
 					+ "sought out products. \n\n"
