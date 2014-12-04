@@ -73,7 +73,7 @@ farming.Game = function() {
             if(this.tickables[i]) this.tickables[i].tick();
         }
     }, this, 1000*0.5);
-    
+
     // Launches help if still applicable
     this.introduction.intro();
 }
