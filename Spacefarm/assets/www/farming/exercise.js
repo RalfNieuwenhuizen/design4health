@@ -116,7 +116,7 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
   
     //if (acceleration.y > 10) {
     //if(last>5){
-    if(Math.abs(last-first)> 10)
+    if(Math.abs(last-first)> 3)
     {
     rep= rep+1;
     console.log('repetitions for wheat are:' +rep);
