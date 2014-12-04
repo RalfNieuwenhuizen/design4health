@@ -1,5 +1,5 @@
 /**
- * Created by david on 11/23/14.
+ * Created on 11/23/14.
  */
 goog.provide('farming.Game');
 
@@ -181,6 +181,15 @@ farming.Game.prototype.giveUpChallenge = function(){
 }
 // complete the current challenge, remove all the items and close all challenge screens
 farming.Game.prototype.completeChallenge = function(){
+    var challenge = this.player.currentChallenge;
+    for(var i in challenge.requirements) {
+        var requirement = challenge.requirements[i];
+        if(requirement.type === 'item') {
+            this.removeItem(requirement.key, requirement.number);
+        } else if(requirement.type === 'exercise') {
+            // points already granted
+        }
+    }
     this.player.currentChallenge = null;
     if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
     if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();

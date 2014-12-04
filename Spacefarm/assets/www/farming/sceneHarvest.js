@@ -1,5 +1,5 @@
 /**
- * Created by david on 11/23/14.
+ * Created on 11/23/14.
  */
 goog.provide('farming.SceneHarvest');
 
