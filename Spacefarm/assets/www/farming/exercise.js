@@ -182,6 +182,7 @@ var EXERCISES = {
         '\n\n Finally, try to keep this stance while standing on your toes.' +
         '\n\n Repeat on the other side (switch the phone hand!).',
         example_frames: 7, // number of image there are in 'images/exercises/{key}/[0-9].png'
+        repetitions: 10,
         type: 'arms', //full_body, arms, legs, back, abs
         points: 1 //points awarded to 'type' region
     },
@@ -200,11 +201,11 @@ var EXERCISES = {
     rocket_jumps: {
         title : '\"Rocket Jumps\"',
         description : 'Keep your phone in two hands.' +
-        '\n Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.' +
-        '\n To initiate the move, squat down halfway and jump back up as high as possible.' +
-        '\n Fully extend your entire body, reaching overhead as far as possible.' +
-        '\n As you land, absorb your impact through the legs.' +
-        '\n Good for general fitness and legs specifically.',
+        '\n\n Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.' +
+        '\n\n To initiate the move, squat down halfway and jump back up as high as possible.' +
+        '\n\n Fully extend your entire body, reaching overhead as far as possible.' +
+        '\n\n As you land, absorb your impact through the legs.' +
+        '\n\n Good for general fitness and legs specifically.',
         example_frames: 10,
         repetitions: 10, // 10 times
         type: 'legs',

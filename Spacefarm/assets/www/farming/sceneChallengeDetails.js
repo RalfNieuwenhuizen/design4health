@@ -35,8 +35,8 @@ farming.SceneChallengeDetails = function (game) {
     this.giveUpButton = new farming.Button('Give up').setColor('#999999')
         .setPosition(center.x + 5 - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
         .setSize(60,30).setHidden(true);
-    this.selectButton = new farming.Button('Select').setColor('#22CC22')
-        .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
+    this.selectButton = new farming.Button('Start').setColor('#22CC22')
+        .setPosition(center.x, center.y * 0.68)
         .setSize(50,30).setHidden(true);
     this.completeButton = new farming.Button('Complete!').setColor('#22CC22')
         .setPosition(center.x, center.y + game.getFullSize(0.31).height)
@@ -91,7 +91,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     if(opt_active) {
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
-    } else {
+    } else if (this.sufficientItems()) {
         this.selectButton.setAction(this.selectChallenge, {
             'challenge': challenge,
             'scene': this
@@ -103,61 +103,52 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     var exercises = 0;
     for(var i in challenge.requirements) {
         var requirement = challenge.requirements[i];
-        if(requirement.type === 'item') {
-            this.drawItem(requirement, new goog.math.Coordinate(items * 40 + center.x*0.4, center.y * 0.65), opt_active)
+        if(requirement.type === 'item' && !opt_active) {
+            this.drawItem(requirement, new goog.math.Coordinate(items * 60 + center.x*0.53, center.y * 0.73), opt_active)
             items++;
         } else if(requirement.type === 'exercise') {
-            this.drawExercise(requirement, new goog.math.Coordinate(exercises * 300 + center.x*0.7, center.y * 1.1), opt_active)
+            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.7, center.y * (1 - (opt_active * 0.27)) + exercises * 50), opt_active)
             exercises++;
         }
     }
-    if(opt_active && !this.sufficientItems()) {
-        var insufficientItemsWarning = new lime.Label().setText('First gather all items').setFontColor('#CC2222').setPosition(center.x, center.y * 0.63);
-        this.drawLayer.appendChild(insufficientItemsWarning);
+    if(items){
+        var itemsLabel = new lime.Label('Items required').setPosition(center.x * 0.45, center.y * 0.68)
+            .setFontWeight(800).setFontSize(13).setAlign('left').setSize(100,10);
+        this.drawLayer.appendChild(itemsLabel);
+    }
+    if(exercises) {
+        var exercisesLabel = new lime.Label('Exercises').setPosition(center.x * 0.45, center.y * (opt_active ? 0.63 :0.92))
+            .setFontWeight(800).setFontSize(13).setAlign('left').setSize(100,10);
+        this.drawLayer.appendChild(exercisesLabel);
     }
 };
 
 farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt_active) {
     var itemIcon = new lime.Sprite().setFill('images/items/'+item.key+'.png').setSize(30, 30).setPosition(position);
-    var itemLabel = new lime.Label().setText(item.number).setSize(10, 10).setPosition(position.x + 13, position.y - 13);
+    var itemLabel = new lime.Label().setText(item.number).setSize(10, 10).setPosition(position.x + 18, position.y - 15);
 
-    // there is an active challenge
-    if(opt_active) {
+    if(!opt_active) {
         var currentNumber = this.game.getInventory(item.key);
         var color = currentNumber >= item.number ? '#22CC22' : '#CC2222';
         itemLabel.setText(currentNumber + '/' + item.number).setFontColor(color);
     }
+
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
 farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, position, opt_active) {
     var props = EXERCISES[exercise.key];
-    var exerciseName = new lime.Label().setText(exercise.name).setSize(190, 10).setPosition(position.x, position.y - 90);
-    var exerciseDescription = new lime.Label()
-        .setText(props.description + '\n\n' + props.points + ' ' + props.type + ' points.')
-        .setFontSize(10).setSize(190, 150).setPosition(position.x + 10, position.y).setMultiline(true).setAlign('left');
-    var exerciseIcon = new lime.Sprite().setSize(150, 200).setPosition(position.x - 125, position.y);
-    var animation = farming.Exercise.prototype.getAnimation(exercise.key, 0.3);
-    exerciseIcon.runAction(animation);
+    var exerciseName = new lime.Label().setText('- ' + exercise.name + ' - ' + props.points + ' ' + props.type + (props.points > 1 ? ' points' : ' point'))
+        .setAlign('left').setSize(300, 10).setPosition(position.x + 80, position.y);
     var doButton = new farming.Button('Do!').setColor('#999999')
-        .setPosition(position.x + 70, position.y + 90)
-        .setSize(50,30).setHidden(true);
-
-    var numberIcon = new lime.Sprite().setSize(10, 10).setPosition(position.x - 130, position.y * 1.35);
-    var numberLabel = new lime.Label().setSize(10, 10).setPosition(position.x - 110, position.y * 1.35);
-    if(props.repetitions) {
-        numberIcon.setFill('images/repetitions.png');
-        numberLabel.setText(props.repetitions);
-    } else if (props.duration) {
-        numberIcon.setFill('images/duration.png');
-        numberLabel.setText(props.duration + '\"');
-    }
+        .setPosition(position.x - 115, position.y)
+        .setSize(50,25).setHidden(true);
 
     // there is an active challenge
     if(opt_active) {
         if (!this.game.player.currentChallenge.exercisesDone)
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
-            doButton.setColor('#22CC22').setText('Done').setHidden(false);
+            doButton.setColor('#AAAAAA').setText('Done').setHidden(false);
         } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
             doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
@@ -172,8 +163,7 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
         }
     }
 
-    this.drawLayer.appendChild(exerciseIcon).appendChild(exerciseName).appendChild(exerciseDescription)
-        .appendChild(numberIcon).appendChild(numberLabel).appendChild(doButton);
+    this.drawLayer.appendChild(exerciseName).appendChild(doButton);
 
 }
 
@@ -211,10 +201,7 @@ farming.SceneChallengeDetails.prototype.exerciseDoable = function (exercise) {
 farming.SceneChallengeDetails.prototype.challengeDone = function () {
     for(var i in this.challenge.requirements) {
         var requirement = this.challenge.requirements[i];
-        if(requirement.type === 'item') {
-            if(!this.game.hasItem(requirement.key, requirement.number))
-                return false;
-        } else if(requirement.type === 'exercise') {
+        if(requirement.type === 'exercise') {
             if(!this.exerciseDone(requirement.key))
                 return false;
         }
