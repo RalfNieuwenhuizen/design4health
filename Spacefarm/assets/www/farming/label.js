@@ -11,7 +11,10 @@ goog.require('lime.Label');
  */
 farming.Label = function(text) {
     goog.base(this);
-    this.setText(text);
+    if(text)
+        this.setText(text);
+    else
+        this.setText('');
 }
 
 goog.inherits(farming.Label,lime.Label);
