@@ -1,7 +1,7 @@
 /**
  * 	TODO: Show number of pages and current page
- *  TODO: Enable clone button
- *  TODO: Enable instruction screens for new players
+ *  
+ *  
  */
 goog.provide('farming.SceneClone');
 

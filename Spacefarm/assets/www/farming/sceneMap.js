@@ -1,5 +1,5 @@
 /**
- * Created by david on 11/23/14.
+ * Created on 11/23/14.
  */
 goog.provide('farming.SceneMap');
 goog.require('farming.Scene');
@@ -7,7 +7,7 @@ goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Button');
 goog.require('farming.Label');
-goog.require('farming.SceneCloneOnMap');
+goog.require('farming.Introduction');
 goog.require('lime.animation.FadeTo');
 
 /**
@@ -208,6 +208,12 @@ farming.SceneMap.prototype.drawControls = function () {
         .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
         .setHidden(true).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeIndicator);
+
+    // Temporary introduction button
+    this.introButton = new farming.Button('Intro').setColor('#999999')
+    		.setPosition(350, this.game.screen.height - this.settings.controls.height / 2)
+    		.setSize(100,30).setAction(this.showIntro, this);
+    // this.controlsLayer.appendChild(this.introButton);
 }
 
 farming.SceneMap.prototype.showFarm = function(scene) {
@@ -218,6 +224,9 @@ farming.SceneMap.prototype.showClone = function(scene) {
 }
 farming.SceneMap.prototype.showChallenge = function(scene) {
     scene.game.showChallenge();
+}
+farming.SceneMap.prototype.showIntro = function(scene) {
+	scene.game.introduction.intro();
 }
 
 farming.SceneMap.prototype.updateControls = function(){

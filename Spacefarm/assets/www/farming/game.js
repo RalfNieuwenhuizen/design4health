@@ -1,5 +1,5 @@
 /**
- * Created by david on 11/23/14.
+ * Created on 11/23/14.
  */
 goog.provide('farming.Game');
 
@@ -11,11 +11,10 @@ goog.require('farming.SceneMap');
 goog.require('farming.SceneFarm');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
-goog.require('farming.SceneCloneOnMap');
 goog.require('farming.SceneCropDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
-
+goog.require('farming.Introduction');
 goog.require('farming.Crop');
 goog.require('farming.Challenge');
 
@@ -44,10 +43,11 @@ farming.Game = function() {
             space_wheat: 10,
             space_apple: 10,
         },
-        currentChallenge : null
+        currentChallenge : null,
+        introPhase: 0 // Used to check for introductional screens
     }
 
-    // TODO Not yet used
+    // Current crop defines the crop the user is building, initiated in clone screen
     this.currentCrop = null;
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
@@ -60,10 +60,10 @@ farming.Game = function() {
     this.sceneExercise = new farming.SceneExercise(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
-    this.sceneCloneOnMap = new farming.SceneCloneOnMap(this);
     this.sceneCropDetails = new farming.SceneCropDetails(this);
     this.sceneChallenge = new farming.SceneChallenge(this);
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
+    this.introduction = new farming.Introduction(this);
 
     //Set the starting scene
     this.director.replaceScene(this.sceneMap);
@@ -73,6 +73,9 @@ farming.Game = function() {
             if(this.tickables[i]) this.tickables[i].tick();
         }
     }, this, 1000*0.5);
+
+    // Launches help if still applicable
+    this.introduction.intro();
 }
 
 farming.Game.prototype.tickables = [];
@@ -113,6 +116,7 @@ farming.Game.prototype.hideExercise = function(){
 }
 // -- end exercise --
 
+// -- clone --
 farming.Game.prototype.showClone = function(){
     this.director.pushScene(this.sceneClone);
 }
@@ -122,15 +126,19 @@ farming.Game.prototype.hideClone = function(){
     this.director.popScene();
 }
 
-// Show details of the crop
+// Start cloning a crop
+farming.Game.prototype.startCloning = function(crop){
+	this.hideClone();
+	this.sceneCropDetails.showDetails(crop);
+}
+// -- end clone --
+
+// -- cropdetails --
 farming.Game.prototype.showCropDetails = function(crop){
     this.sceneCropDetails.showDetails(crop);
     this.director.pushScene(this.sceneCropDetails);
 }
-farming.Game.prototype.backCropDetails = function(){
-    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
-    this.director.popScene();
-}
+
 farming.Game.prototype.closeCropDetails = function(){
     if(this.director.getCurrentScene() != this.sceneCropDetails) return;
     this.director.popScene();
@@ -138,21 +146,11 @@ farming.Game.prototype.closeCropDetails = function(){
     this.director.popScene();
 }
 
-// Show cloning screen
-farming.Game.prototype.startCloning = function(crop){
-    this.hideClone();
-    //this.sceneCloneOnMap.startCloning(crop);
-    this.sceneCropDetails.showDetails(crop);
-    //this.director.pushScene(this.sceneCloneOnMap);
-    //this.sceneCropDetails.showDetails(crop);
-    //this.director.pushScene(this.sceneCropDetails);
-}
-
-farming.Game.prototype.closeCloning = function(){
-    if(this.director.getCurrentScene() != this.sceneCloneOnMap) return;
+farming.Game.prototype.backCropDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneCropDetails) return;
     this.director.popScene();
 }
-
+// -- end cropdetails --
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
