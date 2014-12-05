@@ -14,6 +14,7 @@ goog.require('farming.SceneClone');
 goog.require('farming.SceneCropDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
+goog.require('farming.Introduction');
 goog.require('farming.Crop');
 goog.require('farming.Challenge');
 
@@ -62,6 +63,7 @@ farming.Game = function() {
     this.sceneCropDetails = new farming.SceneCropDetails(this);
     this.sceneChallenge = new farming.SceneChallenge(this);
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
+    this.introduction = new farming.Introduction(this);
 
     //Set the starting scene
     this.director.replaceScene(this.sceneMap);
@@ -71,6 +73,9 @@ farming.Game = function() {
             if(this.tickables[i]) this.tickables[i].tick();
         }
     }, this, 1000*0.5);
+    
+    // Launches help if still applicable
+    this.introduction.intro();
 }
 
 farming.Game.prototype.tickables = [];

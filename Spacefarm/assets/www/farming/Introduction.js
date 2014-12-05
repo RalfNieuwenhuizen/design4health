@@ -21,29 +21,55 @@ farming.Introduction = function (game) {
     this.game = game;
     this.introLayer = new lime.Layer();
     this.appendChild(this.introLayer);
+    this.introPhase = 0;
     
-    var center = game.getCenterPosition();
-    this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
+    game.sceneMap.appendChild(this.introLayer);
+    this.center = game.getCenterPosition();
+    this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.85)).setPosition(this.center.x, this.center.y-10);
     
-    
-    // WORK FROM HERE, REPLACE WINDOWLAYER FOR INTROLAYER
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
-    this.title.setText('Introduction');
+    this.text = new lime.Label().setFontSize(18).setPosition(this.center.x, this.center.y-15).setMultiline(true);
 
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
-    
-    this.windowLayer.appendChild(this.w)
-    	.appendChild(this.title).appendChild(this.closeButton);
-    
-    this.closeButton.setAction(this.closeScreen, this);
-    
+    this.button = new farming.Button('').setColor('#999999').setAction(this.buttonAction, this);
+        //.setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height).setSize(30,30).setText('Start');;
 }
-goog.inherits(farming.SceneClone, farming.Scene);
 
-farming.SceneClone.prototype.game = null;
+goog.inherits(farming.Introduction, farming.Scene);
 
-farming.Introduction.prototype.closeScreen = function(scene) {
-	scene.game.hideIntro();
+farming.Introduction.prototype.game = null;
+
+// The intro function has been called from sceneMap
+farming.Introduction.prototype.intro = function(){
+	// The intro# function is used according to the current phase
+	this['intro'+this.introPhase]();
+	console.log('introphase: ' + this.introPhase);
+}
+
+// First introduction screen: general story
+farming.Introduction.prototype.intro0 = function(){
+	this.text.setFontWeight('bold').setText("2542 AD \n \n"
+					+ "Your uncle was one of the first people \n"
+					+ "to buy land in an unknown planet and decided to \n"
+					+ "turn it into a farm to facilitate the earth’s \n"
+					+ "growing needs of foods. As years went by the farm \n "
+					+ "became very profitable and produced the most \n"
+					+ "sought out products. \n\n"
+					+ "You were very surprised when you received a mail \n"
+					+ "saying that your uncle had left you the farm \n"
+					+ "years ago but you only heard of it now. \n \n "
+					+ "After so many years, the fields on planet Yeo are \n"
+					+ "unused and empty. Will you be able to salvage the \n"
+					+ "farm? Spend your money wisely to grow the company \n"
+					+ "and unlock new possibilities by doing the exercises.");
+	
+	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.365).height)
+    .setSize(60,30).setText('Start');
+	this.introLayer.setOpacity(0.85);
+	this.introLayer.appendChild(this.w)
+	.appendChild(this.text).appendChild(this.button);
+}
+
+// The button is used: introPhase goes one step further and removes the current screen
+farming.Introduction.prototype.buttonAction = function(scene) {
+	scene.game.introduction.introLayer.removeAllChildren();
+	scene.game.introduction.introPhase++;
 }
