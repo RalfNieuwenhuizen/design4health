@@ -6,6 +6,7 @@
 goog.provide('farming.SceneClone');
 
 goog.require('lime.Sprite');
+goog.require('farming.Sprite');
 goog.require('farming.Exercise');
 goog.require('farming.Button');
 goog.require('lime.Layer');
@@ -129,7 +130,8 @@ farming.SceneClone.prototype.drawCrop = function(scene) {
 	
 		cropProps = CROPS[scene.game.player.currentCrops[i]]
 		position = new goog.math.Coordinate( ((i%6)%3)*150 - 150, Math.floor((i%6)/3)*100 - 50);
-		var cropIcon = new lime.Sprite().setFill('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
+		var cropIcon = new farming.Sprite('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
+        cropIcon.setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
 		
 		// Create button to clone the icon
 		scene.cloneButton = new farming.Button('Clone').setColor('#22CC22').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);

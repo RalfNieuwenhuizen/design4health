@@ -40,7 +40,10 @@ farming.Game = function() {
             back: 0,
             abs: 0,
         },
-        inventory : {},
+        inventory : {
+            space_wheat: 10,
+            space_apple: 10,
+        },
         currentChallenge : null
     }
 
@@ -165,7 +168,9 @@ farming.Game.prototype.selectChallenge = function(challenge){
     for(var i in challenge.requirements) {
         var requirement = challenge.requirements[i];
         if(requirement.type === 'item') {
-            this.removeItem(requirement.key, requirement.number);
+            lime.scheduleManager.callAfter(function() {
+                this.game.removeItem(this.requirement.key, this.requirement.number);
+            }, {game: this, requirement: requirement}, i * 1000);
         }
     }
     this.player.currentChallenge = challenge;
@@ -240,11 +245,13 @@ farming.Game.prototype.addItem = function(type, amount) {
     } else {
         this.player.inventory[type] += amount;
     }
+    this.sceneMap.itemAnimation(type, amount);
     return this.player.inventory[type];
 }
 farming.Game.prototype.removeItem = function(type, amount) {
     if(!this.hasItem(type, amount)) return false;
     this.player.inventory[type] -= amount;
+    this.sceneMap.itemAnimation(type, -amount);
     return this.player.inventory[type];
 }
 farming.Game.prototype.getInventory = function(type) {
@@ -287,4 +294,3 @@ farming.Game.prototype.getFullSize = function(percent) {
 farming.Game.prototype.getCenterPosition = function() {
     return new goog.math.Coordinate(this.screen.width / 2, this.screen.height / 2)
 }
-

@@ -53,8 +53,6 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
     var obj = Object.keys(inventory);
     for (var item in obj) {
         if (obj.hasOwnProperty(item)) {
-            // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
-            console.log("item: " + obj[item] + " value: " + inventory[obj[item]]);
             if (inventory[obj[item]]) {
                 this.drawItem(obj[item], inventory[obj[item]], new goog.math.Coordinate(items * 60 + center.x * 0.4, center.y * 0.65));
                 items++;

@@ -7,6 +7,7 @@ goog.require('lime.Sprite');
 goog.require('farming.Challenge');
 goog.require('farming.Exercise');
 goog.require('farming.Button');
+goog.require('farming.Sprite');
 goog.require('lime.Layer');
 goog.require('farming.Scene');
 
@@ -45,9 +46,8 @@ goog.inherits(farming.SceneChallenge, farming.Scene);
 farming.SceneChallenge.prototype.game = null;
 
 farming.SceneChallenge.prototype.drawChallenge = function(challengeProps, position) {
-    //TODO create challenge icons
-    //var challengeIcon = new lime.Sprite().setFill('images/'+challengeProps.key+'.png').setSize(100, 60).setPosition(position);
-    var challengeIcon = new lime.Sprite().setFill('images/wheat_ripe.png').setSize(100, 60).setPosition(position);
+    var challengeIcon = new farming.Sprite('images/challenges/'+challengeProps.key+'.png')
+        .setSize(100, 60).setPosition(position).setAction(this.showChallengeDetails, {'challenge': challengeProps,'scene': this});
     var challengeTitle = new lime.Label().setPosition(position.x, position.y + 33).setText(challengeProps.name);
 
     // Create button to get details about the icon

@@ -1,5 +1,6 @@
 goog.provide('farming.Tile');
-goog.require('lime.Sprite');
+goog.require('farming.Sprite');
+goog.require('lime.Polygon');
 
 /**
  * Tile elements
@@ -13,13 +14,9 @@ farming.Tile = function (game, settings) {
     this.enable();
 
     var tile = this;
-
-    //growing plants
-    dt = 1000;
-
 }
 
-goog.inherits(farming.Tile, lime.Sprite);
+goog.inherits(farming.Tile, farming.Sprite);
 
 farming.Tile.prototype.crop = null;
 farming.Tile.prototype.disabled = false;

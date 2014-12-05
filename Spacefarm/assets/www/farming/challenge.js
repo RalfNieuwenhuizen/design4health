@@ -44,12 +44,12 @@ var CHALLENGES = {
         requirements: [
             {
                 type : 'item', //item, exercise
-                number: 10, //number of items
+                number: 3, //number of items
                 key : 'space_apple' //require 'images/items/{key}.png'   TODO reference to items.js/ITEMS with costs etc.
             },
             {
                 type : 'item',
-                number: 8,
+                number: 3,
                 key : 'space_wheat'
             },
             {
