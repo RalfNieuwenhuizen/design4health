@@ -26,21 +26,21 @@ farming.SceneClone = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
+    this.w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Clone');
 
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
+    this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.close_button)
+        .setSize(SETTINGS.size.close_button);
     
-    this.nextButton = new farming.Button('Next').setColor('#999999')
+    this.nextButton = new farming.Button('Next').setColor(SETTINGS.color.button)
         .setPosition(center.x + game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
-    		.setSize(50,30);
+    		.setSize(SETTINGS.size.button);
     
-    this.prevButton = new farming.Button('Prev').setColor('#999999')
-        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
-    		.setSize(50,30);
+    this.prevButton = new farming.Button('Prev').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.left_button)
+    		.setSize(SETTINGS.size.button);
     
     this.w.appendChild(this.nextButton);
     
@@ -129,20 +129,28 @@ farming.SceneClone.prototype.drawCrop = function(scene) {
 	for(i=6*(scene.page-1); i < Math.min(nCrops,scene.page*6); i++) {
 	
 		cropProps = CROPS[scene.game.player.currentCrops[i]]
-		position = new goog.math.Coordinate( ((i%6)%3)*150 - 150, Math.floor((i%6)/3)*100 - 50);
-		var cropIcon = new farming.Sprite('images/'+cropProps.key+'_ripe.png').setSize(100, 60).setPosition(position);
-        cropIcon.setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
-		
+		position = new goog.math.Coordinate( ((i%6)%3)*200 - 200, Math.floor((i%6)/3)*150 - 100);
+		var cropIcon = new farming.Sprite('images/'+cropProps.key+'_ripe.png').setSize(150, 90).setPosition(position)
+            .setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
+
+        var cropLabel = new farming.Label(cropProps.name).setPosition(position.x, position.y + 52)
+            .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight)
+            .setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
+
 		// Create button to clone the icon
-		scene.cloneButton = new farming.Button('Clone').setColor('#22CC22').setPosition(new goog.math.Coordinate(position.x-32,position.y+45)).setSize(60,20);
-		scene.cloneButton.setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
+		var cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button_primary)
+            .setPosition(new goog.math.Coordinate(position.x-(SETTINGS.size.button_small.width/2),position.y+80))
+            .setSize(SETTINGS.size.button_small)
+		    .setAction(scene.startClone, {'cropProps': cropProps,'game': scene.game} );
 		
 		// Create button to get details about the icon
-		scene.cloneDetails = new farming.Button('Details').setColor('#999999').setPosition(new goog.math.Coordinate(position.x+32,position.y+45)).setSize(60,20);
-		scene.cloneDetails.setAction(scene.showCropDetails, {'cropProps' : cropProps, 'game' : scene.game});
+		var cloneDetails = new farming.Button('Details').setColor(SETTINGS.color.button)
+            .setPosition(new goog.math.Coordinate(position.x+(SETTINGS.size.button_small.width/2),position.y+80))
+            .setSize(SETTINGS.size.button_small)
+            .setAction(scene.showCropDetails, {'cropProps' : cropProps, 'game' : scene.game});
 		
 		// Add crop with button to the w-layer
-		scene.w.appendChild(cropIcon).appendChild(scene.cloneButton).appendChild(scene.cloneDetails);
+		scene.w.appendChild(cropIcon).appendChild(cropLabel).appendChild(cloneButton).appendChild(cloneDetails);
 	}
 }
 

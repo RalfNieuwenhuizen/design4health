@@ -20,13 +20,13 @@ farming.SceneFarm = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill('#f0f0f0').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
+    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Inventory');
 
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
+    this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.close_button)
+        .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeFarm, this);
 
     this.windowLayer
@@ -54,7 +54,7 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
     for (var item in obj) {
         if (obj.hasOwnProperty(item)) {
             if (inventory[obj[item]]) {
-                this.drawItem(obj[item], inventory[obj[item]], new goog.math.Coordinate(items * 60 + center.x * 0.4, center.y * 0.65));
+                this.drawItem(obj[item], inventory[obj[item]], new goog.math.Coordinate(items * 100 + center.x * 0.3, center.y * 0.65));
                 items++;
             }
         }
@@ -66,8 +66,8 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
 }
 farming.SceneFarm.prototype.drawItem = function (item, number, position) {
     var prop = ITEMS[item];
-    var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(50, 50).setPosition(position);
-    var itemLabel = new lime.Label().setText(number).setSize(10, 10).setPosition(position.x + 20, position.y - 20);
+    var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(60, 60).setPosition(position);
+    var itemLabel = new lime.Label().setText(number).setSize(10, 10).setPosition(position.x + 27, position.y - 27);
     //TODO sell button and stuff
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }

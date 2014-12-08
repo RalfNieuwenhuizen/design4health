@@ -175,12 +175,12 @@ farming.Exercise.prototype.stopWatch = function () {
 var EXERCISES = {
     apple_picking: {
         title : '\"Apple Picking\"',
-        description : 'Start from standing up straight.' +
-        '\n\n Raise one arm (with the phone in hand) as high as you can, while you raise your opposite ' +
-        'knee until you have a 90 degrees angle both between legs and core and between upper ' +
-        'and lower leg.' +
-        '\n\n Finally, try to keep this stance while standing on your toes.' +
-        '\n\n Repeat on the other side (switch the phone hand!).',
+        description : '1. Keep you phone in one hand, like in the picture' +
+        '\n\n 2. Start from standing up straight.' +
+        '\n\n 3. Raise one arm (with the phone in hand) and the opposite ' +
+        'knee until to a 90 degrees angle.' +
+        '\n\n 4. Finally, try to stretch even more by standing on your toes.' +
+        '\n\n 5. Repeat on the other side (switch the phone!).',
         example_frames: 7, // number of image there are in 'images/exercises/{key}/[0-9].png'
         repetitions: 10,
         type: 'arms', //full_body, arms, legs, back, abs
@@ -188,24 +188,24 @@ var EXERCISES = {
     },
     arm_circles: {
         title : '\"Arm circles\"',
-        description : 'Stand up and extend your arms straight out by the sides. The arms should be parallel to ' +
-        'the floor and perpendicular to your torso.' +
-        '\n\n Slowly start to make circles of about 1 foot in diameter with each outstretched arm ' +
-        'Breathe normally as you perform the movement.' +
-        '\n\n Continue the circular motion of the outstretched arms for about ten seconds.' +
-        '\n\n Then reverse the movement, going the opposite direction.',
+        description : '1. Keep your phone in one hand, like in the picture.' +
+        '\n\n 2. Stand up and extend your arms straight ahead.' +
+        '\n\n 3. Now move your arms as far to the left as possible.' +
+        '\n\n 4. When you rebounce, push one more time to the left.' +
+        '\n\n 5. Repeat the exercise, moving your arms to the right.',
         example_frames: 20,
+        repetitions: 10,
         type: 'back',
         points: 1
     },
     rocket_jumps: {
         title : '\"Rocket Jumps\"',
-        description : 'Keep your phone in two hands.' +
-        '\n\n Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.' +
-        '\n\n To initiate the move, squat down halfway and jump back up as high as possible.' +
-        '\n\n Fully extend your entire body, reaching overhead as far as possible.' +
-        '\n\n As you land, absorb your impact through the legs.' +
-        '\n\n Good for general fitness and legs specifically.',
+        description : '1. Keep your phone in two hands, like in the picture.' +
+        '\n\n 2. Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.' +
+        '\n\n 3. To initiate the move, squat down halfway and jump back up as high as possible.' +
+        '\n\n 4. Fully extend your entire body, reaching overhead as far as possible.' +
+        '\n\n 5. As you land, absorb your impact through the legs.' +
+        '\n\n 6. Good for general fitness and legs specifically.',
         example_frames: 10,
         repetitions: 10, // 10 times
         type: 'legs',
