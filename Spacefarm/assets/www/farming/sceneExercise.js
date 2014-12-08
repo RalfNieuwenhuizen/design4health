@@ -32,6 +32,7 @@ farming.SceneExercise = function (game) {
         .setSize(30,30);
     this.startButton = new farming.Button('Start').setColor('#00ff00').setPosition(center.x, center.y * 1.55).setSize(100,40);
     this.finishButton = new farming.Button('Fake finish').setColor('#999999').setPosition(center.x*1.55, center.y * 1.55).setSize(100,40);
+    this.waitMessage = new lime.Label('Do the exercise until you \n feel the phone buzz').setFontColor('#f00').setFontWeight(600).setFontSize(15).setMultiline(true).setPosition(center.x, center.y * 1.55).setHidden(true);
     this.windowLayer
         .appendChild(w)
         .appendChild(this.title)
@@ -42,6 +43,7 @@ farming.SceneExercise = function (game) {
         .appendChild(this.numberLabel)
         .appendChild(this.startButton)
         .appendChild(this.closeButton)
+        .appendChild(this.waitMessage)
         .appendChild(this.finishButton);
 
     this.startButton.setAction(this.startExercise, this);
@@ -89,6 +91,8 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     //TODO remove the fake finish button
     scene.finishButton.setHidden(false);
 
+    scene.startButton.setHidden(true);
+    scene.waitMessage.setHidden(false);
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }
 
@@ -112,6 +116,9 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
 
     scene.exercise = null;
     scene.game.hideExercise();
+
+    scene.startButton.setHidden(false);
+    scene.waitMessage.setHidden(true);
     if (scene.game.director.getCurrentScene() == scene.game.sceneChallengeDetails && scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
 }
