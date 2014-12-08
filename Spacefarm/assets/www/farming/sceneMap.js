@@ -63,7 +63,7 @@ farming.SceneMap.prototype.drawLand = function () {
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
 
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -this.settings.tiles.height / 2)
-        .setSize(this.landLayer.getSize()).setFill('#443b35');
+        .setSize(this.landLayer.getSize()).setFill('#B88A00');
     this.landLayer.appendChild(bg);
     //create land elements
     /*for (var x = 0; x < this.settings.mapSize; x++) {
