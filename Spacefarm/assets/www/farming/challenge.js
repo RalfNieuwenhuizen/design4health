@@ -45,7 +45,7 @@ var CHALLENGES = {
             {
                 type : 'item', //item, exercise
                 number: 3, //number of items
-                key : 'space_apple' //require 'images/items/{key}.png'   TODO reference to items.js/ITEMS with costs etc.
+                key : 'space_apple' //require 'images/items/{key}.png'
             },
             {
                 type : 'item',
@@ -57,11 +57,22 @@ var CHALLENGES = {
                 name : '\"Crush it all together\"',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             },
-            {
+            /*{
                 type : 'exercise',
                 name : '\"Wait for it to bake\"',
                 key : 'wait_pie' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
-            }
+            }*/
+        ],
+        rewards: [
+            /*{
+                type : 'item', //item, exercise
+                number: 1, //number of items
+                key : 'space_apple' //require 'images/items/{key}.png'
+            },*/
+            {
+                type : 'coins',
+                number: 50,
+            },
         ]
     }
 };

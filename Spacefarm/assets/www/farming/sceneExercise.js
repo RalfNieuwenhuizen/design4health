@@ -20,19 +20,20 @@ farming.SceneExercise = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill('#f0f0f0').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
+    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label().setFontSize(12).setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4)).setAlign('left').setMultiline(true);
-    this.animation = new lime.Sprite().setSize(game.getFullSize(0.7).height*0.75, game.getFullSize(0.7).height).setPosition(center.x*1.4, center.y);
-    this.pointsLabel = new lime.Label().setPosition(center.x * 0.5, center.y * 1.55).setFontWeight(800).setFontSize(14).setHidden(true);
-    this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(center.x + 140, center.y * 1.5);
-    this.numberLabel = new lime.Label().setSize(30, 30).setPosition(center.x + 190, center.y * 1.5).setFontSize(36);
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
-    this.startButton = new farming.Button('Start').setColor('#00ff00').setPosition(center.x, center.y * 1.55).setSize(100,40);
-    this.finishButton = new farming.Button('Fake finish').setColor('#999999').setPosition(center.x*1.55, center.y * 1.55).setSize(100,40);
-    this.waitMessage = new lime.Label('Do the exercise until you \n feel the phone buzz').setFontColor('#f00').setFontWeight(600).setFontSize(15).setMultiline(true).setPosition(center.x, center.y * 1.55).setHidden(true);
+    this.animation = new lime.Sprite().setSize(SETTINGS.size.background_layer.height*0.75, SETTINGS.size.background_layer.height).setPosition(center.x*1.5, center.y);
+    this.pointsLabel = new lime.Label().setPosition(SETTINGS.position.left_button).setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setHidden(true);
+    this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(center.x + 180, center.y * 1.5);
+    this.numberLabel = new lime.Label().setSize(30, 30).setPosition(center.x + 230, center.y * 1.5).setFontSize(36);
+    this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.close_button)
+        .setSize(SETTINGS.size.close_button);
+    this.startButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary).setPosition(SETTINGS.position.center_button).setSize(SETTINGS.size.button);
+    this.finishButton = new farming.Button('Fake finish').setColor(SETTINGS.color.button).setPosition(SETTINGS.position.right_button).setSize(SETTINGS.size.button);
+    this.waitMessage = new farming.Label('Do the exercise until you \n feel the phone buzz').setPosition(SETTINGS.position.center_button)
+        .setFontColor(SETTINGS.color.red).setFontWeight(600).setFontSize(15).setMultiline(true).setHidden(true);
     this.windowLayer
         .appendChild(w)
         .appendChild(this.title)

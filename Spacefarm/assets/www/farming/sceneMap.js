@@ -28,14 +28,6 @@ goog.inherits(farming.SceneMap, farming.Scene);
 farming.SceneMap.prototype.game = null;
 
 farming.SceneMap.prototype.settings = {
-    mapSize: 20,
-    tiles: {
-        width: 200,
-        height: 116
-    },
-    controls: {
-        height: 30
-    },
     drag: {
         maxClickDistance: 15
     }
@@ -44,14 +36,14 @@ farming.SceneMap.prototype.calculate = function (key) {
     var scene = this;
     return {
         mapWidth: function () {
-            return Math.max(scene.settings.mapSize, scene.settings.mapSize) * scene.settings.tiles.width;
+            return Math.max(SETTINGS.mapSize, SETTINGS.mapSize) * SETTINGS.size.tiles.width;
         },
         mapHeight: function () {
-            return scene.settings.mapSize * scene.settings.tiles.height;
+            return SETTINGS.mapSize * SETTINGS.size.tiles.height;
         },
         middleTile: function () {
-            var x = Math.round(scene.settings.mapSize / 2);
-            var y = Math.round(scene.settings.mapSize / 2);
+            var x = Math.round(SETTINGS.mapSize / 2);
+            var y = Math.round(SETTINGS.mapSize / 2);
             return new goog.math.Coordinate(x, y);
         }
     }[key]();
@@ -62,8 +54,8 @@ farming.SceneMap.prototype.drawLand = function () {
         .setPosition(this.game.screen.width / 2, this.game.screen.height / 2 - this.calculate('mapHeight') / 2)
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
 
-    var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -this.settings.tiles.height / 2)
-        .setSize(this.landLayer.getSize()).setFill('#B88A00');
+    var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
+        .setSize(this.landLayer.getSize()).setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
     //create land elements
     /*for (var x = 0; x < this.settings.mapSize; x++) {
@@ -81,9 +73,9 @@ farming.SceneMap.prototype.drawLand = function () {
     var max = 0;
     var z = 0;
     while (true) { // put the tiles on the map in zig-zag (from top to bottom), important for 3D overlay of the items
-        if (max < this.settings.mapSize) {
+        if (max < SETTINGS.mapSize) {
             max++;
-        } else if (min < this.settings.mapSize) {
+        } else if (min < SETTINGS.mapSize) {
             min++;
         } else {
             break;
@@ -91,7 +83,7 @@ farming.SceneMap.prototype.drawLand = function () {
         for (var x = min; x < max; x++) {
             var y = max - x + min - 1;
             if (typeof this.tiles[x] == 'undefined') this.tiles[x] = [];
-            this.tiles[x][y] = new farming.Tile(this.game, this.settings).setPosition(this.twoDToScreen(x, y));
+            this.tiles[x][y] = new farming.Tile(this.game).setPosition(this.twoDToScreen(x, y));
             this.landLayer.appendChild(this.tiles[x][y]);
             if (middle.x == x && middle.y == y) {
                 this.landLayer.appendChild(farm.setPosition(this.twoDToScreen(x, y)));
@@ -117,7 +109,7 @@ farming.SceneMap.prototype.drawLand = function () {
         e.startDrag(false);
         var drag = function (e) {
             var y = e.position.y + this.getPosition().y;
-            if(y > scene.game.screen.height - scene.settings.controls.height) return;
+            if(y > scene.game.screen.height - SETTINGS.size.controls.height) return;
             var newPos = this.getPosition();
             var xDiff = newPos.x - oldPos.x;
             var yDiff = newPos.y - oldPos.y;
@@ -156,25 +148,25 @@ farming.SceneMap.prototype.drawControls = function () {
     this.appendChild(this.controlsLayer);
     //controls area
     var controlArea = new lime.Sprite().setAnchorPoint(0, 0)
-        .setPosition(0, this.game.screen.height - this.settings.controls.height)
-        .setSize(this.game.screen.width, this.settings.controls.height)
-        .setFill('#0D0D0D')
+        .setPosition(0, this.game.screen.height - SETTINGS.size.controls.height)
+        .setSize(this.game.screen.width, SETTINGS.size.controls.height)
+        .setFill(SETTINGS.color.controls_background)
     this.controlsLayer.appendChild(controlArea);
 
     // Money
     this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
-        .setSize(25, 25).setPosition(this.game.screen.width-80, this.game.screen.height - this.settings.controls.height / 2);
-    this.moneyLabel = new lime.Label().setFontColor('#E8FC08')
-        .setPosition(this.game.screen.width-50, this.game.screen.height - this.settings.controls.height / 2);
+        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width-90, this.game.screen.height - SETTINGS.size.controls.height / 2);
+    this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label)
+        .setPosition(this.game.screen.width-50, this.game.screen.height - SETTINGS.size.controls.height / 2);
 
     // Create the labels for the cloning function
     this.cloningScreen = new lime.Sprite().setFill(255,255,255,0).setSize(150,100).setPosition(85,100);
     this.cloningTitle = new lime.Label().setSize(100,25).setPosition(0,-35);
     this.cloningImage = new lime.Sprite().setSize(100, 60).setPosition(0,0);
     this.cloningText = new lime.Label().setSize(100,25).setPosition(0,40);
-    this.cloningClose = new farming.Button('X').setColor('#999999').setPosition(57,-32).setSize(30,30).setAction(this.stopCloning,this);
+    this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(57,-32).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
 
-    this.noCoinsWarning = new lime.Label().setFill(200,0,0,0.3).setFontColor('#000000').setFontWeight('bold').setFontSize(20).setSize(150,50).setPosition(450,50)
+    this.noCoinsWarning = new lime.Label().setFill(200,0,0,0.3).setFontColor(SETTINGS.color.black).setFontWeight('bold').setFontSize(20).setSize(150,50).setPosition(450,50)
         .setText('Insufficient Money').setAlign('center').setOpacity(0);
 
     //updating money indicator
@@ -186,33 +178,33 @@ farming.SceneMap.prototype.drawControls = function () {
     this.updateControls();
 
     // Farmbutton
-    this.farmButton = new farming.Button('Farm').setColor('#999999')
-        .setPosition(50, this.game.screen.height - this.settings.controls.height / 2)
-        .setSize(100,30).setAction(this.showFarm, this);
+    this.farmButton = new farming.Button('Farm').setColor(SETTINGS.color.button)
+        .setPosition(50, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
 
     // Clonebutton
-    this.cloneButton = new farming.Button('Clone').setColor('#999999')
-        .setPosition(150, this.game.screen.height - this.settings.controls.height / 2)
-        .setSize(100,30).setAction(this.showClone, this);
+    this.cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button)
+        .setPosition(150, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
 
     // Challengebutton
-    this.challengeButton = new farming.Button('Challenges').setColor('#999999')
-        .setPosition(250, this.game.screen.height - this.settings.controls.height / 2)
-        .setSize(100,30).setAction(this.showChallenge, this);
+    this.challengeButton = new farming.Button('Challenges').setColor(SETTINGS.color.button)
+        .setPosition(250, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeButton);
 
     // Current challenge indicator
-    this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill('#CC2222')
+    this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill(SETTINGS.color.red)
         .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
         .setHidden(true).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeIndicator);
 
     // Temporary introduction button
-    this.introButton = new farming.Button('Intro').setColor('#999999')
-    		.setPosition(350, this.game.screen.height - this.settings.controls.height / 2)
-    		.setSize(100,30).setAction(this.showIntro, this);
+    this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
+    		.setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
+    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
     // this.controlsLayer.appendChild(this.introButton);
 }
 
@@ -236,10 +228,10 @@ farming.SceneMap.prototype.updateControls = function(){
 farming.SceneMap.prototype.tiles = [];
 
 farming.SceneMap.prototype.twoDToScreen = function (x, y) {
-    return this.twoDToIso(x, y).scale(this.settings.tiles.width / 2, this.settings.tiles.height);
+    return this.twoDToIso(x, y).scale(SETTINGS.size.tiles.width / 2, SETTINGS.size.tiles.height);
 }
 farming.SceneMap.prototype.screenToTwoD = function (x, y) {
-    var point = this.isoToTwoD(x / this.settings.tiles.width * 2, y / this.settings.tiles.height);
+    var point = this.isoToTwoD(x / SETTINGS.size.tiles.width * 2, y / SETTINGS.size.tiles.height);
     return new goog.math.Coordinate(Math.round(point.x), Math.round(point.y));
 }
 farming.SceneMap.prototype.twoDToIso = function (x, y) {
@@ -268,11 +260,11 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
 // flipping the small coin in the controls panel
 farming.SceneMap.prototype.itemAnimation = function (type, amount) {
     lime.scheduleManager.callAfter(function() {
-        var itemSprite = new lime.Sprite().setFill('images/items/'+type+'.png').setSize(30,30)
-            .setPosition(70,this.game.screen.height - this.settings.controls.height);
+        var itemSprite = new lime.Sprite().setFill('images/items/'+type+'.png').setSize(SETTINGS.size.close_button)
+            .setPosition(70,this.game.screen.height - SETTINGS.size.controls.height);
         var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
-            .setPosition(40,this.game.screen.height - this.settings.controls.height)
-            .setFontColor(amount < 0 ? '#CC2222' : '#22CC22');
+            .setPosition(40,this.game.screen.height - SETTINGS.size.controls.height)
+            .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
         this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
         var moveUp = new lime.animation.MoveBy(0,-100).setDuration(3);
         itemSprite.runAction(moveUp);
@@ -288,6 +280,7 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount) {
 
 farming.SceneMap.prototype.startCloning = function (crop) {
     this.game.hideClone();
+    this.game.closeCropDetails();
     this.cloningTitle.setText(crop.name);
     this.cloningText.setText('Cost: '+crop.cost);
     this.cloningScreen.setFill(211,211,211,0.8);

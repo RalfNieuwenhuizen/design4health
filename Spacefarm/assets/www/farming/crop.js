@@ -70,7 +70,7 @@ farming.Crop.prototype.harvest = function(){
 }
 var CROPS = {
     apple_tree : {
-        name: 'Apple tree',
+        name: 'Space Apple tree',
         key: 'apple_tree',
         growth_phases: 3,
         cost: 20,
@@ -85,7 +85,7 @@ var CROPS = {
         }
     },
     wheat : {
-        name: 'Wheat',
+        name: 'Space Wheat',
         key: 'wheat',
         growth_phases: 2,
         cost: 10,

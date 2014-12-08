@@ -18,6 +18,54 @@ goog.require('farming.Introduction');
 goog.require('farming.Crop');
 goog.require('farming.Challenge');
 
+var SETTINGS = {
+    mapSize: 20,
+    screen: {
+        width: 800,
+        height: 480
+    },
+
+    color: {
+        tile: '#B88A00',
+        background_layer: '#f0f0f0',
+        button_primary: '#22CC22',
+        button_inactive: '#AAAAAA',
+        button: '#999999',
+        green: '#22CC22',
+        red: '#CC2222',
+        black: '#000000',
+        controls_label: '#E8FC08',
+        controls_background: '#0D0D0D',
+    },
+
+    size: {
+        button: new goog.math.Size(120, 50),
+        button_small: new goog.math.Size(80, 40),
+        close_button: new goog.math.Size(40, 40),
+        background_layer: new goog.math.Size(735, 480 * 0.8),
+        tiles: new goog.math.Size(200, 116),
+        controls: {
+            height: 50
+        },
+    },
+
+    position: {
+        close_button: new goog.math.Coordinate(745, 45),
+        left_button: new goog.math.Coordinate(100, 375),
+        center_button: new goog.math.Coordinate(400, 375),
+        right_button: new goog.math.Coordinate(700, 375),
+        title: new goog.math.Coordinate(400, 50),
+    },
+
+    font: {
+        title: 22,
+        subtitle: {
+            size: 16,
+            weight: 600
+        },
+    }
+}
+
 /**
  * Land elements
  *
@@ -25,8 +73,8 @@ goog.require('farming.Challenge');
 farming.Game = function() {
 
     this.screen = {
-        width: 800,
-        height: 480
+        width: SETTINGS.screen.width,
+        height: SETTINGS.screen.height
     }
 
     this.player = {
@@ -186,6 +234,19 @@ farming.Game.prototype.giveUpChallenge = function(){
 }
 // complete the current challenge, remove all the items and close all challenge screens
 farming.Game.prototype.completeChallenge = function(){
+    for(var i in this.player.currentChallenge.rewards) {
+        var reward = this.player.currentChallenge.rewards[i];
+        if(reward.type === 'item') {
+            lime.scheduleManager.callAfter(function() {
+                this.game.addItem(this.reward.key, this.reward.number);
+            }, {game: this, reward: reward}, i * 1000);
+        }
+        if(reward.type === 'coins') {
+            lime.scheduleManager.callAfter(function() {
+                this.game.addCoins(this.reward.number);
+            }, {game: this, reward: reward}, i * 1000);
+        }
+    }
     this.player.currentChallenge = null;
     if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
     if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
@@ -290,5 +351,5 @@ farming.Game.prototype.getFullSize = function(percent) {
 }
 
 farming.Game.prototype.getCenterPosition = function() {
-    return new goog.math.Coordinate(this.screen.width / 2, this.screen.height / 2)
+    return new goog.math.Coordinate(this.screen.width / 2, (this.screen.height - SETTINGS.size.controls.height) / 2)
 }

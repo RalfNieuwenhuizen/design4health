@@ -22,13 +22,13 @@ farming.SceneChallenge = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill('#f0f0f0').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.5);
+    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Challenges');
 
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
+    this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.close_button)
+        .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeChallenge, this);
 
     this.windowLayer
@@ -38,7 +38,7 @@ farming.SceneChallenge = function (game) {
     for (var i in this.game.player.challenges) {
         var prop = CHALLENGES[this.game.player.challenges[i]];
         if (prop)
-            this.drawChallenge(prop, new goog.math.Coordinate((i % 3) * 150 + 250, Math.floor(i / 3) * 100 + 175))
+            this.drawChallenge(prop, new goog.math.Coordinate((i % 3) * 200 + 170, Math.floor(i / 3) * 150 + 120))
     }
 }
 goog.inherits(farming.SceneChallenge, farming.Scene);
@@ -48,10 +48,12 @@ farming.SceneChallenge.prototype.game = null;
 farming.SceneChallenge.prototype.drawChallenge = function(challengeProps, position) {
     var challengeIcon = new farming.Sprite('images/challenges/'+challengeProps.key+'.png')
         .setSize(100, 60).setPosition(position).setAction(this.showChallengeDetails, {'challenge': challengeProps,'scene': this});
-    var challengeTitle = new lime.Label().setPosition(position.x, position.y + 33).setText(challengeProps.name);
+    var challengeTitle = new farming.Label(challengeProps.name)
+        .setPosition(position.x, position.y + 33)
+        .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight);
 
     // Create button to get details about the icon
-    this.detailsButton = new farming.Button('Details').setColor('#999999').setPosition(new goog.math.Coordinate(position.x,position.y + 50)).setSize(60,20);
+    this.detailsButton = new farming.Button('Details').setColor(SETTINGS.color.button).setPosition(position.x,position.y + 70).setSize(SETTINGS.size.button_small);
     this.detailsButton.setAction(this.showChallengeDetails, {'challenge': challengeProps,'scene': this} );
 
     this.windowLayer.appendChild(challengeIcon).appendChild(challengeTitle).appendChild(this.detailsButton);

@@ -22,25 +22,25 @@ farming.SceneChallengeDetails = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill('#f0f0f0').setSize(game.getFullSize(0.7)).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(18).setPosition(center.x, center.y * 0.38);
-    this.description = new lime.Label().setPosition(center.x, center.y * 0.5).setMultiline(true);
+    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
+    this.description = new lime.Label().setPosition(center.x, center.y * 0.45).setMultiline(true);
 
-    this.closeButton = new farming.Button('X').setColor('#999999')
-        .setPosition(center.x + game.getFullSize(0.325).width, center.y - game.getFullSize(0.31).height)
-        .setSize(30,30);
-    this.backButton = new farming.Button('Back').setColor('#999999')
-        .setPosition(center.x - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
-        .setSize(50,30);
-    this.giveUpButton = new farming.Button('Give up').setColor('#999999')
-        .setPosition(center.x + 5 - game.getFullSize(0.31).width, center.y + game.getFullSize(0.31).height)
-        .setSize(60,30).setHidden(true);
-    this.selectButton = new farming.Button('Start').setColor('#22CC22')
+    this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.close_button)
+        .setSize(SETTINGS.size.close_button);
+    this.backButton = new farming.Button('Back').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.left_button)
+        .setSize(SETTINGS.size.button);
+    this.giveUpButton = new farming.Button('Give up').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.position.left_button)
+        .setSize(SETTINGS.size.button).setHidden(true);
+    this.selectButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary)
         .setPosition(center.x, center.y * 0.68)
-        .setSize(50,30).setHidden(true);
-    this.completeButton = new farming.Button('Complete!').setColor('#22CC22')
-        .setPosition(center.x, center.y + game.getFullSize(0.31).height)
-        .setSize(80,30).setHidden(true);
+        .setSize(SETTINGS.size.button).setHidden(true);
+    this.completeButton = new farming.Button('Complete!').setColor(SETTINGS.color.button_primary)
+        .setPosition(SETTINGS.position.center_button)
+        .setSize(SETTINGS.size.button).setHidden(true);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title).appendChild(this.description)
@@ -100,24 +100,37 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
 
     var center = this.game.getCenterPosition();
     var items = 0;
+    var rewards = 0;
     var exercises = 0;
     for(var i in challenge.requirements) {
         var requirement = challenge.requirements[i];
         if(requirement.type === 'item' && !opt_active) {
-            this.drawItem(requirement, new goog.math.Coordinate(items * 60 + center.x*0.53, center.y * 0.73), opt_active)
+            this.drawItem(requirement, new goog.math.Coordinate(items * 60 + center.x*0.5, center.y * 0.73), opt_active)
             items++;
         } else if(requirement.type === 'exercise') {
-            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.7, center.y * (1 - (opt_active * 0.27)) + exercises * 50), opt_active)
+            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.65, center.y * (1 - (opt_active * 0.17)) + exercises * 80), opt_active)
             exercises++;
         }
     }
+    for(var i in challenge.rewards) {
+        var reward = challenge.rewards[i];
+        if((reward.type === 'item' || reward.type === 'coins') && !opt_active) {
+            this.drawReward(reward, new goog.math.Coordinate(rewards * 60 + center.x*1.5, center.y * 0.73))
+            rewards++;
+        }
+    }
     if(items){
-        var itemsLabel = new lime.Label('Items required').setPosition(center.x * 0.45, center.y * 0.68)
+        var itemsLabel = new lime.Label('Items required').setPosition(120, center.y * 0.68)
             .setFontWeight(800).setFontSize(13).setAlign('left').setSize(100,10);
         this.drawLayer.appendChild(itemsLabel);
     }
+    if(rewards){
+        var rewardsLabel = new lime.Label('Rewards').setPosition(550, center.y * 0.68)
+            .setFontWeight(800).setFontSize(13).setAlign('left').setSize(100,10);
+        this.drawLayer.appendChild(rewardsLabel);
+    }
     if(exercises) {
-        var exercisesLabel = new lime.Label('Exercises').setPosition(center.x * 0.45, center.y * (opt_active ? 0.63 :0.92))
+        var exercisesLabel = new lime.Label('Exercises').setPosition(120, center.y * (opt_active ? 0.63 :0.92))
             .setFontWeight(800).setFontSize(13).setAlign('left').setSize(100,10);
         this.drawLayer.appendChild(exercisesLabel);
     }
@@ -129,9 +142,16 @@ farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt
 
     if(!opt_active) {
         var currentNumber = this.game.getInventory(item.key);
-        var color = currentNumber >= item.number ? '#22CC22' : '#CC2222';
+        var color = currentNumber >= item.number ? SETTINGS.color.green : SETTINGS.color.red;
         itemLabel.setText(currentNumber + '/' + item.number).setFontColor(color);
     }
+
+    this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
+}
+farming.SceneChallengeDetails.prototype.drawReward = function (reward, position) {
+    var image = reward.type === 'coins' ? 'images/coin_small/0.png' : 'images/items/'+reward.key+'.png'
+    var itemIcon = new lime.Sprite().setFill(image).setSize(30, 30).setPosition(position);
+    var itemLabel = new lime.Label().setText(reward.number).setSize(10, 10).setPosition(position.x + 18, position.y - 15);
 
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
@@ -139,21 +159,21 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
     var props = EXERCISES[exercise.key];
     var exerciseName = new lime.Label().setText('- ' + exercise.name + ' - ' + props.points + ' ' + props.type + (props.points > 1 ? ' points' : ' point'))
         .setAlign('left').setSize(300, 10).setPosition(position.x + 80, position.y);
-    var doButton = new farming.Button('Do!').setColor('#999999')
+    var doButton = new farming.Button('Do!').setColor(SETTINGS.color.button)
         .setPosition(position.x - 115, position.y)
-        .setSize(50,25).setHidden(true);
+        .setSize(SETTINGS.size.button_small).setHidden(true);
 
     // there is an active challenge
     if(opt_active) {
         if (!this.game.player.currentChallenge.exercisesDone)
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
-            doButton.setColor('#AAAAAA').setText('Done').setHidden(false);
+            doButton.setColor(SETTINGS.color.button_inactive).setText('Done').setHidden(false);
         } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
             doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
                 'scene': this
-            }).setColor('#22CC22').setText('Do!').setHidden(false);
+            }).setColor(SETTINGS.color.button_primary).setText('Do!').setHidden(false);
         }
 
         if (this.challengeDone()) {

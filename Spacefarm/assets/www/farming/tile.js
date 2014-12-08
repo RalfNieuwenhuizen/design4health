@@ -7,10 +7,10 @@ goog.require('lime.Polygon');
  *
  * @param {} gameObj
  */
-farming.Tile = function (game, settings) {
+farming.Tile = function (game) {
     goog.base(this);
     this.game = game;
-    this.setSize(settings.tiles.width, settings.tiles.height);
+    this.setSize(SETTINGS.size.tiles);
     this.enable();
 
     var tile = this;
