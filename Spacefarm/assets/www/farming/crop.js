@@ -7,8 +7,8 @@ goog.require('lime.Sprite');
  */
 farming.Crop = function(type) {
     goog.base(this);
-    this.setAnchorPoint(0.5, 0.58);
-    this.setSize(120, 120);
+    this.setAnchorPoint(0.5, 0.63); //0.5, 0.58
+    this.setSize(200, 169);
 
 	var crop = this;
     this.start(type);

@@ -26,7 +26,7 @@ var SETTINGS = {
     },
 
     color: {
-        tile: '#B88A00',
+        tile: '#FFC285',
         background_layer: '#f0f0f0',
         button_primary: '#22CC22',
         button_inactive: '#AAAAAA',
