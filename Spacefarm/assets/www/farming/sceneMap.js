@@ -119,7 +119,7 @@ farming.SceneMap.prototype.drawLand = function () {
                 var tile = scene.tiles[focus.x][focus.y];
                 if(tile.isRipe()) {
                     scene.game.showHarvest(tile);
-                } else {
+                } else if(tile.isEmpty()) {
                     currentCrop = scene.game.currentCrop;
                     // If there is no current crop to be cloned, return
                     if(currentCrop == null)
