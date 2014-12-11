@@ -117,6 +117,12 @@ farming.SceneMap.prototype.drawLand = function () {
                     scene.game.showFarm();
                 } else if (tile.isRipe()) {
                     scene.game.showHarvest(tile);
+                } else if (tile.isDead()) {
+                    if(scene.game.removeCoins(0)) {
+                        tile.removeCrop();
+                    } else {
+                        scene.noMoneyAnimation(tile.getPosition());
+                    }
                 } else if (tile.isEmpty()) {
                     currentCrop = scene.game.currentCrop;
                     // If there is no current crop to be cloned, return
@@ -128,8 +134,8 @@ farming.SceneMap.prototype.drawLand = function () {
                         scene.game.removeCoins(currentCrop.cost);
                         tile.addCrop(new farming.Crop(currentCrop.key));
                     }
-                    else{
-                        scene.noMoneyAnimation(e.screenPosition);
+                    else {
+                        scene.noMoneyAnimation(tile.getPosition());
                     }
                 }
             }
@@ -171,7 +177,7 @@ farming.SceneMap.prototype.drawControls = function () {
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyImage);
     this.controlsLayer.appendChild(this.moneyLabel);
-    this.controlsLayer.appendChild(this.noCoinsWarning);
+    this.landLayer.appendChild(this.noCoinsWarning);
 
     this.controlsLayer.appendChild(this.cloningScreen);
     this.updateControls();
@@ -202,8 +208,8 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
-    		.setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
-    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
+        .setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
     // this.controlsLayer.appendChild(this.introButton);
 }
 
@@ -217,7 +223,7 @@ farming.SceneMap.prototype.showChallenge = function(scene) {
     scene.game.showChallenge();
 }
 farming.SceneMap.prototype.showIntro = function(scene) {
-	scene.game.introduction.intro();
+    scene.game.introduction.intro();
 }
 
 farming.SceneMap.prototype.updateControls = function(){
@@ -294,7 +300,7 @@ farming.SceneMap.prototype.stopCloning = function(scene) {
 
 // Warning when trying to plant but there is no money
 farming.SceneMap.prototype.noMoneyAnimation = function(position) {
-    this.noCoinsWarning.setPosition(position.x - 100, position.y);
+    this.noCoinsWarning.setPosition(position.x, position.y);
     this.noCoinsWarning.setOpacity(1);
     var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
     this.noCoinsWarning.runAction(fadeAway);

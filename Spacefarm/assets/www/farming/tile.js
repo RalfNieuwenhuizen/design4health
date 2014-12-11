@@ -38,6 +38,9 @@ farming.Tile.prototype.getCrop = function () {
 farming.Tile.prototype.isRipe = function () {
     return this.crop && this.crop.isRipe();
 }
+farming.Tile.prototype.isDead = function () {
+    return this.crop && this.crop.isDead();
+}
 farming.Tile.prototype.disable = function () {
     this.disabled = true;
     this.setFill('');
