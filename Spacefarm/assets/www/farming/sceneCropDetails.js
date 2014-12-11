@@ -54,7 +54,7 @@ farming.SceneCropDetails.prototype.game = null;
 
 // Function to clone a product
 farming.SceneCropDetails.prototype.startClone = function(object) {
-    object.game.sceneMap.startCloning(object.cropProps);
+    object.game.startCloning(object.cropProps);
 }
 
 farming.SceneCropDetails.prototype.backDetails = function(scene) {

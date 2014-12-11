@@ -177,7 +177,9 @@ farming.Game.prototype.hideClone = function(){
 // Start cloning a crop
 farming.Game.prototype.startCloning = function(crop){
     this.hideClone();
-    this.sceneCropDetails.showDetails(crop);
+    this.closeCropDetails();
+    this.currentCrop = crop;
+    this.sceneMap.startCloning(crop);
 }
 // -- end clone --
 

@@ -129,7 +129,7 @@ farming.SceneMap.prototype.drawLand = function () {
                         tile.addCrop(new farming.Crop(currentCrop.key));
                     }
                     else{
-                        scene.noMoneyAnimation();
+                        scene.noMoneyAnimation(e.screenPosition);
                     }
                 }
             }
@@ -159,10 +159,11 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Create the labels for the cloning function
     this.cloningScreen = new lime.Sprite().setFill(255,255,255,0).setSize(150,100).setPosition(85,100);
-    this.cloningTitle = new lime.Label().setSize(100,25).setPosition(0,-35);
-    this.cloningImage = new lime.Sprite().setSize(100, 60).setPosition(0,0);
-    this.cloningText = new lime.Label().setSize(100,25).setPosition(0,40);
-    this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(57,-32).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
+    this.cloningTitle = new lime.Label().setSize(140,25).setPosition(0,40);
+    this.cloningImage = new lime.Sprite().setSize(100, 60).setPosition(-20,-15);
+    this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(30,10);
+    this.cloningText = new lime.Label().setSize(20,20).setPosition(50,15);
+    this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(55,-30).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
 
     this.noCoinsWarning = new lime.Label().setFill(200,0,0,0.3).setFontColor(SETTINGS.color.black).setFontWeight('bold').setFontSize(20).setSize(150,50).setPosition(450,50)
         .setText('Insufficient Money').setAlign('center').setOpacity(0);
@@ -277,14 +278,11 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount) {
 }
 
 farming.SceneMap.prototype.startCloning = function (crop) {
-    this.game.hideClone();
-    this.game.closeCropDetails();
     this.cloningTitle.setText(crop.name);
-    this.cloningText.setText('Cost: '+crop.cost);
+    this.cloningText.setText(crop.cost);
     this.cloningScreen.setFill(211,211,211,0.8);
     this.cloningImage.setFill('images/'+crop.key+'_ripe.png');
-    this.cloningScreen.appendChild(this.cloningTitle).appendChild(this.cloningText).appendChild(this.cloningClose).appendChild(this.cloningImage);
-    this.game.currentCrop = crop;
+    this.cloningScreen.appendChild(this.cloningTitle).appendChild(this.cloningText).appendChild(this.cloningCoin).appendChild(this.cloningClose).appendChild(this.cloningImage);
 }
 
 // Shut the screen down for cloning
@@ -295,7 +293,8 @@ farming.SceneMap.prototype.stopCloning = function(scene) {
 }
 
 // Warning when trying to plant but there is no money
-farming.SceneMap.prototype.noMoneyAnimation = function () {
+farming.SceneMap.prototype.noMoneyAnimation = function(position) {
+    this.noCoinsWarning.setPosition(position.x - 100, position.y);
     this.noCoinsWarning.setOpacity(1);
     var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
     this.noCoinsWarning.runAction(fadeAway);
