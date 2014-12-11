@@ -25,6 +25,18 @@ var ITEMS = {
     space_wheat : {
         name: 'Space Wheat',
         revenue: 15
+    },
+    egg : {
+        name: 'Egg',
+        revenue: 5
+    },
+    wool : {
+        name: 'Wool',
+        revenue: 10
+    },
+    milk : {
+        name: 'Milk',
+        revenue: 15
     }
 };
 

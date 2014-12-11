@@ -36,7 +36,7 @@ farming.Crop.prototype.showProgress = function(){
             progress == 1 ? '_ripe' :
                 this.timesHarvested == 0 ? Math.floor(progress*this.prop.growth_phases) :
                 this.prop.growth_phases - 1;
-    this.setFill('images/'+ this.type + suffix + '.png');
+    this.setFill('images/crops/'+ this.type + suffix + '.png');
 }
 farming.Crop.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
@@ -82,8 +82,7 @@ var CROPS = {
         time_to_ripe: 8,
         harvests: 3,
         exercise: {
-            key : 'apple_picking',
-            callback : 'harvestAppleTree'
+            key : 'apple_picking'
         }
     },
     wheat : {
@@ -96,8 +95,7 @@ var CROPS = {
         time_to_ripe: 3,
         harvests: 1,
         exercise: {
-            key : 'arm_circles',
-            callback : 'harvestWheat'
+            key : 'arm_circles'
         }
     }
 };

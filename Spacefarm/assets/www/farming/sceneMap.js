@@ -115,28 +115,40 @@ farming.SceneMap.prototype.drawLand = function () {
                 var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
                 if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y-1 )) {
                     scene.game.showFarm();
-                } else if (tile.isRipe()) {
+                } else if (tile.canBeHarvested()) {
+                    tile.playSound();
                     scene.game.showHarvest(tile);
                 } else if (tile.isDead()) {
                     if(scene.game.removeCoins(0)) {
-                        tile.removeCrop();
+                        tile.removeItem();
                     } else {
                         scene.noMoneyAnimation(tile.getPosition());
                     }
+                } else if (tile.isHungry()) {
+                    if (scene.game.hasItem(tile.livestock.getFood())) {
+                        scene.game.removeItem(tile.livestock.getFood());
+                        tile.livestock.feed();
+                    }
                 } else if (tile.isEmpty()) {
-                    currentCrop = scene.game.currentCrop;
+                    var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
-                    if(currentCrop == null)
+                    if(currentClone == null)
                         return
 
                     // If there is a current crop and the amount of money is sufficient, this can be planted
-                    if(currentCrop.cost <= scene.game.player.coins){
-                        scene.game.removeCoins(currentCrop.cost);
-                        tile.addCrop(new farming.Crop(currentCrop.key));
+                    if(currentClone.cost <= scene.game.player.coins){
+                        scene.game.removeCoins(currentClone.cost);
+                        if (CROPS[currentClone.key]) {
+                            tile.addCrop(new farming.Crop(currentClone.key));
+                        } else if (LIVESTOCK[currentClone.key]) {
+                            tile.addLivestock(new farming.Livestock(currentClone.key));
+                        }
                     }
                     else {
                         scene.noMoneyAnimation(tile.getPosition());
                     }
+                } else if(!tile.isDead()) {
+                    tile.playSound();
                 }
             }
         }
@@ -283,11 +295,15 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount) {
     }, this, 1000);
 }
 
-farming.SceneMap.prototype.startCloning = function (crop) {
-    this.cloningTitle.setText(crop.name);
-    this.cloningText.setText(crop.cost);
+farming.SceneMap.prototype.startCloning = function (properties) {
+    this.cloningTitle.setText(properties.name);
+    this.cloningText.setText(properties.cost);
     this.cloningScreen.setFill(211,211,211,0.8);
-    this.cloningImage.setFill('images/'+crop.key+'_ripe.png');
+    if (CROPS[properties.key]) {
+        this.cloningImage.setFill('images/crops/'+properties.key+'_ripe.png');
+    } else if (LIVESTOCK[properties.key]) {
+        this.cloningImage.setFill('images/livestock/'+properties.key+properties.appearances+'.png');
+    }
     this.cloningScreen.appendChild(this.cloningTitle).appendChild(this.cloningText).appendChild(this.cloningCoin).appendChild(this.cloningClose).appendChild(this.cloningImage);
 }
 
@@ -295,7 +311,7 @@ farming.SceneMap.prototype.startCloning = function (crop) {
 farming.SceneMap.prototype.stopCloning = function(scene) {
     scene.cloningScreen.setFill(211,211,211,0);
     scene.cloningScreen.removeAllChildren();
-    scene.game.currentCrop = null;
+    scene.game.currentClone = null;
 }
 
 // Warning when trying to plant but there is no money
@@ -309,6 +325,9 @@ farming.SceneMap.prototype.noMoneyAnimation = function(position) {
 //In this function you can define all things that have to updated over time
 farming.SceneMap.prototype.tick = function(){
     this.showCurrentChallenge();
+
+    if(this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
+        this.game.sceneHarvest.hideHarvest(this);
 }
 
 // function for showing or hiding the current challenge indicator

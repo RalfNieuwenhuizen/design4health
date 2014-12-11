@@ -12,10 +12,12 @@ goog.require('farming.SceneFarm');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
 goog.require('farming.SceneCropDetails');
+goog.require('farming.SceneLivestockDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
 goog.require('farming.Introduction');
 goog.require('farming.Crop');
+goog.require('farming.Livestock');
 goog.require('farming.Challenge');
 
 var SETTINGS = {
@@ -80,6 +82,7 @@ farming.Game = function() {
     this.player = {
         coins: 100,
         currentCrops : Object.keys(CROPS),
+        currentLivestock : Object.keys(LIVESTOCK),
         challenges : Object.keys(CHALLENGES),
         body : {
             arms: 0,
@@ -96,7 +99,7 @@ farming.Game = function() {
     }
 
     // Current crop defines the crop the user is building, initiated in clone screen
-    this.currentCrop = null;
+    this.currentClone = null;
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
     this.director.makeMobileWebAppCapable()
@@ -109,6 +112,7 @@ farming.Game = function() {
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
     this.sceneCropDetails = new farming.SceneCropDetails(this);
+    this.sceneLivestockDetails = new farming.SceneLivestockDetails(this);
     this.sceneChallenge = new farming.SceneChallenge(this);
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.introduction = new farming.Introduction(this);
@@ -175,11 +179,11 @@ farming.Game.prototype.hideClone = function(){
 }
 
 // Start cloning a crop
-farming.Game.prototype.startCloning = function(crop){
+farming.Game.prototype.startCloning = function(properties){
     this.hideClone();
     this.closeCropDetails();
-    this.currentCrop = crop;
-    this.sceneMap.startCloning(crop);
+    this.currentClone = properties;
+    this.sceneMap.startCloning(properties);
 }
 // -- end clone --
 
@@ -201,6 +205,25 @@ farming.Game.prototype.backCropDetails = function(){
     this.director.popScene();
 }
 // -- end cropdetails --
+
+// -- livestockdetails --
+farming.Game.prototype.showLivestockDetails = function(livestock){
+    this.sceneLivestockDetails.showDetails(livestock);
+    this.director.pushScene(this.sceneLivestockDetails);
+}
+
+farming.Game.prototype.closeLivestockDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    this.director.popScene();
+    if(this.director.getCurrentScene() != this.sceneClone) return;
+    this.director.popScene();
+}
+
+farming.Game.prototype.backLivestockDetails = function(){
+    if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    this.director.popScene();
+}
+// -- end livestockdetails --
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
@@ -309,6 +332,9 @@ farming.Game.prototype.addItem = function(type, amount) {
     return this.player.inventory[type];
 }
 farming.Game.prototype.removeItem = function(type, amount) {
+    if(!amount)
+        amount = 1;
+
     if(!this.hasItem(type, amount)) return false;
     this.player.inventory[type] -= amount;
     this.sceneMap.itemAnimation(type, -amount);
