@@ -30,7 +30,7 @@ var SETTINGS = {
     },
 
     color: {
-        tile: '#FFC285',
+        tile: '#666699',
         background_layer: '#f0f0f0',
         button_primary: '#22CC22',
         button_inactive: '#AAAAAA',
