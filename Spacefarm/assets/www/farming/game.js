@@ -17,6 +17,10 @@ goog.require('farming.SceneChallengeDetails');
 goog.require('farming.Introduction');
 goog.require('farming.Crop');
 goog.require('farming.Challenge');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+goog.require('goog.events.EventTarget');
+goog.require('goog.events.EventId');
 
 var SETTINGS = {
     mapSize: 20,
@@ -122,6 +126,13 @@ farming.Game = function() {
         }
     }, this, 1000*0.5);
 
+	    this.source = new goog.events.EventTarget();
+		
+		// 	Create ID's for different events
+    	this.EventType = {
+    		SHOW_FARM: goog.events.getUniqueId('show_farm')
+    	};
+	
     // Launches help if still applicable
     this.introduction.intro();
 }
@@ -130,7 +141,9 @@ farming.Game.prototype.tickables = [];
 
 // -- farm --
 farming.Game.prototype.showFarm = function(){
-    this.sceneFarm.redraw(this.player.inventory);
+	// Fire the event that farm is showed, listened to by introduction.intro3
+	this.source.dispatchEvent(this.EventType.SHOW_FARM);
+	this.sceneFarm.redraw(this.player.inventory);
     this.director.pushScene(this.sceneFarm);
 }
 
