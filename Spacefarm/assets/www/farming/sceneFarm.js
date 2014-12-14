@@ -40,7 +40,6 @@ goog.inherits(farming.SceneFarm, farming.Scene);
 farming.SceneFarm.prototype.game = null;
 
 farming.SceneFarm.prototype.closeFarm = function(scene) {
-    console.log('closeFarm is executed');
 	scene.game.closeFarm();
 }
 // redraw the inventory
