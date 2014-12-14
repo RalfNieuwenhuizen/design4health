@@ -140,10 +140,15 @@ farming.Game = function() {
 		
 		// 	Create ID's for different events
     	this.EventType = {
-    		SHOW_FARM: goog.events.getUniqueId('show_farm')
+    		SHOW_FARM: goog.events.getUniqueId('show_farm'),
+    		GO_CLONE: goog.events.getUniqueId('go_clone'),
+    		CLONE_DETAILS: goog.events.getUniqueId('clone_details'),
+    		CLONE_CROP: goog.events.getUniqueId('clone_crop'),
+    		CLOSE_CLONE: goog.events.getUniqueId('close_clone'),
+    		OPEN_CHALLENGES: goog.events.getUniqueId('open_challenges')
     	};
 	
-    // Launches help if still applicable
+    // Launches introductional screens if still applicable
     this.introduction.intro();
 }
 
@@ -221,6 +226,7 @@ farming.Game.prototype.hideExercise = function(){
 // -- clone --
 farming.Game.prototype.showClone = function(){
     //this.director.pushScene(this.sceneClone);
+	this.source.dispatchEvent(this.EventType.GO_CLONE);
 	this.sceneMap.sceneLayer.appendChild(this.sceneClone.windowLayer);
 }
 
@@ -230,12 +236,18 @@ farming.Game.prototype.hideClone = function(){
 	this.sceneMap.sceneLayer.removeAllChildren();
 }
 
+// Let the event fire, called from sceneMap
+farming.Game.prototype.stopCloning = function(){
+	this.source.dispatchEvent(this.EventType.CLOSE_CLONE);
+}
+
 // Start cloning a crop
 farming.Game.prototype.startCloning = function(properties){
     this.hideClone();
     this.closeCropDetails();
     this.currentClone = properties;
     this.sceneMap.startCloning(properties);
+    this.source.dispatchEvent(this.EventType.CLONE_CROP);
 }
 // -- end clone --
 
@@ -244,6 +256,7 @@ farming.Game.prototype.showCropDetails = function(crop){
     this.sceneCropDetails.showDetails(crop);
     this.sceneMap.sceneLayer.appendChild(this.sceneCropDetails.windowLayer);
     //this.director.pushScene(this.sceneCropDetails);
+    this.source.dispatchEvent(this.EventType.CLONE_DETAILS);
 }
 
 farming.Game.prototype.closeCropDetails = function(){
@@ -295,8 +308,8 @@ farming.Game.prototype.showChallenge = function(){
     	this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
     } else {
         this.showChallengeDetails(this.player.currentChallenge);
-        console.log('this is currentChallenge');
     }
+    this.source.dispatchEvent(this.EventType.OPEN_CHALLENGES);
 }
 // set the current challenge and close all challenge screens
 farming.Game.prototype.selectChallenge = function(challenge){
