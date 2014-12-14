@@ -27,12 +27,10 @@ goog.inherits(farming.SceneMap, farming.Scene);
 
 farming.SceneMap.prototype.game = null;
 farming.SceneMap.prototype.farm = null;
+farming.SceneMap.prototype.drag = {
+    maxClickDistance: 15
+};
 
-farming.SceneMap.prototype.settings = {
-    drag: {
-        maxClickDistance: 15
-    }
-}
 farming.SceneMap.prototype.calculate = function (key) {
     var scene = this;
     return {
@@ -52,20 +50,13 @@ farming.SceneMap.prototype.calculate = function (key) {
 
 farming.SceneMap.prototype.drawLand = function () {
     this.landLayer = new lime.Layer()
-        .setPosition(this.game.screen.width / 2, this.game.screen.height / 2 - this.calculate('mapHeight') / 2)
+        .setPosition(this.game.screen.width / 2, SETTINGS.screen.height / 2 - this.calculate('mapHeight') / 2)
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
 
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
         .setSize(this.landLayer.getSize()).setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
-    //create land elements
-    /*for (var x = 0; x < this.settings.mapSize; x++) {
-     this.tiles[x] = [];
-     for (var y = 0; y < this.settings.mapSize; y++) {
-     this.tiles[x][y] = new farming.Tile(this.settings, this.player).setPosition(this.twoDToScreen(x, y));
-     this.landLayer.appendChild(this.tiles[x][y]);
-     }
-     }*/
+
     var middle = this.calculate('middleTile');
 
     this.farm = new farming.Sprite('images/farm.png').setAnchorPoint(0.25, 0.579).setSize(400, 278);
@@ -104,12 +95,12 @@ farming.SceneMap.prototype.drawLand = function () {
         e.startDrag(false);
         var drag = function (e) {
             var y = e.position.y + this.getPosition().y;
-            if(y > scene.game.screen.height - SETTINGS.size.controls.height) return;
+            if(y > SETTINGS.screen.height - SETTINGS.size.controls.height) return;
             var newPos = this.getPosition();
             var xDiff = newPos.x - oldPos.x;
             var yDiff = newPos.y - oldPos.y;
             var diff = xDiff * xDiff + yDiff * yDiff;
-            if (diff < scene.settings.drag.maxClickDistance*scene.settings.drag.maxClickDistance) {
+            if (diff < scene.drag.maxClickDistance*scene.drag.maxClickDistance) {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
                 var tile = scene.tiles[focus.x][focus.y];
                 var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
@@ -157,6 +148,10 @@ farming.SceneMap.prototype.drawLand = function () {
 
     this.appendChild(this.landLayer);
 
+    this.body = new farming.Body();
+    var farmPos = scene.farm.getPosition();
+    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 100, farmPos.y), false);
+    this.landLayer.appendChild(this.body);
 }
 
 farming.SceneMap.prototype.drawControls = function () {
@@ -164,16 +159,16 @@ farming.SceneMap.prototype.drawControls = function () {
     this.appendChild(this.controlsLayer);
     //controls area
     var controlArea = new lime.Sprite().setAnchorPoint(0, 0)
-        .setPosition(0, this.game.screen.height - SETTINGS.size.controls.height)
+        .setPosition(0, SETTINGS.screen.height - SETTINGS.size.controls.height)
         .setSize(this.game.screen.width, SETTINGS.size.controls.height)
         .setFill(SETTINGS.color.controls_background)
     this.controlsLayer.appendChild(controlArea);
 
     // Money
     this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
-        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width-90, this.game.screen.height - SETTINGS.size.controls.height / 2);
+        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width-90, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
     this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label)
-        .setPosition(this.game.screen.width-50, this.game.screen.height - SETTINGS.size.controls.height / 2);
+        .setPosition(this.game.screen.width-50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
 
     // Create the labels for the cloning function
     this.cloningScreen = new lime.Sprite().setFill(255,255,255,0).setSize(150,100).setPosition(85,100);
@@ -196,21 +191,27 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Farmbutton
     this.farmButton = new farming.Button('Farm').setColor(SETTINGS.color.button)
-        .setPosition(50, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
 
     // Clonebutton
     this.cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button)
-        .setPosition(150, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(150, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
 
     // Challengebutton
     this.challengeButton = new farming.Button('Challenges').setColor(SETTINGS.color.button)
-        .setPosition(250, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(250, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeButton);
+
+    // BODYbutton
+    this.bodyButton = new farming.Button('BODY').setColor('#999999')
+    		.setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
+    this.controlsLayer.appendChild(this.bodyButton);
 
     // Current challenge indicator
     this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill(SETTINGS.color.red)
@@ -220,8 +221,8 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
-        .setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
+    		.setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
+    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
     // this.controlsLayer.appendChild(this.introButton);
 }
 
@@ -233,6 +234,9 @@ farming.SceneMap.prototype.showClone = function(scene) {
 }
 farming.SceneMap.prototype.showChallenge = function(scene) {
     scene.game.showChallenge();
+}
+farming.SceneMap.prototype.showBody = function(scene) {
+    scene.game.showBody();
 }
 farming.SceneMap.prototype.showIntro = function(scene) {
     scene.game.introduction.intro();
@@ -278,9 +282,9 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
 farming.SceneMap.prototype.itemAnimation = function (type, amount) {
     lime.scheduleManager.callAfter(function() {
         var itemSprite = new lime.Sprite().setFill('images/items/'+type+'.png').setSize(SETTINGS.size.close_button)
-            .setPosition(70,this.game.screen.height - SETTINGS.size.controls.height);
+            .setPosition(70,SETTINGS.screen.height - SETTINGS.size.controls.height);
         var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
-            .setPosition(40,this.game.screen.height - SETTINGS.size.controls.height)
+            .setPosition(40,SETTINGS.screen.height - SETTINGS.size.controls.height)
             .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
         this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
         var moveUp = new lime.animation.MoveBy(0,-100).setDuration(3);

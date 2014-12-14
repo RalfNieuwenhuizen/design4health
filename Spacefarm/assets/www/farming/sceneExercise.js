@@ -104,6 +104,8 @@ farming.SceneExercise.prototype.closeExercise = function(scene) {
 farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
+    scene.game.putStatistics(scene.exerciseKey);
+
     var exercise = EXERCISES[scene.exerciseKey];
     if(exercise && exercise.type && exercise.points)
         scene.game.addPoints(exercise.type, exercise.points);
