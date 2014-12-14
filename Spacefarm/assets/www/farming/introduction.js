@@ -20,6 +20,7 @@ goog.require('goog.events');
 farming.Introduction = function (game) {
     goog.base(this);
     this.game = game;
+    
     // This layer is on top of all screens
     this.introLayer = new lime.Layer();
     game.sceneMap.appendChild(this.introLayer);
@@ -33,6 +34,8 @@ farming.Introduction = function (game) {
     this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.85)).setPosition(this.center.x, this.center.y-10);
     this.text = new lime.Label().setFontSize(18).setPosition(this.center.x, this.center.y-15).setMultiline(true);
     this.button = new farming.Button('').setColor('#999999').setAction(this.buttonAction, this);
+    
+    this.appendChild(this.introLayer);
 }
 
 goog.inherits(farming.Introduction, farming.Scene);
@@ -53,13 +56,20 @@ farming.Introduction.prototype.intro = function(){
 // The button is used: introPhase goes one step further and removes the current screen
 farming.Introduction.prototype.buttonAction = function(scene) {
 	console.log('action button used');
+	
+	// If current scene is intro: close screen
+	if (scene.game.director.getCurrentScene() == scene){
+		console.log('intro is the current scene')
+		scene.game.closeIntroduction();
+	}
+	
 	scene.game.introduction.introLayer.removeAllChildren();
 	scene.game.introduction.introScrollLayer.removeAllChildren();
 	scene.game.introduction.introPhase++;
 	console.log('intro phase is: '+scene.game.introduction.introPhase);
 	
 	// Call for the next introduction screen
-	scene.game.introduction.intro();
+	scene.intro();
 }
 
 // First introduction screen: general story
@@ -77,12 +87,13 @@ farming.Introduction.prototype.intro1 = function(){
 					+ "After so many years, the fields on planet Yeo are \n"
 					+ "unused and empty. Will you be able to salvage the \n"
 					+ "farm?");
+	this.w.setPosition(this.center.x, this.center.y);
+	this.text.setPosition(this.center.x, this.center.y);
+	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.37).height).setSize(60,30).setText('Start');
+	this.introLayer.setOpacity(1);
+	this.introLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button);
 	
-	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.365).height)
- .setSize(60,30).setText('Start');
-	this.introLayer.setOpacity(0.85);
-	this.introLayer.appendChild(this.w)
-	.appendChild(this.text).appendChild(this.button);
+	this.game.showIntroduction();
 }
 
 // Second screen: meet the uncle
@@ -106,18 +117,20 @@ farming.Introduction.prototype.intro2 = function(){
 	this.introLayer.setOpacity(0.85);
 	this.introLayer.appendChild(this.w)
 	.appendChild(this.text).appendChild(this.button).appendChild(icon);
+	
+	this.game.showIntroduction();
 }
 
-// Third screen: show the farm
+// Third screen: go to the inventory
 farming.Introduction.prototype.intro3 = function(){
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 	
-	this.text.setFontWeight('bold').setPosition(middleCor.x-135,middleCor.y).setText(
+	this.text.setFontWeight('bold').setPosition(middleCor.x-142,middleCor.y).setText(
 			"This is your new farm, \n click on it to see \n your inventory");
 	
-	icon = new farming.Sprite('images/Farmer.png').setSize(150, 200).setPosition(middleCor.x-272,middleCor.y);
-	this.w.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.6).width, this.game.getFullSize(0.6).height)
+	icon = new farming.Sprite('images/Farmer.png').setSize(100, 100).setPosition(middleCor.x-276,middleCor.y);
+	this.w.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.52).width, this.game.getFullSize(0.3).height)
 		.setPosition(middleCor.x-127, middleCor.y).setOpacity(0.85);	
 	this.introScrollLayer.setOpacity(0.85);
 	this.introScrollLayer.appendChild(this.w).appendChild(this.text).appendChild(icon);
@@ -125,6 +138,25 @@ farming.Introduction.prototype.intro3 = function(){
 	// Listen to the show_farm event
 	goog.events.listenOnce(this.game.source,this.game.EventType.SHOW_FARM,goog.partial(this.buttonAction,this.game.introduction));
 }
+
+// Fourth screen: show the inventory
+farming.Introduction.prototype.intro4 = function(){
+	var middle = this.game.sceneMap.calculate('middleTile');
+	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
+	
+	this.text.setFontWeight('bold').setPosition(middleCor.x,middleCor.y).setText(
+			"This is your new farm, \n click on it to see \n your inventory");
+	
+	icon = new farming.Sprite('images/Farmer.png').setSize(100, 100).setPosition(middleCor.x,middleCor.y);
+	this.w.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.52).width, this.game.getFullSize(0.3).height)
+		.setPosition(middleCor.x, middleCor.y).setOpacity(0.85);	
+	this.introLayer.setOpacity(0.85);
+	this.introLayer.appendChild(this.w).appendChild(this.text).appendChild(icon);
+	
+	// Listen to the show_farm event
+	goog.events.listenOnce(this.game.source,this.game.EventType.SHOW_FARM,goog.partial(this.buttonAction,this.game.introduction));
+}
+
 
 farming.Introduction.prototype.write = function(text){
 	console.log('test text is: '+text);
