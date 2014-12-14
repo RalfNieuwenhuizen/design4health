@@ -54,7 +54,7 @@ farming.SceneCropDetails.prototype.game = null;
 
 // Function to clone a product
 farming.SceneCropDetails.prototype.startClone = function(object) {
-    object.game.sceneMap.startCloning(object.cropProps);
+    object.game.startCloning(object.cropProps);
 }
 
 farming.SceneCropDetails.prototype.backDetails = function(scene) {
@@ -75,7 +75,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
     
     var game = this.game;
     var center = game.getCenterPosition();
-    this.cropIcon.setFill('images/'+crop.key+'_ripe.png').setSize(300, 300).setPosition(center.x + 25 - game.getFullSize(0.3).width, center.y);
+    this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png').setSize(300, 300).setPosition(center.x + 25 - game.getFullSize(0.3).width, center.y);
     this.cloneButton.setAction(this.startClone, {'cropProps': crop,'game': this.game} );
     this.crop = crop;
 }

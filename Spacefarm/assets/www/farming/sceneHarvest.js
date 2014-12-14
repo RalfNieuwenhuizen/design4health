@@ -26,13 +26,13 @@ farming.SceneHarvest.prototype.tile = null;
 
 farming.SceneHarvest.prototype.showExercise = function(tile) {
     this.tile = tile;
-    goog.base(this, 'showExercise', tile.crop.prop.exercise.key);
+    goog.base(this, 'showExercise', tile.getExercise());
     // update title for harvest screen only
-    this.title.setText(this.title.getText() + ' (Harvesting ' + this.tile.crop.prop.name + ')')
+    this.title.setText(this.title.getText() + ' (Harvesting ' + tile.getName() + ')')
 }
 
 farming.SceneHarvest.prototype.startExercise = function(scene) {
-    farming.SceneExercise.prototype.startExercise(scene, scene.tile.crop.prop.exercise.callback);
+    farming.SceneExercise.prototype.startExercise(scene);
 }
 
 farming.SceneHarvest.prototype.closeExercise = function(scene) {
@@ -42,13 +42,13 @@ farming.SceneHarvest.prototype.closeExercise = function(scene) {
 farming.SceneHarvest.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
-    // handle crop actions
-    var crop = scene.tile.crop.prop;
-    scene.game.addCoins(crop.revenue);
-    if(crop.revenue_item)
-        scene.game.addItem(crop.revenue_item, 1);
-    if(scene.tile.crop.harvest()) {
-        scene.tile.removeCrop();
+    // handle item actions
+    var item = scene.tile.getItem().prop;
+    scene.game.addCoins(item.revenue);
+    if(item.revenue_item)
+        scene.game.addItem(item.revenue_item, 1);
+    if(scene.tile.getItem().harvest()) {
+        scene.tile.removeItem();
     }
 
     // handle exercise actions
