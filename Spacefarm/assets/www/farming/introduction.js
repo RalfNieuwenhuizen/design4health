@@ -197,7 +197,7 @@ farming.Introduction.prototype.intro6 = function(){
 	var position = {x: this.center.x-200,y: this.center.y + this.game.getFullSize(0.30).height};
 
 	this.text.setFontWeight('bold').setPosition(position.x - 40, position.y-10).setText(
-			"Click on Clone to clone \n and plant a new \n Space Apple Tree");
+			"Click on Clone to \n clone and plant \n a new crop");
 	this.w.setFill('images/textbox/right_low_arrow.png').setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.25).height)
 		.setPosition(position.x, position.y -15 ).setOpacity(1);	
 	
