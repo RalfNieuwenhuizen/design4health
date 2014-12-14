@@ -34,7 +34,7 @@ farming.Introduction = function (game) {
     this.windowLayer = new lime.Layer();
     this.appendChild(this.windowLayer);
     
-    this.introPhase = 7;
+    this.introPhase = 1;
     
     this.center = game.getCenterPosition();
     this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.85));//.setPosition(this.center.x, this.center.y-10);
