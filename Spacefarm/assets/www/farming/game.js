@@ -9,13 +9,17 @@ goog.require('lime.Layer');
 goog.require('lime.transitions.MoveInDown');
 goog.require('farming.SceneMap');
 goog.require('farming.SceneFarm');
+goog.require('farming.SceneBody');
 goog.require('farming.SceneHarvest');
 goog.require('farming.SceneClone');
 goog.require('farming.SceneCropDetails');
+goog.require('farming.SceneLivestockDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
+goog.require('farming.SceneStats');
 goog.require('farming.Introduction');
 goog.require('farming.Crop');
+goog.require('farming.Livestock');
 goog.require('farming.Challenge');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
@@ -39,7 +43,7 @@ var SETTINGS = {
         red: '#CC2222',
         black: '#000000',
         controls_label: '#E8FC08',
-        controls_background: '#0D0D0D',
+        controls_background: '#0D0D0D'
     },
 
     size: {
@@ -50,7 +54,7 @@ var SETTINGS = {
         tiles: new goog.math.Size(200, 116),
         controls: {
             height: 50
-        },
+        }
     },
 
     position: {
@@ -58,7 +62,7 @@ var SETTINGS = {
         left_button: new goog.math.Coordinate(100, 375),
         center_button: new goog.math.Coordinate(400, 375),
         right_button: new goog.math.Coordinate(700, 375),
-        title: new goog.math.Coordinate(400, 50),
+        title: new goog.math.Coordinate(400, 50)
     },
 
     font: {
@@ -66,7 +70,7 @@ var SETTINGS = {
         subtitle: {
             size: 16,
             weight: 600
-        },
+        }
     }
 }
 
@@ -84,23 +88,26 @@ farming.Game = function() {
     this.player = {
         coins: 100,
         currentCrops : Object.keys(CROPS),
+        currentLivestock : Object.keys(LIVESTOCK),
         challenges : Object.keys(CHALLENGES),
+        exercisesDone: [],
         body : {
             arms: 0,
             legs: 0,
             back: 0,
-            abs: 0,
+            chest: 0,
+            abs: 0
         },
         inventory : {
             space_wheat: 10,
-            space_apple: 10,
+            space_apple: 10
         },
         currentChallenge : null,
         introPhase: 0 // Used to check for introductional screens
     }
 
     // Current crop defines the crop the user is building, initiated in clone screen
-    this.currentCrop = null;
+    this.currentClone = null;
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
     this.director.makeMobileWebAppCapable()
@@ -109,12 +116,15 @@ farming.Game = function() {
     //Define all the scenes
     this.sceneMap = new farming.SceneMap(this);
     this.sceneFarm = new farming.SceneFarm(this);
+    this.sceneBody = new farming.SceneBody(this);
     this.sceneExercise = new farming.SceneExercise(this);
     this.sceneHarvest = new farming.SceneHarvest(this);
     this.sceneClone = new farming.SceneClone(this);
     this.sceneCropDetails = new farming.SceneCropDetails(this);
+    this.sceneLivestockDetails = new farming.SceneLivestockDetails(this);
     this.sceneChallenge = new farming.SceneChallenge(this);
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
+    this.sceneStats = new farming.SceneStats(this);
     this.introduction = new farming.Introduction(this);
 
     //Set the starting scene
@@ -144,7 +154,6 @@ farming.Game.prototype.showFarm = function(){
 	// Fire the event that farm is showed, listened to by introduction.intro3
 	this.source.dispatchEvent(this.EventType.SHOW_FARM);
 	this.sceneFarm.redraw(this.player.inventory);
-	
     //this.director.pushScene(this.sceneFarm);
 	this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
 }
@@ -158,11 +167,37 @@ farming.Game.prototype.closeFarm = function(){
 }
 // -- end farm --
 
+
+// -- BODY --
+farming.Game.prototype.showBody = function(){
+    this.sceneBody.redraw(this.player.body);
+    //this.director.pushScene(this.sceneBody);
+    this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
+}
+
+farming.Game.prototype.closeBody = function(){
+    //if(this.director.getCurrentScene() != this.sceneBody) return;
+    //this.director.popScene();
+    this.sceneMap.sceneLayer.removeAllChildren();
+}
+
+farming.Game.prototype.showStats = function(){
+    this.sceneStats.redraw(this.player);
+    //this.director.pushScene(this.sceneStats);
+    this.sceneMap.sceneLayer.appendChild(this.sceneStats.windowLayer);
+}
+farming.Game.prototype.closeStats = function(){
+    //if(this.director.getCurrentScene() != this.sceneStats) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeAllChildren();
+}
+// -- end BODY --
+
 // -- harvest --
 farming.Game.prototype.showHarvest = function(tile){
     this.sceneHarvest.showExercise(tile);
-   // this.sceneMap.sceneLayer.appendChild(this.sceneHarvest);
-   /this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
+    //this.sceneMap.sceneLayer.appendChild(this.sceneHarvest);
+    this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
 }
 
 farming.Game.prototype.hideHarvest = function(){
@@ -196,9 +231,11 @@ farming.Game.prototype.hideClone = function(){
 }
 
 // Start cloning a crop
-farming.Game.prototype.startCloning = function(crop){
-	this.hideClone();
-	this.sceneCropDetails.showDetails(crop);
+farming.Game.prototype.startCloning = function(properties){
+    this.hideClone();
+    this.closeCropDetails();
+    this.currentClone = properties;
+    this.sceneMap.startCloning(properties);
 }
 // -- end clone --
 
@@ -227,6 +264,29 @@ farming.Game.prototype.backCropDetails = function(){
 }
 // -- end cropdetails --
 
+
+// -- livestockdetails --
+farming.Game.prototype.showLivestockDetails = function(livestock){
+    this.sceneLivestockDetails.showDetails(livestock);
+    //this.director.pushScene(this.sceneLivestockDetails);
+    this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
+}
+
+farming.Game.prototype.closeLivestockDetails = function(){
+    //if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    //this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneClone) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeAllChildren();
+}
+
+farming.Game.prototype.backLivestockDetails = function(){
+    //if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeChild(this.sceneLivestockDetails.windowLayer);
+}
+// -- end livestockdetails --
+
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
 farming.Game.prototype.showChallenge = function(){
@@ -235,6 +295,7 @@ farming.Game.prototype.showChallenge = function(){
     	this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
     } else {
         this.showChallengeDetails(this.player.currentChallenge);
+        console.log('this is currentChallenge');
     }
 }
 // set the current challenge and close all challenge screens
@@ -249,9 +310,9 @@ farming.Game.prototype.selectChallenge = function(challenge){
     }
     this.player.currentChallenge = challenge;
     this.player.currentChallenge.exercisesDone = [];
+    // TODO: Check if these steps were not necessary
     //if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
     //if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
-    //this.sceneMap.sceneLayer.removeChild
     this.showChallenge();
 }
 // remove the current challenge and close all challenge screens
@@ -279,15 +340,16 @@ farming.Game.prototype.completeChallenge = function(){
         }
     }
     this.player.currentChallenge = null;
-    //if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
-    //if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
+    //if(this.director.getCurrentScene() == this.sceneChallengeDetails) this.director.popScene();
+    //if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
+    this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
+    this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
     this.showChallenge();
 }
 // close the challenge overview screen
 farming.Game.prototype.closeChallenge = function(){
-   // if(this.director.getCurrentScene() != this.sceneChallenge) return;
-    //this.director.popScene();
-	this.sceneMap.sceneLayer.removeAllChildren();
+    //if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
+    this.sceneMap.sceneLayer.removeAllChildren();
 }
 // show the challenge details screen for input.challenge
 farming.Game.prototype.showChallengeDetails = function(challenge){
@@ -324,9 +386,6 @@ farming.Game.prototype.closeIntroduction = function(){
 		this.director.popScene();
 	}
 }
-
-
-
 // -- end introduction screen --
 
 farming.Game.prototype.addCoins = function(amount) {
@@ -360,6 +419,9 @@ farming.Game.prototype.addItem = function(type, amount) {
     return this.player.inventory[type];
 }
 farming.Game.prototype.removeItem = function(type, amount) {
+    if(!amount)
+        amount = 1;
+
     if(!this.hasItem(type, amount)) return false;
     this.player.inventory[type] -= amount;
     this.sceneMap.itemAnimation(type, -amount);
@@ -387,6 +449,9 @@ farming.Game.prototype.addPoints = function(bodypart, amount) {
     } else {
         this.player.body[bodypart] = amount;
     }
+
+    if(this.sceneMap.body)
+        this.sceneMap.body.redraw(this.player.body);
     return this.player.body[bodypart];
 }
 farming.Game.prototype.getPoints = function(bodypart) {
@@ -394,6 +459,20 @@ farming.Game.prototype.getPoints = function(bodypart) {
         return this.player.body[bodypart];
 
     return 0;
+}
+
+farming.Game.prototype.putStatistics = function(exercise) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(!this.player.exercisesDone[yyyy])
+        this.player.exercisesDone[yyyy] = [];
+    if(!this.player.exercisesDone[yyyy][mm])
+        this.player.exercisesDone[yyyy][mm] = [];
+    if(!this.player.exercisesDone[yyyy][mm][dd])
+        this.player.exercisesDone[yyyy][mm][dd] = [];
+    this.player.exercisesDone[yyyy][mm][dd].push(exercise);
 }
 
 // -- Game methods --

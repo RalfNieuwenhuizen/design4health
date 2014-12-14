@@ -22,6 +22,7 @@ farming.SceneMap = function (game) {
 
     // make the map updateable
     this.game.tickables.push(this);
+    
 }
 goog.inherits(farming.SceneMap, farming.Scene);
 
@@ -52,10 +53,10 @@ farming.SceneMap.prototype.drawLand = function () {
     this.landLayer = new lime.Layer()
         .setPosition(this.game.screen.width / 2, SETTINGS.screen.height / 2 - this.calculate('mapHeight') / 2)
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
-
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
         .setSize(this.landLayer.getSize()).setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
+    
 
     var middle = this.calculate('middleTile');
 
@@ -147,7 +148,15 @@ farming.SceneMap.prototype.drawLand = function () {
     });
 
     this.appendChild(this.landLayer);
-
+    
+    this.cloningScreen = new lime.Sprite().setFill(255,255,255,0).setSize(150,100).setPosition(85,100);
+    this.appendChild(this.cloningScreen);
+    
+    // Make a layer for screens, fixed position
+    this.sceneLayer = new lime.Layer()
+    	.setPosition(0,0)
+    	.setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
+    this.appendChild(this.sceneLayer);
     this.body = new farming.Body();
     var farmPos = scene.farm.getPosition();
     this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 100, farmPos.y), false);
@@ -171,7 +180,7 @@ farming.SceneMap.prototype.drawControls = function () {
         .setPosition(this.game.screen.width-50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
 
     // Create the labels for the cloning function
-    this.cloningScreen = new lime.Sprite().setFill(255,255,255,0).setSize(150,100).setPosition(85,100);
+
     this.cloningTitle = new lime.Label().setSize(140,25).setPosition(0,40);
     this.cloningImage = new lime.Sprite().setSize(100, 60).setPosition(-20,-15);
     this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(30,10);
@@ -186,7 +195,6 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(this.moneyLabel);
     this.landLayer.appendChild(this.noCoinsWarning);
 
-    this.controlsLayer.appendChild(this.cloningScreen);
     this.updateControls();
 
     // Farmbutton
