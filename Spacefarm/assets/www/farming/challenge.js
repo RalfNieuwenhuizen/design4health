@@ -56,7 +56,7 @@ var CHALLENGES = {
                 type : 'exercise',
                 name : '\"Crush it all together\"',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
-            },
+            }
             /*{
                 type : 'exercise',
                 name : '\"Wait for it to bake\"',
@@ -71,8 +71,8 @@ var CHALLENGES = {
             },*/
             {
                 type : 'coins',
-                number: 50,
-            },
+                number: 50
+            }
         ]
     }
 };

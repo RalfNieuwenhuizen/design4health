@@ -26,6 +26,7 @@ farming.SceneMap = function (game) {
 goog.inherits(farming.SceneMap, farming.Scene);
 
 farming.SceneMap.prototype.game = null;
+farming.SceneMap.prototype.farm = null;
 
 farming.SceneMap.prototype.settings = {
     drag: {
@@ -67,7 +68,7 @@ farming.SceneMap.prototype.drawLand = function () {
      }*/
     var middle = this.calculate('middleTile');
 
-    var farm = new farming.Sprite('images/farm.png').setAnchorPoint(0.25, 0.579).setSize(400, 278);
+    this.farm = new farming.Sprite('images/farm.png').setAnchorPoint(0.25, 0.579).setSize(400, 278);
 
     var min = 0;
     var max = 0;
@@ -86,13 +87,7 @@ farming.SceneMap.prototype.drawLand = function () {
             this.tiles[x][y] = new farming.Tile(this.game).setPosition(this.twoDToScreen(x, y));
             this.landLayer.appendChild(this.tiles[x][y]);
             if (middle.x == x && middle.y == y) {
-                this.landLayer.appendChild(farm.setPosition(this.twoDToScreen(x, y)));
-
-                // Add masks that make the farm clickable
-                var farmPos = farm.getPosition();
-                var farmMask1 = new farming.Sprite().setSize(200, 120).setPosition(farmPos.x + 100, farmPos.y).setAction(this.showFarm, this);
-                var farmMask2 = new farming.Sprite().setSize(100, 80).setPosition(farmPos.x + 100, farmPos.y - 80).setAction(this.showFarm, this);
-                this.landLayer.appendChild(farmMask1).appendChild(farmMask2);
+                this.landLayer.appendChild(this.farm.setPosition(this.twoDToScreen(x, y)));
             }
         }
     }
@@ -117,9 +112,12 @@ farming.SceneMap.prototype.drawLand = function () {
             if (diff < scene.settings.drag.maxClickDistance*scene.settings.drag.maxClickDistance) {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
                 var tile = scene.tiles[focus.x][focus.y];
-                if(tile.isRipe()) {
+                var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
+                if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y-1 )) {
+                    scene.game.showFarm();
+                } else if (tile.isRipe()) {
                     scene.game.showHarvest(tile);
-                } else if(tile.isEmpty()) {
+                } else if (tile.isEmpty()) {
                     currentCrop = scene.game.currentCrop;
                     // If there is no current crop to be cloned, return
                     if(currentCrop == null)

@@ -13,7 +13,6 @@ goog.require('lime.Layer');
 goog.require('farming.Tile');
 goog.require('farming.Crop');
 goog.require('farming.Scene');
-goog.require('farming.SceneCropDetails');
 
 /**
  * Scene elements

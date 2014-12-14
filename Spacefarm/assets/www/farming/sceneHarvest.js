@@ -32,7 +32,7 @@ farming.SceneHarvest.prototype.showExercise = function(tile) {
 }
 
 farming.SceneHarvest.prototype.startExercise = function(scene) {
-    goog.base(scene, 'startExercise', scene, scene.tile.crop.prop.exercise.callback);
+    farming.SceneExercise.prototype.startExercise(scene, scene.tile.crop.prop.exercise.callback);
 }
 
 farming.SceneHarvest.prototype.closeExercise = function(scene) {
@@ -52,7 +52,7 @@ farming.SceneHarvest.prototype.finishExercise = function(scene) {
     }
 
     // handle exercise actions
-    goog.base(scene, 'finishExercise', scene);
+    farming.SceneExercise.prototype.finishExercise(scene);
 
     scene.hideHarvest(scene);
 }

@@ -35,7 +35,7 @@ var SETTINGS = {
         red: '#CC2222',
         black: '#000000',
         controls_label: '#E8FC08',
-        controls_background: '#0D0D0D',
+        controls_background: '#0D0D0D'
     },
 
     size: {
@@ -46,7 +46,7 @@ var SETTINGS = {
         tiles: new goog.math.Size(200, 116),
         controls: {
             height: 50
-        },
+        }
     },
 
     position: {
@@ -54,7 +54,7 @@ var SETTINGS = {
         left_button: new goog.math.Coordinate(100, 375),
         center_button: new goog.math.Coordinate(400, 375),
         right_button: new goog.math.Coordinate(700, 375),
-        title: new goog.math.Coordinate(400, 50),
+        title: new goog.math.Coordinate(400, 50)
     },
 
     font: {
@@ -62,7 +62,7 @@ var SETTINGS = {
         subtitle: {
             size: 16,
             weight: 600
-        },
+        }
     }
 }
 
@@ -85,11 +85,11 @@ farming.Game = function() {
             arms: 0,
             legs: 0,
             back: 0,
-            abs: 0,
+            abs: 0
         },
         inventory : {
             space_wheat: 10,
-            space_apple: 10,
+            space_apple: 10
         },
         currentChallenge : null,
         introPhase: 0 // Used to check for introductional screens
@@ -176,8 +176,8 @@ farming.Game.prototype.hideClone = function(){
 
 // Start cloning a crop
 farming.Game.prototype.startCloning = function(crop){
-	this.hideClone();
-	this.sceneCropDetails.showDetails(crop);
+    this.hideClone();
+    this.sceneCropDetails.showDetails(crop);
 }
 // -- end clone --
 
@@ -248,14 +248,13 @@ farming.Game.prototype.completeChallenge = function(){
         }
     }
     this.player.currentChallenge = null;
-    if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
-    if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
+    if(this.director.getCurrentScene() == this.sceneChallengeDetails) this.director.popScene();
+    if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
     this.showChallenge();
 }
 // close the challenge overview screen
 farming.Game.prototype.closeChallenge = function(){
-    if(this.director.getCurrentScene() != this.sceneChallenge) return;
-    this.director.popScene();
+    if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
 }
 // show the challenge details screen for input.challenge
 farming.Game.prototype.showChallengeDetails = function(challenge){
