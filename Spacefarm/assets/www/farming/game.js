@@ -170,29 +170,33 @@ farming.Game.prototype.closeFarm = function(){
 // -- BODY --
 farming.Game.prototype.showBody = function(){
     this.sceneBody.redraw(this.player.body);
-    this.director.pushScene(this.sceneBody);
+    //this.director.pushScene(this.sceneBody);
+    this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
 }
 
 farming.Game.prototype.closeBody = function(){
-    if(this.director.getCurrentScene() != this.sceneBody) return;
-    this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneBody) return;
+    //this.director.popScene();
+    this.sceneMap.sceneLayer.removeAllChildren();
 }
 
 farming.Game.prototype.showStats = function(){
     this.sceneStats.redraw(this.player);
-    this.director.pushScene(this.sceneStats);
+    //this.director.pushScene(this.sceneStats);
+    this.sceneMap.sceneLayer.appendChild(this.sceneStats.windowLayer);
 }
 farming.Game.prototype.closeStats = function(){
-    if(this.director.getCurrentScene() != this.sceneStats) return;
-    this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneStats) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeAllChildren();
 }
 // -- end BODY --
 
 // -- harvest --
 farming.Game.prototype.showHarvest = function(tile){
     this.sceneHarvest.showExercise(tile);
-    this.sceneMap.sceneLayer.appendChild(this.sceneHarvest);
-    //this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
+    //this.sceneMap.sceneLayer.appendChild(this.sceneHarvest);
+    this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
 }
 
 farming.Game.prototype.hideHarvest = function(){
@@ -262,19 +266,22 @@ farming.Game.prototype.backCropDetails = function(){
 // -- livestockdetails --
 farming.Game.prototype.showLivestockDetails = function(livestock){
     this.sceneLivestockDetails.showDetails(livestock);
-    this.director.pushScene(this.sceneLivestockDetails);
+    //this.director.pushScene(this.sceneLivestockDetails);
+    this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
 }
 
 farming.Game.prototype.closeLivestockDetails = function(){
-    if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
-    this.director.popScene();
-    if(this.director.getCurrentScene() != this.sceneClone) return;
-    this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    //this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneClone) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeAllChildren();
 }
 
 farming.Game.prototype.backLivestockDetails = function(){
-    if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
-    this.director.popScene();
+    //if(this.director.getCurrentScene() != this.sceneLivestockDetails) return;
+    //this.director.popScene();
+	this.sceneMap.sceneLayer.removeChild(this.sceneLivestockDetails.windowLayer);
 }
 // -- end livestockdetails --
 
@@ -286,6 +293,7 @@ farming.Game.prototype.showChallenge = function(){
     	this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
     } else {
         this.showChallengeDetails(this.player.currentChallenge);
+        console.log('this is currentChallenge');
     }
 }
 // set the current challenge and close all challenge screens
@@ -300,6 +308,7 @@ farming.Game.prototype.selectChallenge = function(challenge){
     }
     this.player.currentChallenge = challenge;
     this.player.currentChallenge.exercisesDone = [];
+    // TODO: Check if these steps were not necessary
     //if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
     //if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
     this.showChallenge();
@@ -329,9 +338,10 @@ farming.Game.prototype.completeChallenge = function(){
         }
     }
     this.player.currentChallenge = null;
-    // TODO: change to children
-    if(this.director.getCurrentScene() == this.sceneChallengeDetails) this.director.popScene();
-    if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
+    //if(this.director.getCurrentScene() == this.sceneChallengeDetails) this.director.popScene();
+    //if(this.director.getCurrentScene() == this.sceneChallenge) this.director.popScene();
+    this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
+    this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
     this.showChallenge();
 }
 // close the challenge overview screen
@@ -374,9 +384,6 @@ farming.Game.prototype.closeIntroduction = function(){
 		this.director.popScene();
 	}
 }
-
-
-
 // -- end introduction screen --
 
 farming.Game.prototype.addCoins = function(amount) {
