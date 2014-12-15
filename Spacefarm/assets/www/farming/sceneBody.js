@@ -41,7 +41,7 @@ farming.SceneBody = function (game) {
         .appendChild(this.statsButton)
         .appendChild(this.closeButton);
 
-    this.body = new farming.Body();
+    this.body = new farming.Body(1.3);
     this.windowLayer.appendChild(this.body);
 }
 goog.inherits(farming.SceneBody, farming.Scene);

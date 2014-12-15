@@ -159,9 +159,9 @@ farming.SceneMap.prototype.drawLand = function () {
     	.setPosition(0,0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     this.appendChild(this.sceneLayer);
     
-    this.body = new farming.Body();
+    this.body = new farming.Body(0.5);
     var farmPos = scene.farm.getPosition();
-    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 100, farmPos.y), false);
+    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 50, farmPos.y), false);
     this.landLayer.appendChild(this.body);
 }
 

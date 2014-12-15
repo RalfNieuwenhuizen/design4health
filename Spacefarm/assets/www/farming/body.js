@@ -5,12 +5,18 @@ goog.require('lime.Layer');
  * Crop elements
  *
  */
-farming.Body = function() {
+farming.Body = function(scale) {
     goog.base(this);
 
+    if(!scale)
+        scale = 1;
+
     this.bodyLayer = new lime.Layer();
+    this.scale = scale;
     this.appendChild(this.bodyLayer);
 }
+
+farming.Body.prototype.scale = null;
 
 goog.inherits(farming.Body,lime.Layer);
 
@@ -30,19 +36,19 @@ farming.Body.prototype.redraw = function (body, position, showLevels) {
         parent.appendChild(this.bodyLayer);
     }
     this.drawBase(position);
-    this.drawChest(body.chest, new goog.math.Coordinate(position.x - 1, position.y - 30));
+    this.drawChest(body.chest, new goog.math.Coordinate(position.x - (this.scale*1), position.y - (this.scale*30)));
     this.drawAbs(body.abs, position);
-    this.drawArms(body.arms, new goog.math.Coordinate(position.x, position.y - 2));
-    this.drawLegs(body.legs, new goog.math.Coordinate(position.x + 2, position.y + 47));
+    this.drawArms(body.arms, new goog.math.Coordinate(position.x, position.y - (this.scale*2)));
+    this.drawLegs(body.legs, new goog.math.Coordinate(position.x + (this.scale*2), position.y + (this.scale*47)));
 }
 farming.Body.prototype.drawBase= function (center) {
-    var icon = new lime.Sprite().setFill('images/body/exoskeleton.png').setSize(100, 200).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/exoskeleton.png').setSize(this.scale*100, this.scale*200).setPosition(center);
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawBack = function (number, center) {
     var level = this.getLevel(number)
-    var icon = new lime.Sprite().setFill('images/body/back'+level+'.png').setSize(50, 50).setPosition(center);
-    var label = new lime.Label().setText(level).setSize(10, 10).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/back'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
+    var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
@@ -52,8 +58,8 @@ farming.Body.prototype.drawBack = function (number, center) {
 }
 farming.Body.prototype.drawArms = function (number, center) {
     var level = this.getLevel(number);
-    var icon = new lime.Sprite().setFill('images/body/arms'+level+'.png').setSize(74, 50).setPosition(center);
-    var label = new lime.Label().setText(level).setSize(10, 10).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/arms'+level+'.png').setSize(this.scale*74, this.scale*50).setPosition(center);
+    var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
@@ -63,8 +69,8 @@ farming.Body.prototype.drawArms = function (number, center) {
 }
 farming.Body.prototype.drawLegs = function (number, center) {
     var level = this.getLevel(number);
-    var icon = new lime.Sprite().setFill('images/body/legs'+level+'.png').setSize(55, 85).setPosition(center);
-    var label = new lime.Label().setText(level).setSize(10, 10).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/legs'+level+'.png').setSize(this.scale*55, this.scale*85).setPosition(center);
+    var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
@@ -74,8 +80,8 @@ farming.Body.prototype.drawLegs = function (number, center) {
 }
 farming.Body.prototype.drawChest = function (number, center) {
     var level = this.getLevel(number);
-    var icon = new lime.Sprite().setFill('images/body/chest'+level+'.png').setSize(60, 30).setPosition(center);
-    var label = new lime.Label().setText(level).setSize(10, 10).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/chest'+level+'.png').setSize(this.scale*60, this.scale*30).setPosition(center);
+    var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
@@ -85,8 +91,8 @@ farming.Body.prototype.drawChest = function (number, center) {
 }
 farming.Body.prototype.drawAbs = function (number, center) {
     var level = this.getLevel(number);
-    var icon = new lime.Sprite().setFill('images/body/abs'+level+'.png').setSize(50, 50).setPosition(center);
-    var label = new lime.Label().setText(level).setSize(10, 10).setPosition(center);
+    var icon = new lime.Sprite().setFill('images/body/abs'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
+    var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
