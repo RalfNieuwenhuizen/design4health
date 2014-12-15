@@ -40,7 +40,12 @@ farming.Introduction = function (game) {
     this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.85));//.setPosition(this.center.x, this.center.y-10);
     this.text = new lime.Label().setFontSize(18).setMultiline(true);//.setPosition(this.center.x, this.center.y-15);
     this.button = new farming.Button('').setColor('#999999').setAction(this.buttonAction, this);
-
+	this.phil = new farming.Sprite('images/phil_speaking1.png');
+	var talkingPhil = new lime.animation.KeyframeAnimation().setDelay(0.5);
+	for(var i = 1; i < 3; i++) {
+		talkingPhil.addFrame('images/phil_speaking'+i+'.png');
+	}
+	this.phil.runAction(talkingPhil);
 }
 
 goog.inherits(farming.Introduction, farming.Scene);
@@ -112,13 +117,13 @@ farming.Introduction.prototype.intro2 = function(){
 			+ "and possibilities. \n \n"
 			+ "Let's have a look at your farm.");
 	
-	icon = new farming.Sprite('images/Farmer.png').setSize(150, 200).setPosition(this.center.x-165, this.center.y);
+	this.phil.setSize(150, 200).setPosition(this.center.x-165, this.center.y + 56);
 	
 	this.w.setSize(this.game.getFullSize(0.65));
 	this.button.setPosition(this.center.x, this.center.y + 120)
 		.setSize(80,30).setText('Let\'s go!');
 	
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(icon);
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.phil);
 	
 	this.game.showIntroduction();
 }
@@ -131,11 +136,11 @@ farming.Introduction.prototype.intro3 = function(){
 	this.text.setFontWeight('bold').setPosition(middleCor.x-162,middleCor.y-20).setText(
 			"This is your new farm, \n click on it to see \n your inventory");
 	
-	icon = new farming.Sprite('images/Farmer.png').setSize(100, 100).setPosition(middleCor.x-296,middleCor.y-20);
+	this.phil.setSize(100, 133).setPosition(middleCor.x-296,middleCor.y-14);
 	this.w.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.52).width, this.game.getFullSize(0.3).height)
 		.setPosition(middleCor.x-147, middleCor.y-20).setOpacity(0.85);	
 	this.introScrollLayer.setOpacity(0.85);
-	this.introScrollLayer.appendChild(this.w).appendChild(this.text).appendChild(icon);
+	this.introScrollLayer.appendChild(this.w).appendChild(this.text).appendChild(this.phil);
 	
 	// Listen to the show_farm event
 	goog.events.listenOnce(this.game.source,this.game.EventType.SHOW_FARM,goog.partial(this.buttonAction,this.game.introduction));

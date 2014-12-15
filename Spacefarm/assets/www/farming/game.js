@@ -207,7 +207,7 @@ farming.Game.prototype.hideExercise = function(){
 // -- clone --
 farming.Game.prototype.showClone = function(){
     this.source.dispatchEvent(this.EventType.GO_CLONE);
-    this.sceneMap.sceneLayer.appendChild(this.sceneClone.windowLayer);
+    this.sceneMap.sceneLayer.appendChild(this.sceneClone);
 }
 
 // Let the event fire, called from sceneMap

@@ -74,6 +74,50 @@ var CHALLENGES = {
                 number: 50
             }
         ]
+    },
+    cookies : {
+        name: 'Space Cookies',
+        key: 'cookies',
+        description: 'Bake some space cookies.',
+        type: 'arms', //full_body, arms, legs, back, abs
+        requirements: [
+            {
+                type : 'item', //item, exercise
+                number: 2, //number of items
+                key : 'egg' //require 'images/items/{key}.png'
+            },
+            {
+                type : 'item', //item, exercise
+                number: 2, //number of items
+                key : 'milk' //require 'images/items/{key}.png'
+            },
+            {
+                type : 'item',
+                number: 2,
+                key : 'space_wheat'
+            },
+            {
+                type : 'exercise',
+                name : '\"Blend it\"',
+                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : '\"Heat it up\"',
+                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            /*{
+                type : 'item', //item, exercise
+                number: 1, //number of items
+                key : 'space_apple' //require 'images/items/{key}.png'
+            },*/
+            {
+                type : 'coins',
+                number: 100
+            }
+        ]
     }
 };
 

@@ -92,7 +92,9 @@ farming.Livestock.prototype.harvest = function(){
 
 farming.Livestock.prototype.playSound = function(){
     var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
-    sound.play();
+    if (sound.isLoaded() && !sound.isPlaying()) {
+        sound.play();
+    }
 }
 
 farming.Livestock.prototype.tick = function(){
@@ -116,7 +118,7 @@ var LIVESTOCK = {
     polychick : {
         name: 'Polychick',
         key: 'polychick',
-        appearances: 2,
+        appearances: 1,
         cost: 15,
         revenue: 10,
         revenue_item: 'egg',

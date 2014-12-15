@@ -97,6 +97,19 @@ var CROPS = {
         exercise: {
             key : 'arm_circles'
         }
+    },
+    carrot : {
+        name: 'Space Carrots',
+        key: 'carrot',
+        growth_phases: 4,
+        cost: 10,
+        revenue: 15,
+        revenue_item: 'carrot',
+        time_to_ripe: 20,
+        harvests: 1,
+        exercise: {
+            key : 'arm_circles'
+        }
     }
 };
 

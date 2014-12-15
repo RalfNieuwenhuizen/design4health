@@ -36,7 +36,7 @@ farming.SceneChallengeDetails = function (game) {
         .setPosition(SETTINGS.position.left_button)
         .setSize(SETTINGS.size.button).setHidden(true);
     this.selectButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary)
-        .setPosition(center.x, center.y * 0.68)
+        .setPosition(SETTINGS.position.right_button)
         .setSize(SETTINGS.size.button).setHidden(true);
     this.completeButton = new farming.Button('Complete!').setColor(SETTINGS.color.button_primary)
         .setPosition(SETTINGS.position.center_button)
@@ -105,17 +105,17 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     for(var i in challenge.requirements) {
         var requirement = challenge.requirements[i];
         if(requirement.type === 'item' && !opt_active) {
-            this.drawItem(requirement, new goog.math.Coordinate(items * 60 + center.x*0.5, center.y * 0.73), opt_active)
+            this.drawItem(requirement, new goog.math.Coordinate(items * 50 + center.x*0.5, center.y * 0.73), opt_active);
             items++;
         } else if(requirement.type === 'exercise') {
-            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.65, center.y * (1 - (opt_active * 0.17)) + exercises * 80), opt_active)
+            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.55, center.y * (1 - (opt_active * 0.17)) + exercises * (opt_active ? 40 : 20)), opt_active);
             exercises++;
         }
     }
     for(var i in challenge.rewards) {
         var reward = challenge.rewards[i];
         if((reward.type === 'item' || reward.type === 'coins') && !opt_active) {
-            this.drawReward(reward, new goog.math.Coordinate(rewards * 60 + center.x*1.5, center.y * 0.73))
+            this.drawReward(reward, new goog.math.Coordinate(rewards * 50 + center.x*1.5, center.y * 0.73));
             rewards++;
         }
     }
