@@ -30,6 +30,8 @@ farming.Challenge.prototype.bodypart = function (key) {
     switch(key) {
         case "full_body":
             return "Full-body workout, good for all body parts.";
+        case "arms":
+            return "Arm workout, good for your arms.";
         default:
             return key;
     }

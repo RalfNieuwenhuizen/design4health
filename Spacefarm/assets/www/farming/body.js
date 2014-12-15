@@ -1,5 +1,6 @@
 goog.provide('farming.Body');
 goog.require('lime.Layer');
+goog.require('farming.Sprite');
 
 /**
  * Crop elements
@@ -41,12 +42,12 @@ farming.Body.prototype.redraw = function (body, position, showLevels) {
     this.drawLegs(body.legs, new goog.math.Coordinate(position.x + (this.scale*2), position.y + (this.scale*47)));
 }
 farming.Body.prototype.drawBase= function (center) {
-    var icon = new lime.Sprite().setFill('images/body/exoskeleton.png').setSize(this.scale*100, this.scale*200).setPosition(center);
+    var icon = new farming.Sprite('images/body/exoskeleton.png').setSize(this.scale*100, this.scale*200).setPosition(center);
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawBack = function (number, center) {
     var level = this.getLevel(number)
-    var icon = new lime.Sprite().setFill('images/body/back'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
+    var icon = new farming.Sprite('images/body/back'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
     var label = new lime.Label().setText(level).setSize(this.scale*10, this.scale*10).setPosition(center);
 
     this.bodyLayer.appendChild(icon);
@@ -102,8 +103,8 @@ farming.Body.prototype.drawAbs = function (number, center) {
 
 // Mouseover / mouseout
 farming.Body.prototype.addPopup = function (target, text, position) {
-    var offset = 100;
-    var position = position === 'right' ? new goog.math.Coordinate(offset, 0) : new goog.math.Coordinate(-offset, 0)
+    var offset = 110;
+    var position = position === 'left' ? new goog.math.Coordinate(-offset, 0) : new goog.math.Coordinate(offset, 0)
     var popup = new farming.Label(text).setPosition(position).setHidden(true);
     target.appendChild(popup);
 
@@ -116,7 +117,7 @@ farming.Body.prototype.addPopup = function (target, text, position) {
     return this;
 }
 
-var LEVELS = [0, 5, 10, 20, 30, 50, 100, 200, 500, 1000, 10000];
+var LEVELS = [5, 10, 20, 30, 50, 100, 200, 500, 1000, 10000];
 
 // Function that returns your current level
 farming.Body.prototype.getLevel = function (points) {
@@ -131,14 +132,5 @@ farming.Body.prototype.getTargetXP = function (points) {
     for (var level in LEVELS) {
         if (points < LEVELS[level])
             return LEVELS[level];
-    }
-}
-
-farming.Body.prototype.bodypart = function (key) {
-    switch(key) {
-        case "full_body":
-            return "Full-body workout, good for all body parts.";
-        default:
-            return key;
     }
 }

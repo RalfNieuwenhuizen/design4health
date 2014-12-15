@@ -26,6 +26,7 @@ farming.Livestock.prototype.appearance = null;
 
 farming.Livestock.prototype.start = function(type){
     this.startTime = this.getCurrentTime();
+    this.harvestTime = this.getCurrentTime();
     this.type = type;
     this.prop = LIVESTOCK[type];
     this.appearance = Math.ceil(Math.random() * this.prop.appearances);
@@ -97,7 +98,7 @@ farming.Livestock.prototype.playSound = function(){
 
 farming.Livestock.prototype.tick = function(){
     //automatic feeding of livestock
-    if(this.isHungry() && this.parent_.game.hasItem(this.getFood())) {
+    if(this.isHungry() && this.parent_ && this.parent_.game && this.parent_.game.hasItem(this.getFood())) {
         this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
         this.feed();
     }

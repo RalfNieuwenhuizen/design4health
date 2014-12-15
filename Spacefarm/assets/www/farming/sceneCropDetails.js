@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 goog.provide('farming.SceneCropDetails');
 
@@ -19,7 +19,7 @@ farming.SceneCropDetails = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
-    
+
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Crop Details');
     this.cropIcon = new lime.Sprite();
@@ -67,12 +67,16 @@ farming.SceneCropDetails.prototype.closeDetails = function(scene) {
 farming.SceneCropDetails.prototype.showDetails = function(crop) {
     this.title.setText('Details '+ crop.name);
     var text = 'Cost: '+crop.cost + '\n\n';
-    text += 'Revenue: '+crop.revenue + '\n\n';
-    text += 'Time to ripe: '+crop.time_to_ripe + '\n\n';
-    text += 'Number of harvests: '+crop.harvests + '\n\n';
+    text += 'Growing time: '+crop.time_to_ripe + '\n\n';
+    if(crop.harvests > 1) {
+        text += 'Revenue per harvest: ' + crop.revenue + '\n\n';
+        text += 'Number of harvests: ' + crop.harvests + '\n\n';
+    } else {
+        text += 'Revenue: '+crop.revenue + '\n\n';
+    }
     text += 'Exercise: '+EXERCISES[crop.exercise.key].title + '\n\n';
     this.cropDetails.setText(text);
-    
+
     var game = this.game;
     var center = game.getCenterPosition();
     this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png').setSize(300, 300).setPosition(center.x + 25 - game.getFullSize(0.3).width, center.y);

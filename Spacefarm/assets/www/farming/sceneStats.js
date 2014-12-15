@@ -195,7 +195,7 @@ farming.SceneStats.prototype.redraw = function(player) {
         var exercise = EXERCISES[keys[i]];
         text += exercise.title + ': ' + exercises[keys[i]] + '\n';
     }
-    this.description.setText(text);
+    this.description.setText(text ? text : 'You have not done any exercises in this period.');
 }
 
 farming.SceneStats.prototype.getDate = function(dd, mm, yyyy) {

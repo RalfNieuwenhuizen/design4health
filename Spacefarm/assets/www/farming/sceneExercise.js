@@ -67,6 +67,9 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     var animation = farming.Exercise.prototype.getAnimation(key, 0.3);
     this.animation.runAction(animation);
     this.finishButton.setHidden(true);
+    this.startButton.setHidden(false);
+    this.waitMessage.setHidden(true);
+    this.exercise = null;
 
     var center = this.game.getCenterPosition();
     if(exercise.points) {
@@ -99,6 +102,11 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
 
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
+
+    scene.startButton.setHidden(false);
+    scene.finishButton.setHidden(true);
+    scene.waitMessage.setHidden(true);
+    scene.exercise = null;
 
 }
 farming.SceneExercise.prototype.finishExercise = function(scene) {

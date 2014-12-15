@@ -177,6 +177,7 @@ farming.Game.prototype.showBody = function(){
 }
 
 farming.Game.prototype.showStats = function(){
+    this.sceneStats.filter = this.sceneStats.getDate();
     this.sceneStats.redraw(this.player);
     this.sceneMap.sceneLayer.appendChild(this.sceneStats.windowLayer);
 }

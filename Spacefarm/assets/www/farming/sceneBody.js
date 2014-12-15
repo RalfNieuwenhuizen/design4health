@@ -22,7 +22,12 @@ farming.SceneBody = function (game) {
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     this.title = new farming.Label('BODY').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
-    this.description = new lime.Label('').setPosition(center.x - 200, center.y).setMultiline(true).setFontSize(20).setAlign('right');
+    this.description = new lime.Label('This is the BODY, your Bionic Outer Dimension Yeosuit. \n' +
+    ' It represents you, \n and the exercises you have done in this game. \n' +
+    ' When you look at the levels of each bodypart, \n' +
+    'you can see how much you have trained that part of your own body. \n' +
+    ' As you level up your BODY, \n more challenges and clones will become available!')
+        .setPosition(center.x - 140, center.y).setMultiline(true).setFontSize(15);
 
     this.closeButton = new farming.Button('X').setColor('#999999')
         .setPosition(SETTINGS.position.close_button)
@@ -56,16 +61,6 @@ farming.SceneBody.prototype.showStats = function(scene) {
 }
 
 farming.SceneBody.prototype.redraw = function(body) {
-    /* //Set descriptive text
-    var obj = Object.keys(body);
-    var text = "";
-    for (var item in obj) {
-        if (obj.hasOwnProperty(item)) {
-            text += obj[item] + " level " + this.body.getLevel(body[obj[item]]) + ": " + body[obj[item]] + "/" + this.body.getTargetXP(body[obj[item]]) + " points" + "\n\n";
-        }
-    }
-    this.description.setText(text);*/
-
     if (this.body)
-        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y));
+        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x + 150, this.game.getCenterPosition().y));
 }
