@@ -122,7 +122,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
 
     scene.startButton.setHidden(false);
     scene.waitMessage.setHidden(true);
-    if (scene.game.director.getCurrentScene() == scene.game.sceneChallengeDetails && scene.game.player.currentChallenge)
+    if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
 }
 

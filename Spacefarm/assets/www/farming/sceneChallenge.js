@@ -63,5 +63,5 @@ farming.SceneChallenge.prototype.showChallengeDetails = function(input) {
     input.scene.game.showChallengeDetails(input.challenge);
 }
 farming.SceneChallenge.prototype.closeChallenge = function(scene) {
-    scene.game.closeChallenge();
+    scene.game.close();
 }

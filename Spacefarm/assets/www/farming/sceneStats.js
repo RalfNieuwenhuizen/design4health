@@ -78,7 +78,7 @@ farming.SceneStats.prototype.player = null;
 farming.SceneStats.prototype.filter = null;
 
 farming.SceneStats.prototype.closeStats = function(scene) {
-    scene.game.closeStats();
+    scene.game.close();
 }
 farming.SceneStats.prototype.filterYear = function(scene) {
     switch(scene.filter.length) {
