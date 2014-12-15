@@ -41,8 +41,6 @@ farming.Livestock.prototype.showProgress = function(){
 
     if (this.isDead()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
-    } else if (this.isHungry()) {
-        this.setFill('images/livestock/'+ this.type + this.appearance + '_hungry.png');
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
@@ -61,13 +59,13 @@ farming.Livestock.prototype.getHungriness = function() {
 }
 
 farming.Livestock.prototype.isHungry = function() {
-    return this.getHungriness() >= 0.5;
+    return this.getHungriness() >= 0.9;
 }
 farming.Livestock.prototype.isDead = function() {
     return this.getHungriness() >= 1;
 }
 farming.Livestock.prototype.isHarvestable = function() {
-    if (this.isDead() || this.isHungry()) return false;
+    if (this.isDead()) return false;
     return (this.getCurrentTime() - this.harvestTime) > this.prop.time_between_harvests;
 }
 
@@ -98,6 +96,11 @@ farming.Livestock.prototype.playSound = function(){
 }
 
 farming.Livestock.prototype.tick = function(){
+    //automatic feeding of livestock
+    if(this.isHungry() && this.parent_.game.hasItem(this.getFood())) {
+        this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
+        this.feed();
+    }
     this.showProgress();
 }
 

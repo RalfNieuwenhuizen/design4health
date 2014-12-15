@@ -22,7 +22,7 @@ farming.SceneMap = function (game) {
 
     // make the map updateable
     this.game.tickables.push(this);
-    
+
 }
 goog.inherits(farming.SceneMap, farming.Scene);
 
@@ -56,7 +56,7 @@ farming.SceneMap.prototype.drawLand = function () {
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
         .setSize(this.landLayer.getSize()).setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
-    
+
 
     var middle = this.calculate('middleTile');
 
@@ -111,16 +111,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     tile.playSound();
                     scene.game.showHarvest(tile);
                 } else if (tile.isDead()) {
-                    if(scene.game.removeCoins(0)) {
-                        tile.removeItem();
-                    } else {
-                        scene.noMoneyAnimation(tile.getPosition());
-                    }
-                } else if (tile.isHungry()) {
-                    if (scene.game.hasItem(tile.livestock.getFood())) {
-                        scene.game.removeItem(tile.livestock.getFood());
-                        tile.livestock.feed();
-                    }
+                    tile.removeItem();
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
@@ -148,17 +139,17 @@ farming.SceneMap.prototype.drawLand = function () {
     });
 
     this.appendChild(this.landLayer);
-    
+
     // TODO: change this into the image of the crop to be cloned with high opacity and plot in on the tile
     // Make the screen to show what crop is being cloned
     this.cloningScreen = new lime.Sprite().setSize(150,100).setPosition(85,100);
     this.appendChild(this.cloningScreen);
-    
+
     // Make a layer for screens, fixed position
     this.sceneLayer = new lime.Layer()
-    	.setPosition(0,0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
+        .setPosition(0,0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     this.appendChild(this.sceneLayer);
-    
+
     this.body = new farming.Body(0.5);
     var farmPos = scene.farm.getPosition();
     this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 50, farmPos.y), false);
@@ -219,8 +210,8 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // BODYbutton
     this.bodyButton = new farming.Button('BODY').setColor('#999999')
-    		.setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
+        .setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
 
     // Current challenge indicator
@@ -231,8 +222,8 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
-    		.setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
-    		.setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
+        .setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
     // this.controlsLayer.appendChild(this.introButton);
 }
 
@@ -289,14 +280,24 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
 }
 
 // flipping the small coin in the controls panel
-farming.SceneMap.prototype.itemAnimation = function (type, amount) {
+farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position) {
+    var itemPos = new goog.math.Coordinate(70, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    var labelPos = new goog.math.Coordinate(40, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    if(opt_position) {
+        itemPos = new goog.math.Coordinate(opt_position.x, opt_position.y - 30);
+        labelPos = new goog.math.Coordinate(opt_position.x - 30, opt_position.y - 30);
+    }
+
     lime.scheduleManager.callAfter(function() {
         var itemSprite = new lime.Sprite().setFill('images/items/'+type+'.png').setSize(SETTINGS.size.close_button)
-            .setPosition(70,SETTINGS.screen.height - SETTINGS.size.controls.height);
+            .setPosition(itemPos);
         var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
-            .setPosition(40,SETTINGS.screen.height - SETTINGS.size.controls.height)
+            .setPosition(labelPos)
             .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
-        this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
+        if(opt_position)
+            this.landLayer.appendChild(itemSprite).appendChild(numberLabel);
+        else
+            this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
         var moveUp = new lime.animation.MoveBy(0,-100).setDuration(3);
         itemSprite.runAction(moveUp);
         numberLabel.runAction(moveUp);

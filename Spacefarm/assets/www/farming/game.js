@@ -353,22 +353,22 @@ farming.Game.prototype.hasCoins = function(amount) {
 }
 
 // -- Inventory --
-farming.Game.prototype.addItem = function(type, amount) {
+farming.Game.prototype.addItem = function(type, amount, opt_positionOnMap) {
     if(!this.hasItem(type, amount)) {
         this.player.inventory[type] = amount;
     } else {
         this.player.inventory[type] += amount;
     }
-    this.sceneMap.itemAnimation(type, amount);
+    this.sceneMap.itemAnimation(type, amount, opt_positionOnMap);
     return this.player.inventory[type];
 }
-farming.Game.prototype.removeItem = function(type, amount) {
+farming.Game.prototype.removeItem = function(type, amount, opt_positionOnMap) {
     if(!amount)
         amount = 1;
 
     if(!this.hasItem(type, amount)) return false;
     this.player.inventory[type] -= amount;
-    this.sceneMap.itemAnimation(type, -amount);
+    this.sceneMap.itemAnimation(type, -amount, opt_positionOnMap);
     return this.player.inventory[type];
 }
 farming.Game.prototype.getInventory = function(type) {

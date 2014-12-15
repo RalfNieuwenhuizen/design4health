@@ -46,7 +46,7 @@ farming.SceneHarvest.prototype.finishExercise = function(scene) {
     var item = scene.tile.getItem().prop;
     scene.game.addCoins(item.revenue);
     if(item.revenue_item)
-        scene.game.addItem(item.revenue_item, 1);
+        scene.game.addItem(item.revenue_item, 1, scene.tile.getPosition());
     if(scene.tile.getItem().harvest()) {
         scene.tile.removeItem();
     }
