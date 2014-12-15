@@ -60,7 +60,7 @@ goog.inherits(farming.SceneChallengeDetails, farming.Scene);
 farming.SceneChallengeDetails.prototype.game = null;
 
 farming.SceneChallengeDetails.prototype.closeChallengeDetails = function (scene) {
-    scene.game.closeChallengeDetails();
+    scene.game.close();
 }
 farming.SceneChallengeDetails.prototype.backChallengeDetails = function (scene) {
     scene.game.backChallengeDetails();

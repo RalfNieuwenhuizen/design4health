@@ -103,10 +103,8 @@ farming.Body.prototype.addPopup = function (target, text, position) {
     target.appendChild(popup);
 
     goog.events.listen(target, ['mousedown', 'touchstart'], function (e) {
-        console.log("On", popup);
         popup.setHidden(false);
         e.swallow(['touchend', 'mouseup'], function(){
-            console.log("Off", popup);
             popup.setHidden(true)
         }, true);
     });

@@ -65,7 +65,7 @@ farming.SceneLivestockDetails.prototype.backDetails = function(scene) {
     scene.game.backLivestockDetails();
 }
 farming.SceneLivestockDetails.prototype.closeDetails = function(scene) {
-    scene.game.closeLivestockDetails();
+    scene.game.close();
 }
 
 farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {

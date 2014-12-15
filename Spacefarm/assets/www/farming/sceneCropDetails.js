@@ -61,7 +61,7 @@ farming.SceneCropDetails.prototype.backDetails = function(scene) {
     scene.game.backCropDetails();
 }
 farming.SceneCropDetails.prototype.closeDetails = function(scene) {
-    scene.game.closeCropDetails();
+    scene.game.close();
 }
 
 farming.SceneCropDetails.prototype.showDetails = function(crop) {

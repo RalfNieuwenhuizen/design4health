@@ -62,7 +62,7 @@ goog.inherits(farming.SceneClone, farming.Scene);
 farming.SceneClone.prototype.game = null;
 
 farming.SceneClone.prototype.closeClone = function(scene) {
-    scene.game.hideClone();
+    scene.game.close();
 }
 
 // Set action for the next button

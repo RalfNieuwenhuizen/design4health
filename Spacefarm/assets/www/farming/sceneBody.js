@@ -49,7 +49,7 @@ goog.inherits(farming.SceneBody, farming.Scene);
 farming.SceneBody.prototype.game = null;
 
 farming.SceneBody.prototype.closeBody = function(scene) {
-    scene.game.closeBody();
+    scene.game.close();
 }
 farming.SceneBody.prototype.showStats = function(scene) {
     scene.game.showStats();
