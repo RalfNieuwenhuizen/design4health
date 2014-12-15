@@ -74,9 +74,11 @@ farming.SceneChallengeDetails.prototype.completeChallenge = function (scene) {
 }
 farming.SceneChallengeDetails.prototype.selectChallenge = function (input) {
     input.scene.game.selectChallenge(input.challenge);
+    input.scene.game.source.dispatchEvent(input.scene.game.EventType.DO_CHALLENGE);
 }
 farming.SceneChallengeDetails.prototype.showExercise = function (input) {
     input.scene.game.showExercise(input.exercise);
+    input.scene.game.source.dispatchEvent(input.scene.game.EventType.PRESSED_DO);
 }
 
 // update the screen -- set opt_active true iff there is an active challenge

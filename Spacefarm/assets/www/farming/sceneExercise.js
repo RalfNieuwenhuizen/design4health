@@ -133,5 +133,9 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.waitMessage.setHidden(true);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
+    
+    // Fire that exercise is done
+    scene.game.source.dispatchEvent(scene.game.EventType.EXERCISE_DONE);
+    console.log('exercise is done');
 }
 

@@ -140,18 +140,6 @@ farming.Game = function() {
         }
     }, this, 1000*0.5);
 
-    this.source = new goog.events.EventTarget();
-
-    // 	Create ID's for different events
-    this.EventType = {
-        SHOW_FARM: goog.events.getUniqueId('show_farm'),
-        GO_CLONE: goog.events.getUniqueId('go_clone'),
-        CLONE_DETAILS: goog.events.getUniqueId('clone_details'),
-        CLONE_CROP: goog.events.getUniqueId('clone_crop'),
-        CLOSE_CLONE: goog.events.getUniqueId('close_clone'),
-        OPEN_CHALLENGES: goog.events.getUniqueId('open_challenges')
-    };
-
     // Launches introductional screens if still applicable
     this.introduction.intro();
 
@@ -161,6 +149,24 @@ farming.Game = function() {
         game.saveWrapper(game)
     };
 }
+
+// 	Create ID's for different events
+farming.Game.prototype.EventType = {
+    SHOW_FARM: goog.events.getUniqueId('show_farm'),
+    GO_CLONE: goog.events.getUniqueId('go_clone'),
+    CLONE_DETAILS: goog.events.getUniqueId('clone_details'),
+    CLONE_CROP: goog.events.getUniqueId('clone_crop'),
+    CLOSE_CLONE: goog.events.getUniqueId('close_clone'),
+    OPEN_CHALLENGES: goog.events.getUniqueId('open_challenges'),
+    CHALLENGE_DETAILS: goog.events.getUniqueId('challenge_details'),
+    DO_CHALLENGE: goog.events.getUniqueId('do_challenge'),
+    PRESSED_DO: goog.events.getUniqueId('pressed_do'),
+    EXERCISE_DONE: goog.events.getUniqueId('exercise_done'),
+    OPEN_BODY: goog.events.getUniqueId('show_body')
+};
+
+// Create source to fire events
+farming.Game.prototype.source = new goog.events.EventTarget();
 
 farming.Game.prototype.tickables = [];
 farming.Game.prototype.saveAtClose = true;
@@ -227,6 +233,7 @@ farming.Game.prototype.showFarm = function(){
 farming.Game.prototype.showBody = function(){
     this.sceneBody.redraw(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
+    this.source.dispatchEvent(this.EventType.OPEN_BODY);
 }
 
 farming.Game.prototype.showStats = function(){
@@ -262,11 +269,6 @@ farming.Game.prototype.hideExercise = function(){
 farming.Game.prototype.showClone = function(){
     this.source.dispatchEvent(this.EventType.GO_CLONE);
     this.sceneMap.sceneLayer.appendChild(this.sceneClone);
-}
-
-// Let the event fire, called from sceneMap
-farming.Game.prototype.stopCloning = function(){
-    this.source.dispatchEvent(this.EventType.CLOSE_CLONE);
 }
 
 // Start cloning a crop
@@ -365,6 +367,7 @@ farming.Game.prototype.showChallengeDetails = function(challenge){
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
     this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
+	this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
 }
 
 // go back from the details screen to the overview screen
