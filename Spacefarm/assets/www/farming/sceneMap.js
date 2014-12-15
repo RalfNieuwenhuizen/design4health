@@ -351,7 +351,7 @@ farming.SceneMap.prototype.stopCloning = function(scene) {
     scene.cloningScreen.removeAllChildren();
     scene.game.currentClone = null;
     // Let the event fire
-    scene.game.stopCloning();
+    scene.game.source.dispatchEvent(scene.game.EventType.CLOSE_CLONE);
 }
 
 // Warning when trying to plant but there is no money
