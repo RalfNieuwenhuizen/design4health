@@ -15,10 +15,9 @@ farming.Body = function(scale) {
     this.scale = scale;
     this.appendChild(this.bodyLayer);
 }
+goog.inherits(farming.Body,lime.Layer);
 
 farming.Body.prototype.scale = null;
-
-goog.inherits(farming.Body,lime.Layer);
 
 // redraw the inventory
 farming.Body.prototype.redraw = function (body, position, showLevels) {
