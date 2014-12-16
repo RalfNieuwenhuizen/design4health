@@ -6,12 +6,17 @@ goog.require('lime.audio.Audio');
  * Livestock elements
  *
  */
-farming.Livestock = function(type) {
+farming.Livestock = function(type, saved) {
     goog.base(this);
     this.setAnchorPoint(0.5, 0.63); //0.5, 0.58
     this.setSize(80, 60);
 
-    this.start(type);
+
+    if(typeof saved != 'undefined') {
+        this.deserialize(saved);
+    } else {
+        this.start(type);
+    }
 }
 
 goog.inherits(farming.Livestock,lime.Sprite);
@@ -31,6 +36,22 @@ farming.Livestock.prototype.start = function(type){
     this.prop = LIVESTOCK[type];
     this.appearance = Math.ceil(Math.random() * this.prop.appearances);
     this.showProgress();
+
+
+}
+farming.Livestock.prototype.serialize = function(){
+    return {timesHarvested : this.timesHarvested, startTime : this.startTime, feedTime : this.feedTime, harvestTime : this.harvestTime, type : this.type, appearance : this.appearance};
+}
+farming.Livestock.prototype.deserialize = function(saved){
+
+    this.harvestTime = saved.harvestTime;
+    this.startTime = saved.startTime;
+    this.feedTime = saved.feedTime;
+    this.type = saved.type;
+    this.prop = LIVESTOCK[saved.type];
+    this.appearance = saved.appearance;
+    this.showProgress();
+
 }
 farming.Livestock.prototype.showProgress = function(){
     this.removeAllChildren();

@@ -85,6 +85,8 @@ farming.Game = function() {
         height: SETTINGS.screen.height
     }
 
+
+
     this.player = {
         coins: 100,
         currentCrops : Object.keys(CROPS),
@@ -127,6 +129,8 @@ farming.Game = function() {
     this.sceneStats = new farming.SceneStats(this);
     this.introduction = new farming.Introduction(this);
 
+    this.load();
+
     //Set the starting scene
     this.director.replaceScene(this.sceneMap);
     var game = this;
@@ -150,6 +154,9 @@ farming.Game = function() {
 
     // Launches introductional screens if still applicable
     this.introduction.intro();
+
+    document.addEventListener("pause", function(){ game.saveWrapper(game)}, false);
+    window.onbeforeunload = function(){ game.saveWrapper(game)};
 }
 
 farming.Game.prototype.tickables = [];
@@ -157,6 +164,40 @@ farming.Game.prototype.tickables = [];
 // General close function
 farming.Game.prototype.close = function(){
     this.sceneMap.sceneLayer.removeAllChildren();
+}
+
+
+farming.Game.prototype.load = function(){
+    var save = JSON.parse(localStorage.getItem('save'));
+    this.tickables = [];
+    this.player = save.player;
+    this.introduction.introPhase = save.introPhase;
+    for(var x=0; x<SETTINGS.mapSize; x++) {
+        for(var y=0; y<SETTINGS.mapSize; y++) {
+           this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
+        }
+    }
+    this.sceneMap.updateControls();
+}
+farming.Game.prototype.loadWrapper = function(game){
+    game.load();
+}
+farming.Game.prototype.save = function(){
+    var save = {};
+    save.player = this.player;
+    save.introPhase = this.introduction.introPhase;
+    save.tiles = [];
+    for(var x=0; x<SETTINGS.mapSize; x++) {
+        save.tiles[x] = [];
+        for(var y=0; y<SETTINGS.mapSize; y++) {
+            save.tiles[x][y] = this.sceneMap.tiles[x][y].serialize();
+        }
+    }
+    var string = JSON.stringify(save);
+    localStorage.setItem('save', string);
+}
+farming.Game.prototype.saveWrapper = function(game){
+    game.save();
 }
 
 // -- farm --

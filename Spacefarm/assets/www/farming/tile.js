@@ -22,6 +22,18 @@ farming.Tile.prototype.crop = null;
 farming.Tile.prototype.livestock = null;
 farming.Tile.prototype.disabled = false;
 
+farming.Tile.prototype.serialize = function(){
+    var crop = this.crop ? this.crop.serialize() : null;
+    var livestock = this.livestock ? this.livestock.serialize() : null;
+    return {crop : crop, livestock : livestock};
+}
+farming.Tile.prototype.deserialize = function(save){
+    this.crop = null; this.livestock = null;
+    if(save.crop)
+        this.addCrop(new farming.Crop(null, save.crop));
+    if(save.livestock)
+        this.addLivestock(new farming.Livestock(null, save.livestock));
+}
 farming.Tile.prototype.addCrop = function (crop) {
     if (!this.isEmpty() || !crop) return false;
     this.crop = crop;

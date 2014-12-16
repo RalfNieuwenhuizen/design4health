@@ -5,13 +5,19 @@ goog.require('lime.Sprite');
  * Crop elements
  *
  */
-farming.Crop = function(type) {
+farming.Crop = function(type, saved) {
+
     goog.base(this);
     this.setAnchorPoint(0.5, 0.63); //0.5, 0.58
     this.setSize(200, 169);
 
     var crop = this;
-    this.start(type);
+
+    if(typeof saved != 'undefined') {
+        this.deserialize(saved);
+    } else {
+        this.start(type);
+    }
 
 
 
@@ -27,6 +33,15 @@ farming.Crop.prototype.start = function(type){
     this.startTime = this.getCurrentTime();
     this.type = type;
     this.prop = CROPS[type];
+    this.showProgress();
+}
+farming.Crop.prototype.serialize = function(){
+    return {timesHarvested : this.timesHarvested, startTime : this.startTime, type : this.type};
+}
+farming.Crop.prototype.deserialize = function(saved){
+    this.startTime = saved.startTime;
+    this.type = saved.type;
+    this.prop = CROPS[saved.type];
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
