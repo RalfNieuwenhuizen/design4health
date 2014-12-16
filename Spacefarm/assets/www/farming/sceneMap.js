@@ -212,11 +212,11 @@ farming.SceneMap.prototype.drawControls = function () {
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
 
-    // CASHButton
-    this.cashButton = new farming.Button('Cash!').setColor('#cc9900')
-        .setPosition(640, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(70,SETTINGS.size.controls.height/2).setAction(function(){ scene.game.addCoins(10);  }, this);
-    this.controlsLayer.appendChild(this.cashButton);
+    // RESETButton
+    this.resetButton = new farming.Button('Reset').setColor('#995555')
+        .setPosition(620, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(70,SETTINGS.size.controls.height).setAction(function(){ scene.game.reset();  }, this);
+    this.controlsLayer.appendChild(this.resetButton);
 
     // Current challenge indicator
     this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill(SETTINGS.color.red)

@@ -156,10 +156,14 @@ farming.Game = function() {
     this.introduction.intro();
 
     document.addEventListener("pause", function(){ game.saveWrapper(game)}, false);
-    window.onbeforeunload = function(){ game.saveWrapper(game)};
+    window.onbeforeunload = function(){
+        if(!game.saveAtClose) return;
+        game.saveWrapper(game)
+    };
 }
 
 farming.Game.prototype.tickables = [];
+farming.Game.prototype.saveAtClose = true;
 
 // General close function
 farming.Game.prototype.close = function(){
@@ -169,7 +173,7 @@ farming.Game.prototype.close = function(){
 
 farming.Game.prototype.load = function(){
     var savedString = localStorage.getItem('save');
-    if(!savedString) return;
+    if(!savedString || savedString == 'null') return;
     var save = JSON.parse(savedString);
 
     this.tickables = [];
@@ -184,6 +188,11 @@ farming.Game.prototype.load = function(){
 }
 farming.Game.prototype.loadWrapper = function(game){
     game.load();
+}
+farming.Game.prototype.reset = function(){
+    localStorage.setItem('save', null);
+    this.saveAtClose = false;
+    window.location.reload();
 }
 farming.Game.prototype.save = function(){
     var save = {};
