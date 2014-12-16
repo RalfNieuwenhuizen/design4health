@@ -180,8 +180,7 @@ farming.SceneMap.prototype.drawControls = function () {
     this.cloningText = new lime.Label().setSize(20,20).setPosition(50,15);
     this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(54,-29).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
 
-    this.noCoinsWarning = new lime.Label().setFill(200,0,0,0.3).setFontColor(SETTINGS.color.black).setFontWeight('bold').setFontSize(20).setSize(150,50).setPosition(450,50)
-        .setText('Insufficient Money').setAlign('center').setOpacity(0);
+    this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100,100).setPosition(450,50);
 
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyImage);
