@@ -35,9 +35,6 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     //var options = { frequency: 500 };
     var options = { frequency: 1000};
     if (typeof navigator.accelerometer == 'undefined') {
-        exercise.fakeWebWatchID = setInterval(function () {
-            callback({x: 100, y: 100, z: 100, timestamp: 0}, exercise)
-        }, 500);
         return;
     }
     this.watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
