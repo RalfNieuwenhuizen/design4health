@@ -168,7 +168,10 @@ farming.Game.prototype.close = function(){
 
 
 farming.Game.prototype.load = function(){
-    var save = JSON.parse(localStorage.getItem('save'));
+    var savedString = localStorage.getItem('save');
+    if(!savedString) return;
+    var save = JSON.parse(savedString);
+
     this.tickables = [];
     this.player = save.player;
     this.introduction.introPhase = save.introPhase;
