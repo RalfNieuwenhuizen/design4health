@@ -159,6 +159,7 @@ farming.SceneMap.prototype.drawLand = function () {
 farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer = new lime.Layer().setAnchorPoint(0, 0);
     this.appendChild(this.controlsLayer);
+    var scene = this;
     //controls area
     var controlArea = new lime.Sprite().setAnchorPoint(0, 0)
         .setPosition(0, SETTINGS.screen.height - SETTINGS.size.controls.height)
@@ -212,6 +213,12 @@ farming.SceneMap.prototype.drawControls = function () {
         .setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
+
+    // CASHButton
+    this.cashButton = new farming.Button('Cash!').setColor('#cc9900')
+        .setPosition(640, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(70,SETTINGS.size.controls.height/2).setAction(function(){ scene.game.addCoins(10);  }, this);
+    this.controlsLayer.appendChild(this.cashButton);
 
     // Current challenge indicator
     this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill(SETTINGS.color.red)
