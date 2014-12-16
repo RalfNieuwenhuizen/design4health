@@ -81,6 +81,7 @@ farming.Livestock.prototype.getHungriness = function() {
 }
 
 farming.Livestock.prototype.isHungry = function() {
+    if(this.isDead()) return false;
     return this.getHungriness() >= 0.9;
 }
 farming.Livestock.prototype.isDead = function() {

@@ -95,8 +95,6 @@ farming.SceneMap.prototype.drawLand = function () {
         var oldPos = this.getPosition();
         e.startDrag(false);
         var drag = function (e) {
-            var y = e.position.y + this.getPosition().y;
-            if(y > SETTINGS.screen.height - SETTINGS.size.controls.height) return;
             var newPos = this.getPosition();
             var xDiff = newPos.x - oldPos.x;
             var yDiff = newPos.y - oldPos.y;
@@ -116,7 +114,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
                     if(currentClone == null)
-                        return
+                        return;
 
                     // If there is a current crop and the amount of money is sufficient, this can be planted
                     if(currentClone.cost <= scene.game.player.coins){
@@ -181,7 +179,7 @@ farming.SceneMap.prototype.drawControls = function () {
     this.cloningText = new lime.Label().setSize(20,20).setPosition(50,15);
     this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(54,-29).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
 
-    this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100,100).setPosition(450,50);
+    this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100,100).setPosition(450,50).setOpacity(0);
 
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyImage);
@@ -225,6 +223,16 @@ farming.SceneMap.prototype.drawControls = function () {
         .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
         .setHidden(true).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeIndicator);
+
+    // Zoom buttons
+    this.zoomInButton = new farming.Button('+').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.screen.width - 20, 20)
+        .setSize(30, 30).setAction(this.zoomIn, this);
+    this.controlsLayer.appendChild(this.zoomInButton);
+    this.zoomOutButton = new farming.Button('-').setColor(SETTINGS.color.button)
+        .setPosition(SETTINGS.screen.width - 20, 50)
+        .setSize(30, 30).setAction(this.zoomOut, this);
+    this.controlsLayer.appendChild(this.zoomOutButton);
 
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
@@ -351,6 +359,28 @@ farming.SceneMap.prototype.tick = function(){
 
     if(this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
         this.game.sceneHarvest.hideHarvest(this);
+}
+
+// Zooming
+farming.SceneMap.prototype.zoomIn = function(scene){
+    var scale = scene.landLayer.getScale();
+    if(scale.x >= 1.5) return;
+    var newScale = scale.x/.9;
+    scene.landLayer.setScale(newScale, newScale);
+    scene.zoomOutButton.setColor(SETTINGS.color.button).setAction(farming.SceneMap.prototype.zoomOut, scene);
+    if(newScale >= 1.5) {
+        scene.zoomInButton.setColor(SETTINGS.color.button_inactive).setAction();
+    }
+}
+farming.SceneMap.prototype.zoomOut = function(scene){
+    var scale = scene.landLayer.getScale();
+    if(scale.x <= 0.7) return;
+    var newScale = scale.x*.9;
+    scene.landLayer.setScale(newScale, newScale);
+    scene.zoomInButton.setColor(SETTINGS.color.button).setAction(farming.SceneMap.prototype.zoomIn, scene);
+    if(newScale <= 0.7) {
+        scene.zoomOutButton.setColor(SETTINGS.color.button_inactive).setAction();
+    }
 }
 
 // function for showing or hiding the current challenge indicator

@@ -34,10 +34,10 @@ var SETTINGS = {
     },
 
     color: {
-        tile: '#666699',
+        tile: '#000',
         background_layer: '#f0f0f0',
         button_primary: '#22CC22',
-        button_inactive: '#AAAAAA',
+        button_inactive: '#BBB',
         button: '#999999',
         green: '#22CC22',
         red: '#CC2222',

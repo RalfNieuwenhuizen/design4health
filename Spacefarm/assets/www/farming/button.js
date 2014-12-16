@@ -19,8 +19,14 @@ goog.inherits(farming.Button,lime.GlossyButton);
 farming.Button.prototype.parent = null;
 
 farming.Button.prototype.setAction = function(action, target){
-    goog.events.listen(this, ['mousedown', 'touchstart'], function (e) {
-        e.swallow(['touchend', 'mouseup'], function(){ action(target, e) }, true);
-    });
+    this.removeAllListeners();
+
+    if(action && target) {
+        goog.events.listen(this, ['mousedown', 'touchstart'], function (e) {
+            e.swallow(['touchend', 'mouseup'], function () {
+                action(target, e)
+            }, true);
+        });
+    }
     return this;
 }
