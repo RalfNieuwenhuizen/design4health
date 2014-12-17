@@ -92,6 +92,24 @@ farming.Tile.prototype.playSound = function () {
     if (this.livestock)
         this.livestock.playSound();
 }
+farming.Tile.prototype.showProgress = function(){
+    var progress = this.getItem().getTimeTillHarvest();
+
+    var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(60,30).setPosition(0,-30);
+    var timer = new farming.Sprite('images/duration.png').setSize(20,20).setPosition(-16,0);
+    var label = new lime.Label(progress).setPosition(12,3);
+    bg.appendChild(timer).appendChild(label);
+    this.appendChild(bg);
+
+    var fade = new lime.animation.FadeTo(0).setDuration(3);
+    bg.runAction(fade);
+    goog.events.listen(fade,lime.animation.Event.STOP,function(){
+        for(var i in this.targets) {
+            var target = this.targets[i];
+            target.parent_.removeChild(target);
+        }
+    });
+}
 
 farming.Tile.prototype.getExercise = function () {
     if (this.livestock) {

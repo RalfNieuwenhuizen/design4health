@@ -132,6 +132,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     }
                 } else if(!tile.isDead()) {
                     tile.playSound();
+                    tile.showProgress();
                 }
             }
         }

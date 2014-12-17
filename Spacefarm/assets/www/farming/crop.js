@@ -63,6 +63,9 @@ farming.Crop.prototype.getElapsedTime = function(){
 farming.Crop.prototype.getProgress = function(){
     return Math.min(this.getElapsedTime() / this.prop.time_to_ripe, 1);
 }
+farming.Crop.prototype.getTimeTillHarvest = function(){
+    return Math.round(this.prop.time_to_ripe - this.getElapsedTime());
+}
 farming.Crop.prototype.isRipe = function(){
     if (this.isDead() || this.isRotten()) return false;
 

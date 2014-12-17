@@ -76,6 +76,9 @@ farming.Livestock.prototype.getCurrentTime = function(){
 farming.Livestock.prototype.getElapsedTime = function(){
     return this.getCurrentTime() - this.startTime;
 }
+farming.Livestock.prototype.getTimeTillHarvest = function(){
+    return Math.round(this.prop.time_between_harvests - (this.getCurrentTime() - this.harvestTime));
+}
 
 // Get a partial of how close this livestock is to dying (1 == dead)
 farming.Livestock.prototype.getHungriness = function() {
