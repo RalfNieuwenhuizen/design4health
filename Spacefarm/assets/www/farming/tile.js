@@ -73,6 +73,9 @@ farming.Tile.prototype.isHungry = function () {
 farming.Tile.prototype.isDead = function () {
     return (this.crop && this.crop.isDead()) || (this.livestock && this.livestock.isDead());
 }
+farming.Tile.prototype.isRotten = function () {
+    return this.crop && this.crop.isRotten();
+}
 farming.Tile.prototype.disable = function () {
     this.disabled = true;
     this.setFill('');

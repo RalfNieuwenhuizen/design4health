@@ -131,6 +131,7 @@ farming.SceneClone.prototype.drawCrop = function(crop, position) {
 
     // Add crop with button to the w-layer
     this.w.appendChild(cropIcon).appendChild(cropLabel).appendChild(cloneButton).appendChild(cloneDetails);
+    this.drawCost(crop.cost, position);
 }
 
 farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
@@ -155,6 +156,19 @@ farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
 
     // Add livestock with button to the w-layer
     this.w.appendChild(livestockIcon).appendChild(livestockLabel).appendChild(cloneButton).appendChild(cloneDetails);
+    this.drawCost(livestock.cost, position);
+    this.drawFood(livestock.food, position);
+}
+
+farming.SceneClone.prototype.drawCost = function(amount, position) {
+    var icon = new farming.Sprite('images/coin_small/0.png').setSize(30, 30).setPosition(position.x - 60, position.y + 25);
+    var label = new lime.Label(amount).setSize(20, 20).setPosition(position.x - 60, position.y + 29);
+
+    this.w.appendChild(icon).appendChild(label);
+}
+farming.SceneClone.prototype.drawFood = function(type, position) {
+    var icon = new farming.Sprite('images/items/'+type+'.png').setSize(40, 40).setPosition(position.x + 50, position.y + 25);
+    this.w.appendChild(icon);
 }
 
 // Function to show the details of the crop

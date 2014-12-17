@@ -40,6 +40,7 @@ farming.Crop.prototype.serialize = function(){
 }
 farming.Crop.prototype.deserialize = function(saved){
     this.startTime = saved.startTime;
+    this.timesHarvested = saved.timesHarvested;
     this.type = saved.type;
     this.prop = CROPS[saved.type];
     this.showProgress();
@@ -68,20 +69,20 @@ farming.Crop.prototype.isRipe = function(){
     return this.getProgress() == 1;
 }
 farming.Crop.prototype.isRotten = function(){
+    if(this.isDead()) return false;
     return this.getElapsedTime() > this.prop.time_to_ripe * 3;
 }
 farming.Crop.prototype.isDead = function(){
-    //this time is so big to give a punishment for letting things rot, tile is unusable when rotten
-    return this.getElapsedTime() > this.prop.time_to_ripe * 6;
+    return (this.timesHarvested == this.prop.harvests);
 }
 
 farming.Crop.prototype.tick = function(){
     this.showProgress();
 }
 farming.Crop.prototype.harvest = function(){
-    if (this.isDead() || this.isRotten()) return false;
+    if (this.isDead()) return false;
     this.timesHarvested++;
-    if (this.timesHarvested == this.prop.harvests) return true;
+    if ((this.timesHarvested == this.prop.harvests) && this.prop.harvests == 1) this.parent_.removeItem();
     this.startTime = this.getCurrentTime();
     this.showProgress();
     return false;

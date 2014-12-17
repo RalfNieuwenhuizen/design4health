@@ -185,6 +185,7 @@ farming.Game.prototype.load = function(){
         }
     }
     this.sceneMap.updateControls();
+    this.sceneMap.body.redraw(this.player.body);
 }
 farming.Game.prototype.loadWrapper = function(game){
     game.load();

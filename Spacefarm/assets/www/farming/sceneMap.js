@@ -108,6 +108,8 @@ farming.SceneMap.prototype.drawLand = function () {
                 } else if (tile.canBeHarvested()) {
                     tile.playSound();
                     scene.game.showHarvest(tile);
+                } else if (tile.isRotten()) {
+                    tile.crop.harvest();
                 } else if (tile.isDead()) {
                     tile.removeItem();
                 } else if (tile.isEmpty()) {
@@ -151,6 +153,12 @@ farming.SceneMap.prototype.drawLand = function () {
     this.body = new farming.Body(0.5);
     var farmPos = scene.farm.getPosition();
     this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 50, farmPos.y), false);
+    goog.events.listen(this.body, ['mousedown', 'touchstart'], function (e) {
+        e.swallow(['touchend', 'mouseup'], function () {
+            console.log(this)
+            this.parent_.parent_.showBody(this.parent_.parent_, e)
+        }, true);
+    });
     this.landLayer.appendChild(this.body);
 }
 

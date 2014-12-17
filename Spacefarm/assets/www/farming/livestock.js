@@ -42,8 +42,8 @@ farming.Livestock.prototype.start = function(type){
 farming.Livestock.prototype.serialize = function(){
     return {timesHarvested : this.timesHarvested, startTime : this.startTime, feedTime : this.feedTime, harvestTime : this.harvestTime, type : this.type, appearance : this.appearance};
 }
-farming.Livestock.prototype.deserialize = function(saved){
-
+farming.Livestock.prototype.deserialize = function(saved) {
+    this.timesHarvested = saved.timesHarvested;
     this.harvestTime = saved.harvestTime;
     this.startTime = saved.startTime;
     this.feedTime = saved.feedTime;
@@ -51,18 +51,21 @@ farming.Livestock.prototype.deserialize = function(saved){
     this.prop = LIVESTOCK[saved.type];
     this.appearance = saved.appearance;
     this.showProgress();
-
 }
+
 farming.Livestock.prototype.showProgress = function(){
     this.removeAllChildren();
 
-    // Healthbar
+    /*// Healthbar
     var healthbaroffset = -40;
     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.green).setSize(100, 10).setPosition(0, healthbaroffset));
-    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));
+    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));*/
 
     if (this.isDead()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
+    } else if (this.isHarvestable()) {
+        //TODO create harvestable animals images
+        this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
@@ -118,11 +121,19 @@ farming.Livestock.prototype.playSound = function(){
     }
 }
 
+farming.Livestock.prototype.showWarning = function(){
+    //TODO show a warning sign that there is no food
+}
+
 farming.Livestock.prototype.tick = function(){
     //automatic feeding of livestock
-    if(this.isHungry() && this.parent_ && this.parent_.game && this.parent_.game.hasItem(this.getFood())) {
-        this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
-        this.feed();
+    if(this.isHungry()) {
+        if(this.parent_ && this.parent_.game && this.parent_.game.hasItem(this.getFood())) {
+            this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
+            this.feed();
+        } else {
+            this.showWarning();
+        }
     }
     this.showProgress();
 }
