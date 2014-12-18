@@ -100,9 +100,8 @@ var CROPS = {
         revenue_item: 'space_apple',
         time_to_ripe: 8,
         harvests: 3,
-        exercise: {
-            key : 'apple_picking'
-        }
+        exercise: 'apple_picking',
+        required_level: 0
     },
     wheat : {
         name: 'Space Wheat',
@@ -113,9 +112,8 @@ var CROPS = {
         revenue_item: 'space_wheat',
         time_to_ripe: 3,
         harvests: 1,
-        exercise: {
-            key : 'arm_circles'
-        }
+        exercise: 'arm_circles',
+        required_level: 0
     },
     carrot : {
         name: 'Space Carrots',
@@ -126,9 +124,20 @@ var CROPS = {
         revenue_item: 'carrot',
         time_to_ripe: 20,
         harvests: 1,
-        exercise: {
-            key : 'arm_circles'
-        }
+        exercise: 'situps',
+        required_level: 0
+    },
+    strawberry : {
+        name: 'Space Berries',
+        key: 'strawberry',
+        growth_phases: 3,
+        cost: 10,
+        revenue: 15,
+        revenue_item: 'strawberry',
+        time_to_ripe: 20,
+        harvests: 1,
+        exercise: 'arm_circles',
+        required_level: 2
     }
 };
 

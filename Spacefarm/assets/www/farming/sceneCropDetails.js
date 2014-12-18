@@ -75,7 +75,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
     } else {
         text += 'Revenue: '+crop.revenue + '\n\n';
     }
-    text += 'Exercise: '+EXERCISES[crop.exercise.key].title + '\n\n';
+    text += 'Exercise: '+EXERCISES[crop.exercise].title + "\n"+ EXERCISES[crop.exercise].points + ' ' + EXERCISES[crop.exercise].type + (EXERCISES[crop.exercise].points > 1 ? ' points' : ' point') + '\n\n';
     this.cropDetails.setText(text);
 
     var game = this.game;

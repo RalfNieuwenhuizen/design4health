@@ -69,6 +69,5 @@ farming.SceneFarm.prototype.drawItem = function (item, number, position) {
     var prop = ITEMS[item];
     var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(60, 60).setPosition(position);
     var itemLabel = new lime.Label().setText(number).setSize(10, 10).setPosition(position.x + 27, position.y - 27);
-    //TODO sell button and stuff
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }

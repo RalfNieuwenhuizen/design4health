@@ -113,9 +113,9 @@ farming.Tile.prototype.showProgress = function(){
 
 farming.Tile.prototype.getExercise = function () {
     if (this.livestock) {
-        return this.livestock.prop.exercise.key;
+        return this.livestock.prop.exercise;
     } else if (this.crop) {
-        return this.crop.prop.exercise.key;
+        return this.crop.prop.exercise;
     }
     return false;
 }

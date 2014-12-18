@@ -34,8 +34,20 @@ var ITEMS = {
         name: 'Wool',
         revenue: 10
     },
+    bacon : {
+        name: 'Bacon',
+        revenue: 15
+    },
     milk : {
         name: 'Milk',
+        revenue: 15
+    },
+    carrot : {
+        name: 'Carrot',
+        revenue: 15
+    },
+    strawberry : {
+        name: 'Space Berry',
         revenue: 15
     }
 };

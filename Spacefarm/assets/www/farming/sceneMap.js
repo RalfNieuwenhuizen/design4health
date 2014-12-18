@@ -156,7 +156,6 @@ farming.SceneMap.prototype.drawLand = function () {
     this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 50, farmPos.y), false);
     goog.events.listen(this.body, ['mousedown', 'touchstart'], function (e) {
         e.swallow(['touchend', 'mouseup'], function () {
-            console.log(this)
             this.parent_.parent_.showBody(this.parent_.parent_, e)
         }, true);
     });
