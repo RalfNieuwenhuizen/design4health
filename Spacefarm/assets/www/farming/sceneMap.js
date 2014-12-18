@@ -368,6 +368,14 @@ farming.SceneMap.prototype.tick = function(){
 
     if(this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
         this.game.sceneHarvest.hideHarvest(this);
+
+    if(this.sceneLayer.children_.length > 0) {
+        this.zoomInButton.setHidden(true);
+        this.zoomOutButton.setHidden(true);
+    } else {
+        this.zoomInButton.setHidden(false);
+        this.zoomOutButton.setHidden(false);
+    }
 }
 
 // Zooming

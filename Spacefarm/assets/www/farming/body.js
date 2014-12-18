@@ -36,10 +36,10 @@ farming.Body.prototype.redraw = function (body, position, showLevels) {
         parent.appendChild(this.bodyLayer);
     }
     this.drawBase(position);
-    this.drawChest(body.chest, new goog.math.Coordinate(position.x - (this.scale*1), position.y - (this.scale*30)));
-    this.drawAbs(body.abs, position);
     this.drawArms(body.arms, new goog.math.Coordinate(position.x, position.y - (this.scale*2)));
     this.drawLegs(body.legs, new goog.math.Coordinate(position.x + (this.scale*2), position.y + (this.scale*47)));
+    this.drawAbs(body.abs, position);
+    this.drawChest(body.chest, new goog.math.Coordinate(position.x - (this.scale*1), position.y - (this.scale*30)));
 }
 farming.Body.prototype.drawBase= function (center) {
     var icon = new farming.Sprite('images/body/exoskeleton.png').setSize(this.scale*100, this.scale*200).setPosition(center);
@@ -52,7 +52,7 @@ farming.Body.prototype.drawBack = function (number, center) {
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
-        farming.Body.prototype.addPopup(icon, "level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
+        farming.Body.prototype.addPopup(icon, "back level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
         //this.bodyLayer.appendChild(label);
     }
 }
@@ -63,7 +63,7 @@ farming.Body.prototype.drawArms = function (number, center) {
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
-        farming.Body.prototype.addPopup(icon, "level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
+        farming.Body.prototype.addPopup(icon, "arms level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points", -65);
         //this.bodyLayer.appendChild(label);
     }
 }
@@ -74,7 +74,7 @@ farming.Body.prototype.drawLegs = function (number, center) {
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
-        farming.Body.prototype.addPopup(icon, "level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
+        farming.Body.prototype.addPopup(icon, "legs level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
         //this.bodyLayer.appendChild(label);
     }
 }
@@ -85,7 +85,7 @@ farming.Body.prototype.drawChest = function (number, center) {
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
-        farming.Body.prototype.addPopup(icon, "level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
+        farming.Body.prototype.addPopup(icon, "chest level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points", -30);
         //this.bodyLayer.appendChild(label);
     }
 }
@@ -96,15 +96,15 @@ farming.Body.prototype.drawAbs = function (number, center) {
 
     this.bodyLayer.appendChild(icon);
     if(!this.hideLevels) {
-        farming.Body.prototype.addPopup(icon, "level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points");
+        farming.Body.prototype.addPopup(icon, "abs level " + this.getLevel(number) + ": " + number + "/" + this.getTargetXP(number) + " points", 60);
         //this.bodyLayer.appendChild(label);
     }
 }
 
 // Mouseover / mouseout
-farming.Body.prototype.addPopup = function (target, text, position) {
-    var offset = 110;
-    var position = position === 'left' ? new goog.math.Coordinate(-offset, 0) : new goog.math.Coordinate(offset, 0)
+farming.Body.prototype.addPopup = function (target, text, yPos) {
+    var xPos = 110;
+    var position = yPos ? new goog.math.Coordinate(xPos, yPos) : new goog.math.Coordinate(xPos, 0)
     var popup = new farming.Label(text).setPosition(position).setHidden(true);
     target.appendChild(popup);
 

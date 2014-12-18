@@ -176,7 +176,6 @@ farming.Game.prototype.load = function(){
     if(!savedString || savedString == 'null') return;
     var save = JSON.parse(savedString);
 
-    this.tickables = [];
     this.player = save.player;
     this.introduction.introPhase = save.introPhase;
     for(var x=0; x<SETTINGS.mapSize; x++) {
