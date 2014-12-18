@@ -160,7 +160,6 @@ farming.SceneStats.prototype.redraw = function(player) {
         }
         this.title.setText('Statistics' + description);
     }
-    var exercises = '';
     var year, month, day;
     switch(this.filter.length) {
         case 3: day = this.filter[2];
@@ -178,7 +177,7 @@ farming.SceneStats.prototype.redraw = function(player) {
         for(var d in dayList) {
             day = dayList[d];
             if(!player.exercisesDone[year] || !player.exercisesDone[year][month] || !player.exercisesDone[year][month][day])
-                break;
+                continue;
             for(var e in player.exercisesDone[year][month][day]) {
                 var key = player.exercisesDone[year][month][day][e];
                 if(!exercises[key])
@@ -187,7 +186,7 @@ farming.SceneStats.prototype.redraw = function(player) {
             }
         }
     }
-
+    
     exercises.sort();
     var text = '';
     var keys = Object.keys(exercises);
