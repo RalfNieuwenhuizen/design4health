@@ -33,3 +33,11 @@ farming.Sprite.prototype.setAction = function(action, target) {
     }
     return this;
 }
+farming.Sprite.prototype.preventClickThrough = function() {
+    goog.events.listen(this, ['mousedown', 'touchstart'], function (e) {
+        e.swallow(['touchend', 'mouseup'], function () {
+            e.preventDefault();
+        }, true);
+    });
+    return this;
+}

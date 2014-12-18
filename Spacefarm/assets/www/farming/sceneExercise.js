@@ -20,7 +20,8 @@ farming.SceneExercise = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
+        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label().setFontSize(12).setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4)).setAlign('left').setMultiline(true);
     this.animation = new lime.Sprite().setSize(SETTINGS.size.background_layer.height*0.75, SETTINGS.size.background_layer.height).setPosition(center.x*1.5, center.y);

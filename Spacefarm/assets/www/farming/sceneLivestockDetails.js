@@ -18,7 +18,8 @@ farming.SceneLivestockDetails = function (game) {
     this.windowLayer = new lime.Layer();
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
-    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
+        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Livestock Details');

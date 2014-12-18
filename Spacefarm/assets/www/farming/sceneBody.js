@@ -20,7 +20,8 @@ farming.SceneBody = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new lime.Sprite().setFill(SETTINGS.color.background_layer).setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
+        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     this.title = new farming.Label('BODY').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label('This is the BODY, your Bionic Outer Dimension Yeosuit. \n' +
     ' It represents you, \n and the exercises you have done in this game. \n' +
