@@ -87,7 +87,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
     console.log('repetitions for apple are:' +rep);
      }
     
-    if (rep >=10) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -119,7 +119,7 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     console.log('repetitions for wheat are:' +rep);
      }
     
-    if (rep >=2) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -151,7 +151,7 @@ farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
     console.log('repetitions for rocket_jumps are:' +rep);
      }
     
-    if (rep >=10) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -168,6 +168,14 @@ farming.Exercise.prototype.stopWatch = function () {
         clearInterval(this.fakeWebWatchID);
         this.fakeWebWatchID = null;
     }
+}
+farming.Exercise.prototype.getRepetitions = function (exerciseObject) {
+    if(exerciseObject && exerciseObject.target && exerciseObject.target.exerciseKey) {
+        if(EXERCISES && EXERCISES[exerciseObject.target.exerciseKey] && EXERCISES[exerciseObject.target.exerciseKey]['repetitions']) {
+            return EXERCISES[exerciseObject.target.exerciseKey]['repetitions'];
+        }
+    }
+    return 1;
 }
 var EXERCISES = {
     apple_picking: {
