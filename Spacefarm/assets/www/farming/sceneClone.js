@@ -110,18 +110,15 @@ farming.SceneClone.prototype.drawItems = function() {
 }
 
 farming.SceneClone.prototype.drawCrop = function(crop, position) {
-    var cropIcon = new farming.Sprite('images/crops/'+crop.key+'_ripe.png').setSize(125, 90).setPosition(position)
-        .setAction(this.startClone, {'properties': crop,'game': this.game} );
+    var cropIcon = new farming.Sprite('images/crops/'+crop.key+'_ripe.png').setSize(125, 90).setPosition(position);
 
     var cropLabel = new farming.Label(crop.name).setPosition(position.x, position.y + 52)
-        .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight)
-        .setAction(this.startClone, {'properties': crop,'game': this.game} );
+        .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight);
 
     // Create button to clone the icon
     var cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button_primary)
         .setPosition(new goog.math.Coordinate(position.x-(SETTINGS.size.button_small.width/2),position.y+80))
-        .setSize(SETTINGS.size.button_small)
-        .setAction(this.startClone, {'properties': crop,'game': this.game} );
+        .setSize(SETTINGS.size.button_small);
 
     // Create button to get details about the icon
     var cloneDetails = new farming.Button('Details').setColor(SETTINGS.color.button)
@@ -133,6 +130,9 @@ farming.SceneClone.prototype.drawCrop = function(crop, position) {
     this.w.appendChild(cropIcon).appendChild(cropLabel);
     if(!this.drawLock(crop.required_level, position)) {
         this.drawCost(crop.cost, position);
+        cropIcon.setAction(this.startClone, {'properties': crop,'game': this.game} );
+        cropLabel.setAction(this.startClone, {'properties': crop,'game': this.game} );
+        cloneButton.setAction(this.startClone, {'properties': crop,'game': this.game} );
         this.w.appendChild(cloneButton).appendChild(cloneDetails);
     }
 }
