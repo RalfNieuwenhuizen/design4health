@@ -116,11 +116,49 @@ farming.Livestock.prototype.harvest = function(){
     return false;
 }
 
+// farming.Livestock.prototype.playSound = function(){
+//     var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
+//     if (sound.isLoaded() && !sound.isPlaying()) {
+//         sound.play();
+//     }
+// }
+
 farming.Livestock.prototype.playSound = function(){
-    var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
-    if (sound.isLoaded() && !sound.isPlaying()) {
-        sound.play();
-    }
+
+    //  var mp3URL = getMediaURL("sounds/"+this.type+".ogg");
+    // var media = new Media(mp3URL, null, mediaError);
+    // media.play();
+
+    
+     if (device.platform == "Android") {
+        console.log("I am in play sound function in android");
+        var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
+        //if (sound.isLoaded() && !sound.isPlaying()) {
+         
+            sound.play();
+              //}
+          }
+         
+       else {
+        console.log("I am in the limejs sound")
+           var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
+           if (sound.isLoaded() && !sound.isPlaying()) {
+             sound.play();
+             } 
+         }
+
+  
+    //var sound = new Media("/android_asset/www/sounds/"+this.type+ ".ogg");
+    // var sound = new Media('sounds/'+this.type+'.ogg');
+    // if (sound.isLoaded() && !sound.isPlaying()) {
+    //     sound.play();
+    // }
+
+    // var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
+    // if (sound.isLoaded() && !sound.isPlaying()) {
+    //     console.log("sound is loaded");
+    //     sound.play();
+    // }
 }
 
 farming.Livestock.prototype.showWarning = function(){
