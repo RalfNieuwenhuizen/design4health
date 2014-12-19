@@ -92,6 +92,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     var title = opt_active ? 'Current challenge: '+challenge.name : challenge.name;
     this.title.setText(title);
     this.description.setText(challenge.description + "\n" + farming.Challenge.prototype.bodypart(challenge.type));
+    this.selectButton.setHidden(false);
     if(opt_active) {
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
