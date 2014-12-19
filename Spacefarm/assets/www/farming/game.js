@@ -162,6 +162,7 @@ farming.Game.prototype.EventType = {
     DO_CHALLENGE: goog.events.getUniqueId('do_challenge'),
     PRESSED_DO: goog.events.getUniqueId('pressed_do'),
     EXERCISE_DONE: goog.events.getUniqueId('exercise_done'),
+    COMPLETE_CHALLENGE: goog.events.getUniqueId('complete_challenge'),
     OPEN_BODY: goog.events.getUniqueId('open_body'),
     SHOW_BODYSTATS: goog.events.getUniqueId('show_bodystats')
 };

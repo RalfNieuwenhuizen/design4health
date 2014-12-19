@@ -71,6 +71,7 @@ farming.SceneChallengeDetails.prototype.giveUpChallenge = function (scene) {
 }
 farming.SceneChallengeDetails.prototype.completeChallenge = function (scene) {
     scene.game.completeChallenge();
+    scene.game.source.dispatchEvent(scene.game.EventType.COMPLETE_CHALLENGE);
 }
 farming.SceneChallengeDetails.prototype.selectChallenge = function (input) {
     input.scene.game.selectChallenge(input.challenge);
