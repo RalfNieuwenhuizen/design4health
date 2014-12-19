@@ -68,7 +68,7 @@ farming.SceneCropDetails.prototype.closeDetails = function(scene) {
 farming.SceneCropDetails.prototype.showDetails = function(crop) {
     this.title.setText('Details '+ crop.name);
     var text = 'Cost: '+crop.cost + '\n\n';
-    text += 'Growing time: '+crop.time_to_ripe + '\n\n';
+    text += 'Growing time: '+crop.time_to_ripe/60 + ' min \n\n';
     if(crop.harvests > 1) {
         text += 'Revenue per harvest: ' + crop.revenue + '\n\n';
         text += 'Number of harvests: ' + crop.harvests + '\n\n';
