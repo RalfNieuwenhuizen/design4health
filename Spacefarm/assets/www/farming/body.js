@@ -119,6 +119,16 @@ farming.Body.prototype.addPopup = function (target, text, yPos) {
 
 var LEVELS = [5, 10, 20, 30, 50, 100, 200, 500, 1000, 10000];
 
+// Function that returns your overall level
+farming.Body.prototype.getBodyLevel = function (body) {
+    var min_xp = LEVELS[LEVELS.length - 1];
+    for(var part in body) {
+        if(body[part] < min_xp) {
+            min_xp = body[part];
+        }
+    }
+    return farming.Body.prototype.getLevel(min_xp);
+}
 // Function that returns your current level
 farming.Body.prototype.getLevel = function (points) {
     for (var level in LEVELS) {

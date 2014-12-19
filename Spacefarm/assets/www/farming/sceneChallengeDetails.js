@@ -95,6 +95,12 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     if(opt_active) {
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
+        this.selectButton.setHidden(true);
+        if (this.challengeDone()) {
+            lime.scheduleManager.callAfter(function() {
+                this.completeChallenge(this);
+            }, this, 1000);
+        }
     } else if (this.sufficientItems()) {
         this.selectButton.setAction(this.selectChallenge, {
             'challenge': challenge,
@@ -173,17 +179,11 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
             doButton.setColor(SETTINGS.color.button_inactive).setText('Done').setHidden(false);
-        } else if (this.sufficientItems() && this.exerciseDoable(exercise.key)) {
+        } else if (this.exerciseDoable(exercise.key)) {
             doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
                 'scene': this
             }).setColor(SETTINGS.color.button_primary).setText('Do!').setHidden(false);
-        }
-
-        if (this.challengeDone()) {
-            //TODO woohoo
-            this.giveUpButton.setHidden(true);
-            this.completeButton.setHidden(false);
         }
     }
 

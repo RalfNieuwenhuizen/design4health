@@ -89,9 +89,6 @@ farming.Game = function() {
 
     this.player = {
         coins: 100,
-        currentCrops : Object.keys(CROPS),
-        currentLivestock : Object.keys(LIVESTOCK),
-        challenges : Object.keys(CHALLENGES),
         exercisesDone: [],
         body : {
             arms: 0,
@@ -101,8 +98,8 @@ farming.Game = function() {
             abs: 0
         },
         inventory : {
-            space_wheat: 10,
-            space_apple: 10
+            space_wheat: 3,
+            space_apple: 2
         },
         currentChallenge : null,
         introPhase: 0 // Used to check for introductional screens
@@ -270,6 +267,7 @@ farming.Game.prototype.hideExercise = function(){
 // -- clone --
 farming.Game.prototype.showClone = function(){
     this.source.dispatchEvent(this.EventType.GO_CLONE);
+    this.sceneClone.drawItems(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneClone);
 }
 
@@ -310,6 +308,7 @@ farming.Game.prototype.backLivestockDetails = function(){
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
 farming.Game.prototype.showChallenge = function(){
     if(!this.player.currentChallenge) {
+        this.sceneChallenge.redraw(this.player.body);
         this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
     } else {
         this.showChallengeDetails(this.player.currentChallenge);
@@ -329,9 +328,6 @@ farming.Game.prototype.selectChallenge = function(challenge){
     }
     this.player.currentChallenge = challenge;
     this.player.currentChallenge.exercisesDone = [];
-    // TODO: Check if these steps were not necessary
-    //if(this.director.getCurrentScene() != this.sceneChallengeDetails) this.director.popScene();
-    //if(this.director.getCurrentScene() != this.sceneChallenge) this.director.popScene();
     this.showChallenge();
 }
 
@@ -358,15 +354,16 @@ farming.Game.prototype.completeChallenge = function(){
             }, {game: this, reward: reward}, i * 1000);
         }
     }
+
     this.player.currentChallenge = null;
     this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
     this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
-    this.showChallenge();
+    //this.showChallenge();
 }
 
 // show the challenge details screen for input.challenge
 farming.Game.prototype.showChallengeDetails = function(challenge){
-    this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
+    //this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
     this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
 	this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);

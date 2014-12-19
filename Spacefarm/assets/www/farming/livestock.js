@@ -64,8 +64,7 @@ farming.Livestock.prototype.showProgress = function(){
     if (this.isDead()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
     } else if (this.isHarvestable()) {
-        //TODO create harvestable animals images
-        this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
+        this.setFill('images/livestock/'+ this.type + this.appearance + '_harvestable.png');
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
@@ -142,19 +141,6 @@ farming.Livestock.prototype.tick = function(){
 }
 
 var LIVESTOCK = {
-    woolybot : {
-        name: 'Woolybot',
-        key: 'woolybot',
-        appearances: 2,
-        cost: 20,
-        revenue: 10,
-        revenue_item: 'wool',
-        food: 'space_wheat',
-        time_between_harvests: 8,
-        exercise: {
-            key : 'apple_picking'
-        }
-    },
     polychick : {
         name: 'Polychick',
         key: 'polychick',
@@ -164,9 +150,20 @@ var LIVESTOCK = {
         revenue_item: 'egg',
         food: 'space_wheat',
         time_between_harvests: 5,
-        exercise: {
-            key : 'apple_picking'
-        }
+        exercise: 'apple_picking',
+        required_level: 0
+    },
+    woolybot : {
+        name: 'Woolybot',
+        key: 'woolybot',
+        appearances: 2,
+        cost: 20,
+        revenue: 10,
+        revenue_item: 'wool',
+        food: 'space_wheat',
+        time_between_harvests: 8,
+        exercise: 'apple_picking',
+        required_level: 1
     },
     piggium : {
         name: 'Piggium',
@@ -174,12 +171,11 @@ var LIVESTOCK = {
         appearances: 2,
         cost: 10,
         revenue: 50,
-        revenue_item: 'pork',
+        revenue_item: 'bacon',
         food: 'space_apple',
         time_between_harvests: 1440,
-        exercise: {
-            key : 'apple_picking'
-        }
+        exercise: 'apple_picking',
+        required_level: 2
     },
     milkatron : {
         name: 'Milkatron',
@@ -190,9 +186,8 @@ var LIVESTOCK = {
         revenue_item: 'milk',
         food: 'space_wheat',
         time_between_harvests: 240,
-        exercise: {
-            key : 'apple_picking'
-        }
+        exercise: 'apple_picking',
+        required_level: 2
     }
 };
 

@@ -1,5 +1,4 @@
 /**
- * 	TODO: Show number of pages and current page
  *
  *
  */
@@ -89,15 +88,15 @@ farming.SceneClone.prototype.drawItems = function() {
     this.w.removeAllChildren();
     // Total amount of items
     var nItems = this.getTotalItems();
-    var nCrops = goog.object.getCount(this.game.player.currentCrops);
+    var nCrops = goog.object.getCount(CROPS);
 
     // Print six crops to the screen (in layer w) according to the number of the page
     for(var i=6*(this.page-1); i < Math.min(nItems, this.page*6); i++) {
         var position = new goog.math.Coordinate( ((i%6)%3)*200 - 200, Math.floor((i%6)/3)*150 - 120);
-        if (i < this.game.player.currentCrops.length) {
-            this.drawCrop(CROPS[this.game.player.currentCrops[i]], position);
-        } else if (i - nCrops < this.game.player.currentLivestock.length) {
-            this.drawLivestock(LIVESTOCK[this.game.player.currentLivestock[i - nCrops]], position);
+        if (i < goog.object.getCount(CROPS)) {
+            this.drawCrop(CROPS[Object.keys(CROPS)[i]], position);
+        } else if (i - nCrops < goog.object.getCount(LIVESTOCK)) {
+            this.drawLivestock(LIVESTOCK[Object.keys(LIVESTOCK)[i - nCrops]], position);
         }
     }
 
@@ -111,7 +110,7 @@ farming.SceneClone.prototype.drawItems = function() {
 }
 
 farming.SceneClone.prototype.drawCrop = function(crop, position) {
-    var cropIcon = new farming.Sprite('images/crops/'+crop.key+'_ripe.png').setSize(150, 90).setPosition(position)
+    var cropIcon = new farming.Sprite('images/crops/'+crop.key+'_ripe.png').setSize(125, 90).setPosition(position)
         .setAction(this.startClone, {'properties': crop,'game': this.game} );
 
     var cropLabel = new farming.Label(crop.name).setPosition(position.x, position.y + 52)
@@ -131,12 +130,15 @@ farming.SceneClone.prototype.drawCrop = function(crop, position) {
         .setAction(this.showCropDetails, {'properties' : crop, 'game' : this.game});
 
     // Add crop with button to the w-layer
-    this.w.appendChild(cropIcon).appendChild(cropLabel).appendChild(cloneButton).appendChild(cloneDetails);
-    this.drawCost(crop.cost, position);
+    this.w.appendChild(cropIcon).appendChild(cropLabel);
+    if(!this.drawLock(crop.required_level, position)) {
+        this.drawCost(crop.cost, position);
+        this.w.appendChild(cloneButton).appendChild(cloneDetails);
+    }
 }
 
 farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
-    var livestockIcon = new farming.Sprite('images/livestock/'+livestock.key+livestock.appearances+'.png').setSize(150, 90).setPosition(position)
+    var livestockIcon = new farming.Sprite('images/livestock/'+livestock.key+livestock.appearances+'.png').setSize(125, 90).setPosition(position)
         .setAction(this.startClone, {'properties': livestock,'game': this.game} );
 
     var livestockLabel = new farming.Label(livestock.name).setPosition(position.x, position.y + 52)
@@ -156,9 +158,12 @@ farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
         .setAction(this.showLivestockDetails, {'properties' : livestock, 'game' : this.game});
 
     // Add livestock with button to the w-layer
-    this.w.appendChild(livestockIcon).appendChild(livestockLabel).appendChild(cloneButton).appendChild(cloneDetails);
-    this.drawCost(livestock.cost, position);
-    this.drawFood(livestock.food, position);
+    this.w.appendChild(livestockIcon).appendChild(livestockLabel);
+    if(!this.drawLock(livestock.required_level, position)) {
+        this.drawCost(livestock.cost, position);
+        this.drawFood(livestock.food, position);
+        this.w.appendChild(cloneButton).appendChild(cloneDetails);
+    }
 }
 
 farming.SceneClone.prototype.drawCost = function(amount, position) {
@@ -171,11 +176,22 @@ farming.SceneClone.prototype.drawFood = function(type, position) {
     var icon = new farming.Sprite('images/items/'+type+'.png').setSize(40, 40).setPosition(position.x + 50, position.y + 25);
     this.w.appendChild(icon);
 }
+farming.SceneClone.prototype.drawLock = function(required_level, position) {
+    if(farming.Body.prototype.getBodyLevel(this.game.player.body) < required_level) {
+        var lock = new farming.Sprite('images/lock.png').setOpacity(.75).preventClickThrough()
+            .setSize(165, 140).setPosition(position.x, position.y + 30);
+        var label = new lime.Label('Level '+required_level).setFontSize(20)
+            .setSize(165, 20).setPosition(position.x, position.y + 77);
+        this.w.appendChild(lock).appendChild(label);
+        return true;
+    }
+    return false;
+}
 
 // Function to show the details of the crop
 farming.SceneClone.prototype.getTotalItems = function() {
-    var nCrops = goog.object.getCount(this.game.player.currentCrops);
-    var nLivestock = goog.object.getCount(this.game.player.currentLivestock);
+    var nCrops = goog.object.getCount(CROPS);
+    var nLivestock = goog.object.getCount(LIVESTOCK);
     return nCrops + nLivestock;
 }
 
