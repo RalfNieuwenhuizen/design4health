@@ -444,14 +444,10 @@ farming.Game.prototype.hasItem = function(type, amount) {
 
 // -- BODY --
 farming.Game.prototype.addPoints = function(bodypart, amount) {
-    if(this.player.body[bodypart]) {
-        this.player.body[bodypart] += amount;
-    } else {
-        this.player.body[bodypart] = amount;
-    }
-
-    if(this.sceneMap.body)
-        this.sceneMap.body.redraw(this.player.body);
+    if(!this.player.body[bodypart]) this.player.body[bodypart] = 0;
+    var max = this.sceneMap.body.getTargetXP(this.player.body[bodypart]);
+    this.player.body[bodypart] = Math.min(max, this.player.body[bodypart]+amount);
+    this.sceneMap.body.redraw(this.player.body);
     return this.player.body[bodypart];
 }
 farming.Game.prototype.getPoints = function(bodypart) {

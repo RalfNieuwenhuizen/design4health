@@ -99,7 +99,7 @@ farming.SceneChallenge.prototype.redraw = function() {
 
 farming.SceneChallenge.prototype.drawChallenge = function(challenge, position) {
     var challengeIcon = new farming.Sprite('images/challenges/'+challenge.key+'.png')
-        .setSize(100, 83).setPosition(position.x, position.y + 3).setAction(this.showChallengeDetails, {'challenge': challenge,'scene': this});
+        .setSize(80, 65).setPosition(position.x, position.y + 3).setAction(this.showChallengeDetails, {'challenge': challenge,'scene': this});
     var challengeTitle = new farming.Label(challenge.name)
         .setPosition(position.x, position.y + 44)
         .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight);

@@ -23,9 +23,8 @@ farming.SceneBody = function (game) {
     var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
         .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     this.title = new farming.Label('BODY').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
-    this.description = new lime.Label('The Bionic Outer Dimension Yeosuit \n' +
-    		'shows your progress. \n\n Click on it to see \n the gained experience points \n per body part.')
-        .setPosition(center.x - 140, center.y).setMultiline(true).setFontSize(15);
+    this.description = new lime.Label('Bionic Outer Dimension Yeosuit')
+        .setPosition(SETTINGS.position.title.x, SETTINGS.position.title.y+20).setMultiline(true).setFontSize(15);
 
     this.closeButton = new farming.Button('X').setColor('#999999')
         .setPosition(SETTINGS.position.close_button)
@@ -44,7 +43,7 @@ farming.SceneBody = function (game) {
         .appendChild(this.statsButton)
         .appendChild(this.closeButton);
 
-    this.body = new farming.Body(1.3);
+    this.body = new farming.Body(1.25);
     this.windowLayer.appendChild(this.body);
 }
 goog.inherits(farming.SceneBody, farming.Scene);
@@ -61,5 +60,5 @@ farming.SceneBody.prototype.showStats = function(scene) {
 
 farming.SceneBody.prototype.redraw = function(body) {
     if (this.body)
-        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x + 150, this.game.getCenterPosition().y));
+        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y-5));
 }

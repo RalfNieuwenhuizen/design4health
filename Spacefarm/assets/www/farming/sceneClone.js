@@ -138,18 +138,15 @@ farming.SceneClone.prototype.drawCrop = function(crop, position) {
 }
 
 farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
-    var livestockIcon = new farming.Sprite('images/livestock/'+livestock.key+livestock.appearances+'.png').setSize(125, 90).setPosition(position)
-        .setAction(this.startClone, {'properties': livestock,'game': this.game} );
+    var livestockIcon = new farming.Sprite('images/livestock/'+livestock.key+livestock.appearances+'.png').setSize(125, 90).setPosition(position);
 
     var livestockLabel = new farming.Label(livestock.name).setPosition(position.x, position.y + 52)
-        .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight)
-        .setAction(this.startClone, {'properties': livestock,'game': this.game} );
+        .setFontSize(SETTINGS.font.subtitle.size).setFontWeight(SETTINGS.font.subtitle.weight);
 
     // Create button to clone the icon
     var cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button_primary)
         .setPosition(new goog.math.Coordinate(position.x-(SETTINGS.size.button_small.width/2),position.y+80))
-        .setSize(SETTINGS.size.button_small)
-        .setAction(this.startClone, {'properties': livestock,'game': this.game} );
+        .setSize(SETTINGS.size.button_small);
 
     // Create button to get details about the icon
     var cloneDetails = new farming.Button('Details').setColor(SETTINGS.color.button)
@@ -162,6 +159,9 @@ farming.SceneClone.prototype.drawLivestock = function(livestock, position) {
     if(!this.drawLock(livestock.required_level, position)) {
         this.drawCost(livestock.cost, position);
         this.drawFood(livestock.food, position);
+        livestockIcon.setAction(this.startClone, {'properties': livestock,'game': this.game} );
+        livestockLabel.setAction(this.startClone, {'properties': livestock,'game': this.game} );
+        cloneButton.setAction(this.startClone, {'properties': livestock,'game': this.game} );
         this.w.appendChild(cloneButton).appendChild(cloneDetails);
     }
 }
