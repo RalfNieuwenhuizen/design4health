@@ -118,7 +118,7 @@ farming.Body.prototype.addPopup = function (target, text, yPos) {
     return this;
 }*/
 
-var LEVELS = [0, 5, 10, 20, 30, 50, 100, 200, 500, 1000, 10000];
+var LEVELS = [0, 5, 15, 30, 50, 80, 120, 200, 300];
 var LEVEL_TEXTS = [null,'Rusted iron body','Amethyst body','EcoPower body','Fire body',
     'Obsidian body','Plasma body','Golden body','Diamond body','Platinum body','Printer ink body',
     'Caramel body','Chocolate body','Banana smoothie body','Last body'

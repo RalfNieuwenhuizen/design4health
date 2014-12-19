@@ -252,7 +252,7 @@ farming.Exercise.prototype.situps = function (acceleration, exercise) {
     'Acceleration Z: ' + acceleration.z + " " +
     'Timestamp: ' + acceleration.timestamp);
 
-    acc.push(acceleration.x);
+    acc.push(acceleration.z);
     first= acc[0];
 
     last= acc[acc.length-1];
