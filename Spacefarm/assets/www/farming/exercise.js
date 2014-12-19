@@ -86,7 +86,7 @@ farming.Exercise.prototype.getAnimation = function (key, delay) {
 }
 farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
     
-     window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
+
      //navigator.plugin.notification.local.add({ sound: null });
 
 //      navigator.plugin.notification.local.add({
@@ -143,6 +143,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
         navigator.notification.vibrate(2500);
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
+        window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
     }
 
 
@@ -245,7 +246,41 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     }
     
 }
+farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
+    if(!exercise.watchID && !exercise.fakeWebWatchID) return;
+    console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
+        'Acceleration Z: ' + acceleration.z + " " +
+        'Timestamp: ' + acceleration.timestamp);
 
+    acc.push(acceleration.x);
+    first= acc[0];
+    //var listLimit = 15;
+    //if (accvalues.length > listLimit) {
+    //accvalues.splice(0, 1); }
+
+    last= acc[acc.length-1];
+    console.log('first value of array' +first + 'last value of array' +last);
+    console.log('array length is:' +acc.length);
+
+    //if (acceleration.y > 10) {
+    //if(last>5){
+    if(Math.abs(last-first)> 3)
+    {
+        rep= rep+1;
+        console.log('repetitions for wheat are:' +rep);
+    }
+
+    //if (rep >=2) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+        //navigator.notification.beep(3);
+        navigator.notification.vibrate(2500);
+        rep=0;
+        acc=[];
+        exercise.onExerciseSuccess(exercise.target);
+        exercise.stopWatch();
+    }
+
+}
 farming.Exercise.prototype.situps = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Situps callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
