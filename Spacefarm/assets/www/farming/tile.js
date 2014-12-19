@@ -108,28 +108,31 @@ farming.Tile.prototype.showProgress = function(tile){
     bg.appendChild(timer).appendChild(label);
     this.appendChild(bg);
     
-    var food = this.getItem().getFood();
-	// TODO: change namespace to wheat_ripe instead of space_wheat_ripe
-	var bgFood = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,30).setPosition(0,-90)
-			.setAction(this.feedTile,tile);
-    var crop = new farming.Sprite('images/crops/'+food+'_ripe.png').setSize(40,30).setPosition(-45,0);
-    var labelFood = new lime.Label('Feed now').setPosition(10,0).setFontWeight('bold');
+    // If this is livestock
+    if (this.livestock != null){
+    	var food = this.getItem().getFood();
+    	// TODO: change namespace to wheat_ripe instead of space_wheat_ripe
+    	var bgFood = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,30).setPosition(0,-90)
+    			.setAction(this.feedTile,tile);
+    	var crop = new farming.Sprite('images/crops/'+food+'_ripe.png').setSize(40,30).setPosition(-45,0);
+    	var labelFood = new lime.Label('Feed now').setPosition(10,0).setFontWeight('bold');
+    	
+    	// If no food left for the animal
+		if (!tile.game.hasItem(tile.livestock.getFood())){
+			labelFood.setText('Not in stock');	
+		}
+		bgFood.appendChild(crop).appendChild(labelFood);
+		this.appendChild(bgFood);
     
-    // If no food left for the animal
-	if (!tile.game.hasItem(tile.livestock.getFood())){
-		labelFood.setText('Not in stock');	
-	}
-    bgFood.appendChild(crop).appendChild(labelFood);
-    this.appendChild(bgFood);
-    
-    var fade = new lime.animation.FadeTo(0).setDuration(4);
-    bgFood.runAction(fade);
-    goog.events.listen(fade,lime.animation.Event.STOP,function(){
-        for(var i in this.targets) {
-            var target = this.targets[i];
-            target.parent_.removeChild(target);
-        }
-    });
+		var fade = new lime.animation.FadeTo(0).setDuration(4);
+		bgFood.runAction(fade);
+		goog.events.listen(fade,lime.animation.Event.STOP,function(){
+			for(var i in this.targets) {
+				var target = this.targets[i];
+				target.parent_.removeChild(target);
+			}
+		});
+    }
     
     var fade2 = new lime.animation.FadeTo(0).setDuration(4);
     bg.runAction(fade2);
