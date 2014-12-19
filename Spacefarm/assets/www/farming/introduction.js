@@ -334,12 +334,12 @@ farming.Introduction.prototype.intro12 = function(){
 // 13th screen: Click the statistics button
 farming.Introduction.prototype.intro13 = function(){
 	
-	var position = {x: this.center.x + 100, y: this.center.y + this.game.getFullSize(0.1).height};
+	var position = {x: this.center.x + 75, y: this.center.y + this.game.getFullSize(0.1).height};
 
-	var textbox = new lime.Sprite().setFill('images/textbox/right_arrow.png')
-			.setSize(this.game.getFullSize(0.6).width, this.game.getFullSize(0.7).height).setPosition(position.x - 200,position.y-30);
-	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(position.x - 275,position.y - 30).setText(
+	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
+			.setSize(this.game.getFullSize(0.33).width, this.game.getFullSize(0.7).height).setPosition(position.x - 335,position.y-30);
+	var text = new lime.Label().setFontSize(16).setMultiline(true);
+	text.setFontWeight('bold').setPosition(position.x - 335,position.y - 30).setText(
 			"This is the BODY: your \n Bionic Outer Dimension Yeosuit. \n" +
 		    "It represents you and is based \n on the exercises you have done \n in this game. \n\n" +
 		    " When you click on a bodypart \n you can see" +
