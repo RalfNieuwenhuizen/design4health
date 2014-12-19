@@ -23,11 +23,8 @@ farming.SceneBody = function (game) {
     var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
         .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
     this.title = new farming.Label('BODY').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
-    this.description = new lime.Label('This is the BODY, your Bionic Outer Dimension Yeosuit. \n' +
-    ' It represents you, \n and the exercises you have done in this game. \n' +
-    ' When you look at the levels of each bodypart, \n' +
-    'you can see how much you have trained that part of your own body. \n' +
-    ' As you level up your BODY, \n more challenges and clones will become available!')
+    this.description = new lime.Label('The Bionic Outer Dimension Yeosuit \n' +
+    		'shows your progress. \n\n Click on it to see \n the gained experience points \n per body part.')
         .setPosition(center.x - 140, center.y).setMultiline(true).setFontSize(15);
 
     this.closeButton = new farming.Button('X').setColor('#999999')
@@ -59,6 +56,7 @@ farming.SceneBody.prototype.closeBody = function(scene) {
 }
 farming.SceneBody.prototype.showStats = function(scene) {
     scene.game.showStats();
+    scene.game.source.dispatchEvent(scene.game.EventType.SHOW_BODYSTATS);
 }
 
 farming.SceneBody.prototype.redraw = function(body) {

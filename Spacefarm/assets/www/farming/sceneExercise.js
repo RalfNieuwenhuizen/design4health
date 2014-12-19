@@ -136,6 +136,5 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     
     // Fire that exercise is done
     scene.game.source.dispatchEvent(scene.game.EventType.EXERCISE_DONE);
-    console.log('exercise is done');
 }
 
