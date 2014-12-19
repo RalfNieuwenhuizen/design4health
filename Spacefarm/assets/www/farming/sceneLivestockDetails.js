@@ -73,7 +73,7 @@ farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
     this.title.setText('Details '+ livestock.name);
     var text = 'Cost: '+livestock.cost + '\n\n';
     text += 'Revenue per harvest: '+livestock.revenue + '\n\n';
-    text += 'Time between harvests: '+livestock.time_between_harvests + '\n\n';
+    text += 'Time between harvests: '+livestock.time_between_harvests/60 + ' min\n\n';
     text += 'Exercise: '+EXERCISES[livestock.exercise].title + '\n';
     text += EXERCISES[livestock.exercise].points + ' ' + EXERCISES[livestock.exercise].type + (EXERCISES[livestock.exercise].points > 1 ? ' points' : ' point') + '\n\n';
     this.details.setText(text);

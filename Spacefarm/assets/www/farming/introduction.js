@@ -135,7 +135,8 @@ farming.Introduction.prototype.intro2 = function(){
 farming.Introduction.prototype.intro3 = function(){
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
-	
+	middleCor.x = middleCor.x + 20;
+	middleCor.y = middleCor.y - 30;
 	this.text.setFontWeight('bold').setPosition(middleCor.x-162,middleCor.y-20).setText(
 			"This is your new farm, \n click on it to see \n your inventory");
 	
