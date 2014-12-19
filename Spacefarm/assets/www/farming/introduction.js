@@ -57,9 +57,12 @@ farming.Introduction.prototype.game = null;
 farming.Introduction.prototype.intro = function(){
 	
 	// The intro# function is used according to the current phase
-	if (this['intro'+this.introPhase])
-		this['intro'+this.introPhase]()
-		
+	if (this['intro'+this.introPhase]){
+		if (this.introPhase == 12)
+			this.waiter(this);
+		else
+			this['intro'+this.introPhase]()
+	}	
 	else
 		console.log('next intro does not exist');
 }
@@ -176,18 +179,18 @@ farming.Introduction.prototype.intro4 = function(){
 farming.Introduction.prototype.intro5 = function(){
 	var position = {x: this.center.x-95,y: this.center.y + this.game.getFullSize(0.20).height};
 
-	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.45).width, this.game.getFullSize(0.35).height).setPosition(500,160);
-	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(500,160).setText(
-			"Here you see \n all the available \n products that \n can be cloned.");
+	//var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
+	//		.setSize(this.game.getFullSize(0.45).width, this.game.getFullSize(0.35).height).setPosition(500,160);
+	//var text = new lime.Label().setFontSize(18).setMultiline(true);
+	//text.setFontWeight('bold').setPosition(500,160).setText(
+	//		"Here you see \n all the available \n products that \n can be cloned.");
 
 	this.text.setFontWeight('bold').setPosition(position.x, position.y + 15).setText(
-			"Click on Details to see more \n details about the Space \n Apple tree");
+			"Click on Details to see more \n details about the product");
 	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.40).height)
 		.setPosition(position.x, position.y-15).setOpacity(1);	
 	
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
+	this.windowLayer.appendChild(this.w).appendChild(this.text);//.appendChild(textbox).appendChild(text);
 	this.game.sceneClone.windowLayer.appendChild(this.windowLayer);
 	
 	// Listen to the Clone
@@ -199,7 +202,7 @@ farming.Introduction.prototype.intro6 = function(){
 	var position = {x: this.center.x-200,y: this.center.y + this.game.getFullSize(0.30).height};
 
 	this.text.setFontWeight('bold').setPosition(position.x - 40, position.y-10).setText(
-			"Click on Clone to \n clone and plant \n a new crop");
+			"Click on Clone to \n clone a new crop");
 	this.w.setFill('images/textbox/right_low_arrow.png').setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.25).height)
 		.setPosition(position.x, position.y -15 ).setOpacity(1);	
 	
@@ -214,7 +217,7 @@ farming.Introduction.prototype.intro6 = function(){
 farming.Introduction.prototype.intro7 = function(){
 	var position = {x: this.center.x-400,y: this.center.y + 0};
 	this.text.setFontWeight('bold').setPosition(position.x + 0, position.y-10).setText(
-			"Click on empty \n tiles to clone \n the crop. \n\n Shut down the \n screen above to \n stop cloning.");
+			"Click on empty \n tiles to plant \n the cloned crop. \n\n Shut down the \n screen above to \n stop cloning.");
 	this.w.setFill('images/textbox/no_arrow.png').setSize(this.game.getFullSize(0.20).width, this.game.getFullSize(0.4).height)
 		.setPosition(position.x, position.y -15 ).setOpacity(0.8);		
 	this.windowLayer.appendChild(this.w).appendChild(this.text);
@@ -311,7 +314,7 @@ farming.Introduction.prototype.intro11 = function(){
 	this.game.sceneChallengeDetails.windowLayer.appendChild(this.windowLayer);	
 	
 	// Listen to the Clone
-	goog.events.listenOnce(this.game.source,this.game.EventType.PRESSED_DO,goog.partial(this.waiter,this.game.introduction));
+	goog.events.listenOnce(this.game.source,this.game.EventType.PRESSED_DO,goog.partial(this.buttonAction,this.game.introduction));
 }
 
 // 12th screen: open body screen
@@ -319,7 +322,7 @@ farming.Introduction.prototype.intro12 = function(){
 	
 	var position = {x: this.center.x+20,y: this.center.y + 150};
 	this.text.setFontWeight('bold').setPosition(position.x + 0, position.y-45).setText(
-			"Congratulations! You finished \n your first exercise. \n \n Check out your progress \n in the BODY screen");
+			"Congratulations! You completed \n your first challenge. \n \n Check out your progress \n in the BODY screen");
 	this.w.setFill('images/textbox/down_arrow.png').setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.4).height)
 		.setPosition(position.x, position.y -15 ).setOpacity(0.8);		
 	
@@ -358,6 +361,7 @@ farming.Introduction.prototype.intro13 = function(){
 
 // Wait function, awaits an event to be fired before it continues
 farming.Introduction.prototype.waiter = function(scene){
-	// Wait for an exercise to be completed, then go to buttonAction
-	goog.events.listenOnce(scene.game.source,scene.game.EventType.EXERCISE_DONE,goog.partial(scene.buttonAction,scene));
+	
+	// Wait for a challenge to be completed, then go to intro12, pass "this" as fifth element
+	goog.events.listenOnce(scene.game.source,scene.game.EventType.COMPLETE_CHALLENGE,scene.intro12,false,scene);
 }
