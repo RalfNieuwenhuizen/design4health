@@ -92,23 +92,64 @@ farming.Tile.prototype.playSound = function () {
     if (this.livestock)
         this.livestock.playSound();
 }
-farming.Tile.prototype.showProgress = function(){
+farming.Tile.prototype.showProgress = function(tile){
     var progress = this.getItem().getTimeTillHarvest();
 
-    var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(60,30).setPosition(0,-30);
-    var timer = new farming.Sprite('images/duration.png').setSize(20,20).setPosition(-16,0);
-    var label = new lime.Label(progress).setPosition(12,3);
+    if (progress == null){
+    	progress = 'Not fed yet';
+    }
+    else{
+    	progress = progress + ' min';
+    }
+    
+    var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,30).setPosition(0,-60);
+    var timer = new farming.Sprite('images/duration.png').setSize(20,20).setPosition(-40 ,0);
+    var label = new lime.Label(progress).setPosition(14,3);
     bg.appendChild(timer).appendChild(label);
     this.appendChild(bg);
-
-    var fade = new lime.animation.FadeTo(0).setDuration(3);
-    bg.runAction(fade);
+    
+    var food = this.getItem().getFood();
+	// TODO: change namespace to wheat_ripe instead of space_wheat_ripe
+	var bgFood = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,30).setPosition(0,-90)
+			.setAction(this.feedTile,tile);
+    var crop = new farming.Sprite('images/crops/'+food+'_ripe.png').setSize(40,30).setPosition(-45,0);
+    var labelFood = new lime.Label('Feed now').setPosition(10,0).setFontWeight('bold');
+    
+    // If no food left for the animal
+	if (!tile.game.hasItem(tile.livestock.getFood())){
+		labelFood.setText('Not in stock');	
+	}
+    bgFood.appendChild(crop).appendChild(labelFood);
+    this.appendChild(bgFood);
+    
+    var fade = new lime.animation.FadeTo(0).setDuration(4);
+    bgFood.runAction(fade);
     goog.events.listen(fade,lime.animation.Event.STOP,function(){
         for(var i in this.targets) {
             var target = this.targets[i];
             target.parent_.removeChild(target);
         }
     });
+    
+    var fade2 = new lime.animation.FadeTo(0).setDuration(4);
+    bg.runAction(fade2);
+    goog.events.listen(fade2,lime.animation.Event.STOP,function(){
+        for(var i in this.targets) {
+            var target = this.targets[i];
+            target.parent_.removeChild(target);
+        }
+    });
+}
+
+//farming.Tile.prototype.showFoodMenu = function(tile){}
+
+farming.Tile.prototype.feedTile = function(tile){
+	if (tile.game.hasItem(tile.livestock.getFood())){
+		tile.game.removeItem(tile.livestock.getFood());
+		tile.livestock.feed();	
+	}
+	else
+		console.log('no food left');
 }
 
 farming.Tile.prototype.getExercise = function () {

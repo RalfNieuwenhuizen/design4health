@@ -254,15 +254,15 @@ farming.Introduction.prototype.intro9 = function(){
 	var position = {x: this.center.x-160,y: this.center.y + this.game.getFullSize(0.15).height};
 
 	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.3).height).setPosition(450,160);
+			.setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.3).height).setPosition(475,135);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(450,160).setText(
+	text.setFontWeight('bold').setPosition(475,135).setText(
 			"Here you see all the \n available challenges that \n you can do.");
 
-	this.text.setFontWeight('bold').setPosition(position.x, position.y + 20).setText(
+	this.text.setFontWeight('bold').setPosition(position.x + 25, position.y - 5).setText(
 			"Click on Details to see more \n details about the Challenge");
 	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.35).width, this.game.getFullSize(0.30).height)
-		.setPosition(position.x, position.y-5).setOpacity(1);	
+		.setPosition(position.x + 25, position.y-30).setOpacity(1);	
 	
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
 	this.game.sceneChallenge.windowLayer.appendChild(this.windowLayer);

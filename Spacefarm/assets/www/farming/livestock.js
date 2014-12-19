@@ -24,6 +24,7 @@ goog.inherits(farming.Livestock,lime.Sprite);
 farming.Livestock.prototype.timesHarvested = 0;
 farming.Livestock.prototype.startTime = null;
 farming.Livestock.prototype.feedTime = null;
+farming.Livestock.prototype.firstFeed = null;
 farming.Livestock.prototype.harvestTime = null;
 farming.Livestock.prototype.type = null;
 farming.Livestock.prototype.prop = null;
@@ -32,6 +33,9 @@ farming.Livestock.prototype.appearance = null;
 farming.Livestock.prototype.start = function(type){
     this.startTime = this.getCurrentTime();
     this.harvestTime = this.getCurrentTime();
+    this.feedTime = this.getCurrentTime();
+    // First feed time after the last harvest;
+    this.firstFeed = this.getCurrentTime();
     this.type = type;
     this.prop = LIVESTOCK[type];
     this.appearance = Math.ceil(Math.random() * this.prop.appearances);
@@ -40,13 +44,14 @@ farming.Livestock.prototype.start = function(type){
 
 }
 farming.Livestock.prototype.serialize = function(){
-    return {timesHarvested : this.timesHarvested, startTime : this.startTime, feedTime : this.feedTime, harvestTime : this.harvestTime, type : this.type, appearance : this.appearance};
+    return {timesHarvested : this.timesHarvested, startTime : this.startTime, feedTime : this.feedTime, harvestTime : this.harvestTime, firstFeed : this.firstFeed, type : this.type, appearance : this.appearance};
 }
 farming.Livestock.prototype.deserialize = function(saved) {
     this.timesHarvested = saved.timesHarvested;
     this.harvestTime = saved.harvestTime;
     this.startTime = saved.startTime;
     this.feedTime = saved.feedTime;
+    this.firstFeed = saved.firstFeed;
     this.type = saved.type;
     this.prop = LIVESTOCK[saved.type];
     this.appearance = saved.appearance;
@@ -56,11 +61,12 @@ farming.Livestock.prototype.deserialize = function(saved) {
 farming.Livestock.prototype.showProgress = function(){
     this.removeAllChildren();
 
-    /*// Healthbar
+    // Healthbar
     var healthbaroffset = -40;
     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.green).setSize(100, 10).setPosition(0, healthbaroffset));
-    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));*/
-
+    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));
+    this.appendChild(new lime.Label().setFontSize(10).setText('Food stock').setPosition(0,healthbaroffset));
+   
     if (this.isDead()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
     } else if (this.isHarvestable()) {
@@ -76,25 +82,35 @@ farming.Livestock.prototype.getElapsedTime = function(){
     return this.getCurrentTime() - this.startTime;
 }
 farming.Livestock.prototype.getTimeTillHarvest = function(){
-    return Math.round(this.prop.time_between_harvests - (this.getCurrentTime() - this.harvestTime));
+	// Not yet fed after last harvest!
+	if(this.firstFeed < this.harvestTime){
+		return null;
+	}
+	else{
+		return Math.round((this.prop.time_between_harvests - (this.getCurrentTime() - this.firstFeed))/60);
+	}
 }
 
 // Get a partial of how close this livestock is to dying (1 == dead)
 farming.Livestock.prototype.getHungriness = function() {
     var lastFed = this.feedTime ? this.feedTime : this.startTime;
-    return (this.getCurrentTime() - lastFed) / (this.prop.time_between_harvests * 4);
+    // Livestock dies in 24 h
+    return (this.getCurrentTime() - lastFed) / (12 * 60 * 60);//(this.prop.time_between_harvests * 4);
 }
 
 farming.Livestock.prototype.isHungry = function() {
     if(this.isDead()) return false;
-    return this.getHungriness() >= 0.9;
+    return this.getHungriness() >= 0.5;
 }
 farming.Livestock.prototype.isDead = function() {
     return this.getHungriness() >= 1;
 }
 farming.Livestock.prototype.isHarvestable = function() {
     if (this.isDead()) return false;
-    return (this.getCurrentTime() - this.harvestTime) > this.prop.time_between_harvests;
+    if (this.firstFeed >= this.harvestTime)
+    	return (this.getCurrentTime() - this.firstFeed) > this.prop.time_between_harvests;
+    else
+    	return false;
 }
 
 farming.Livestock.prototype.getFood = function(){
@@ -104,6 +120,10 @@ farming.Livestock.prototype.getFood = function(){
 farming.Livestock.prototype.feed = function(){
     if (this.isDead()) return false;
     this.playSound();
+    if (this.firstFeed < this.harvestTime){
+    	this.firstFeed = this.getCurrentTime();
+    	console.log('firstFeed updated');
+    }
     this.feedTime = this.getCurrentTime();
     this.showProgress();
     return true;
@@ -167,7 +187,8 @@ farming.Livestock.prototype.showWarning = function(){
 
 farming.Livestock.prototype.tick = function(){
     //automatic feeding of livestock
-    if(this.isHungry()) {
+    /*
+     * if(this.isHungry()) {
         if(this.parent_ && this.parent_.game && this.parent_.game.hasItem(this.getFood())) {
             this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
             this.feed();
@@ -175,19 +196,21 @@ farming.Livestock.prototype.tick = function(){
             this.showWarning();
         }
     }
+    */
     this.showProgress();
 }
 
 var LIVESTOCK = {
-    polychick : {
+
+		polychick : {
         name: 'Polychick',
         key: 'polychick',
         appearances: 1,
-        cost: 15,
-        revenue: 10,
+        cost: 75,
+        revenue: 20,
         revenue_item: 'egg',
         food: 'space_wheat',
-        time_between_harvests: 5,
+        time_between_harvests: 45 * 60,
         exercise: 'apple_picking',
         required_level: 0
     },
@@ -195,37 +218,37 @@ var LIVESTOCK = {
         name: 'Woolybot',
         key: 'woolybot',
         appearances: 2,
-        cost: 20,
-        revenue: 10,
+        cost: 120,
+        revenue: 40,
         revenue_item: 'wool',
         food: 'space_wheat',
-        time_between_harvests: 8,
+        time_between_harvests: 2 * 60 * 60,
         exercise: 'apple_picking',
-        required_level: 1
+        required_level: 2
     },
     piggium : {
         name: 'Piggium',
         key: 'piggium',
         appearances: 2,
-        cost: 10,
-        revenue: 50,
+        cost: 200,
+        revenue: 75,
         revenue_item: 'bacon',
         food: 'space_apple',
-        time_between_harvests: 1440,
+        time_between_harvests: 4 * 60 * 60,
         exercise: 'apple_picking',
-        required_level: 2
+        required_level: 3
     },
     milkatron : {
         name: 'Milkatron',
         key: 'milkatron',
         appearances: 2,
-        cost: 100,
-        revenue: 40,
+        cost: 300,
+        revenue: 100,
         revenue_item: 'milk',
         food: 'space_wheat',
-        time_between_harvests: 240,
+        time_between_harvests: 6 * 60 * 60 ,
         exercise: 'apple_picking',
-        required_level: 2
+        required_level: 3
     }
 };
 

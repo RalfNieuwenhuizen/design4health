@@ -112,6 +112,8 @@ farming.SceneMap.prototype.drawLand = function () {
                     tile.crop.harvest();
                 } else if (tile.isDead()) {
                     tile.removeItem();
+                } else if (tile.isHungry()){
+                		tile.showProgress(tile);
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
@@ -132,7 +134,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     }
                 } else if(!tile.isDead()) {
                     tile.playSound();
-                    tile.showProgress();
+                    tile.showProgress(tile);
                 }
             }
         }

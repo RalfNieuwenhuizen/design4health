@@ -64,7 +64,7 @@ farming.Crop.prototype.getProgress = function(){
     return Math.min(this.getElapsedTime() / this.prop.time_to_ripe, 1);
 }
 farming.Crop.prototype.getTimeTillHarvest = function(){
-    return Math.round(this.prop.time_to_ripe - this.getElapsedTime());
+    return Math.round((this.prop.time_to_ripe - this.getElapsedTime())/60);
 }
 farming.Crop.prototype.isRipe = function(){
     if (this.isDead() || this.isRotten()) return false;
@@ -73,7 +73,8 @@ farming.Crop.prototype.isRipe = function(){
 }
 farming.Crop.prototype.isRotten = function(){
     if(this.isDead()) return false;
-    return this.getElapsedTime() > this.prop.time_to_ripe * 3;
+    // Rotting time is one day after it is ripe
+    return this.getElapsedTime() > this.prop.time_to_ripe + 24*60*60;
 }
 farming.Crop.prototype.isDead = function(){
     return (this.timesHarvested == this.prop.harvests);
@@ -82,6 +83,7 @@ farming.Crop.prototype.isDead = function(){
 farming.Crop.prototype.tick = function(){
     this.showProgress();
 }
+
 farming.Crop.prototype.harvest = function(){
     if (this.isDead()) return false;
     this.timesHarvested++;
@@ -98,7 +100,7 @@ var CROPS = {
         cost: 20,
         revenue: 10,
         revenue_item: 'space_apple',
-        time_to_ripe: 8,
+        time_to_ripe: 20 * 60,
         harvests: 3,
         exercise: 'apple_picking',
         required_level: 0
@@ -110,34 +112,34 @@ var CROPS = {
         cost: 10,
         revenue: 15,
         revenue_item: 'space_wheat',
-        time_to_ripe: 3,
+        time_to_ripe: 8 * 60,
         harvests: 1,
         exercise: 'arm_circles',
-        required_level: 0
+        required_level: 1
     },
     carrot : {
         name: 'Space Carrots',
         key: 'carrot',
         growth_phases: 4,
-        cost: 10,
-        revenue: 15,
+        cost: 20,
+        revenue: 35,
         revenue_item: 'carrot',
-        time_to_ripe: 20,
+        time_to_ripe: 45 * 60,
         harvests: 1,
         exercise: 'situps',
-        required_level: 0
+        required_level: 2
     },
     strawberry : {
         name: 'Space Berries',
         key: 'strawberry',
         growth_phases: 3,
-        cost: 10,
-        revenue: 15,
+        cost: 50,
+        revenue: 75,
         revenue_item: 'strawberry',
-        time_to_ripe: 20,
+        time_to_ripe: 90 * 60,
         harvests: 1,
         exercise: 'arm_circles',
-        required_level: 2
+        required_level: 3
     }
 };
 
