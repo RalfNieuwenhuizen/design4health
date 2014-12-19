@@ -117,9 +117,9 @@ farming.SceneChallenge.prototype.drawChallenge = function(challenge, position) {
 farming.SceneChallenge.prototype.drawLock = function(required_level, position) {
     if(farming.Body.prototype.getBodyLevel(this.game.player.body) < required_level) {
         var lock = new farming.Sprite('images/lock.png').setOpacity(.75).preventClickThrough()
-            .setSize(130, 130).setPosition(position.x, position.y + 30);
-        var label = new lime.Label(required_level).setFontSize(30)
-            .setSize(20, 20).setPosition(position.x + 48, position.y - 12);
+            .setSize(165, 140).setPosition(position.x, position.y + 30);
+        var label = new lime.Label('Level '+required_level).setFontSize(20)
+            .setSize(165, 20).setPosition(position.x, position.y + 77);
         this.w.appendChild(lock).appendChild(label);
         return true;
     }
