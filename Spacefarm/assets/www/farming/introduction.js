@@ -282,9 +282,9 @@ farming.Introduction.prototype.intro10 = function(){
 	var position = {x: this.center.x + 120, y: this.center.y + this.game.getFullSize(0.15).height};
 
 	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.35).width, this.game.getFullSize(0.35).height).setPosition(position.x - 340,position.y+30);
+			.setSize(this.game.getFullSize(0.35).width, this.game.getFullSize(0.3).height).setPosition(position.x - 340,position.y+45);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(position.x - 340,position.y + 30).setText(
+	text.setFontWeight('bold').setPosition(position.x - 340,position.y + 45).setText(
 			"Here you see all the \n details of the challenge. \n \n Beware: starting the challenge \n removes the required items \n from your inventory. ");
 	
 	this.text.setFontWeight('bold').setPosition(position.x + 120, position.y - 40).setText(

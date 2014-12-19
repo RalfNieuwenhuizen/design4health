@@ -99,7 +99,7 @@ farming.Game = function() {
         },
         inventory : {
             space_wheat: 3,
-            space_apple: 2
+            space_apple: 3
         },
         currentChallenge : null,
         introPhase: 0 // Used to check for introductional screens
