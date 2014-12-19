@@ -88,7 +88,7 @@ farming.Game = function() {
 
 
     this.player = {
-        coins: 100,
+        coins: 250,
         exercisesDone: [],
         body : {
             arms: 0,
