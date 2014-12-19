@@ -150,7 +150,7 @@ farming.Livestock.prototype.playSound = function(){
     // media.play();
 
     
-     if (device.platform == "Android") {
+     if (typeof device != 'undefined' && device.platform == "Android") {
         console.log("I am in play sound function in android");
         var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
         //if (sound.isLoaded() && !sound.isPlaying()) {
@@ -211,8 +211,8 @@ var LIVESTOCK = {
         revenue_item: 'egg',
         food: 'space_wheat',
         time_between_harvests: 45 * 60,
-        exercise: 'apple_picking',
-        required_level: 0
+        exercise: 'butterflies',
+        required_level: 1
     },
     woolybot : {
         name: 'Woolybot',

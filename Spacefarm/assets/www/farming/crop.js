@@ -103,7 +103,7 @@ var CROPS = {
         time_to_ripe: 20 * 60,
         harvests: 3,
         exercise: 'apple_picking',
-        required_level: 0
+        required_level: 1
     },
     wheat : {
         name: 'Space Wheat',
@@ -127,7 +127,7 @@ var CROPS = {
         time_to_ripe: 45 * 60,
         harvests: 1,
         exercise: 'situps',
-        required_level: 2
+        required_level: 1
     },
     strawberry : {
         name: 'Space Berries',
@@ -139,7 +139,7 @@ var CROPS = {
         time_to_ripe: 90 * 60,
         harvests: 1,
         exercise: 'arm_circles',
-        required_level: 3
+        required_level: 2
     }
 };
 

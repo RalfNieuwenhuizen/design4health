@@ -423,11 +423,21 @@ var EXERCISES = {
     },
     situps: {
         title : '\"Sit-ups\"',
-        description : '1. Keep your phone in one hand, like in the picture.' +
-        '\n\n 2. ',
+        description : '1. Keep your phone in both hands, like in the picture.' +
+            '\n\n 2. Do sit ups!',
         example_frames: 10,
         repetitions: 20,
         type: 'abs',
+        points: 1
+    },
+    butterflies: {
+        title : '\"Butterflies\"',
+        description : '1. Keep your phone in one hand' +
+            '\n\n 2. Stretch both arms' +
+            '\n\n 3. Stretch your chest by moving your arms back and forth',
+        example_frames: 0,
+        repetitions: 10,
+        type: 'chest',
         points: 1
     },
     rocket_jumps: {

@@ -28,6 +28,7 @@ farming.SceneExercise = function (game) {
     this.pointsLabel = new lime.Label().setPosition(SETTINGS.position.left_button).setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
     this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(center.x + 180, center.y * 1.5);
     this.numberLabel = new lime.Label().setSize(30, 30).setPosition(center.x + 230, center.y * 1.5).setFontSize(36);
+    this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
         .setSize(SETTINGS.size.close_button);
@@ -38,6 +39,7 @@ farming.SceneExercise = function (game) {
     this.windowLayer
         .appendChild(w)
         .appendChild(this.title)
+        .appendChild(this.heartRate)
         .appendChild(this.description)
         .appendChild(this.animation)
         .appendChild(this.pointsLabel)
@@ -76,6 +78,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     this.finishButton.setHidden(true);
     this.startButton.setHidden(false);
     this.waitMessage.setHidden(true);
+    this.heartRate.setHidden(true);
     this.exercise = null;
     this.countdown = null;
 
@@ -113,7 +116,6 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
     //TODO remove the fake finish button
     scene.finishButton.setHidden(false);
-
     scene.startButton.setHidden(true);
     scene.waitMessage.setHidden(false);
     if(scene.countdown) {
@@ -121,7 +123,8 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
             if(scene.countdown)
                 scene.numberLabel.setText((scene.countdown--) + '\"');
             else
-                scene.finishExercise(scene);
+                scene.startHeartRate(scene);
+
         }, this, 1000);
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
@@ -137,9 +140,27 @@ farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.countdown = null;
 
 }
+farming.SceneExercise.prototype.startHeartRate = function(scene) {
+    scene.numberIcon.setHidden(true);
+    scene.numberLabel.setHidden(true);
+    scene.waitMessage.setText('Place your finger on the camera to measure your heart rate.');
+    lime.scheduleManager.scheduleWithDelay(function () {
+        lime.scheduleManager.scheduleWithDelay(function () {
+            scene.updateHeartRate(scene);
+        }, this, 800, 20);
+        lime.scheduleManager.scheduleWithDelay(function () {
+            scene.finishExercise(scene);
+        }, this, 5000);
+    }, this, 1000);
+}
+farming.SceneExercise.prototype.updateHeartRate = function(scene) {
+    scene.heartRate.setText('Heart rate: '+(Math.round(Math.random()*50+70))).setHidden(false);
+}
+
 farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
+    scene.heartRate.setHidden(true);
     scene.game.putStatistics(scene.exerciseKey);
 
     var exercise = EXERCISES[scene.exerciseKey];
