@@ -76,7 +76,6 @@ farming.Introduction.prototype.buttonAction = function(scene) {
 	scene.game.introduction.introScrollLayer.removeAllChildren();
 	scene.game.introduction.introPhase++;
 	
-	console.log('introPhase: '+ scene.game.introduction.introPhase);
 	// Call for the next introduction screen
 	scene.intro();
 }
@@ -178,15 +177,15 @@ farming.Introduction.prototype.intro5 = function(){
 	var position = {x: this.center.x-95,y: this.center.y + this.game.getFullSize(0.20).height};
 
 	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.3).height).setPosition(500,160);
+			.setSize(this.game.getFullSize(0.45).width, this.game.getFullSize(0.35).height).setPosition(500,160);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
 	text.setFontWeight('bold').setPosition(500,160).setText(
 			"Here you see \n all the available \n products that \n can be cloned.");
 
-	this.text.setFontWeight('bold').setPosition(position.x, position.y + 30).setText(
+	this.text.setFontWeight('bold').setPosition(position.x, position.y + 15).setText(
 			"Click on Details to see more \n details about the Space \n Apple tree");
 	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.40).height)
-		.setPosition(position.x, position.y-5).setOpacity(1);	
+		.setPosition(position.x, position.y-15).setOpacity(1);	
 	
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
 	this.game.sceneClone.windowLayer.appendChild(this.windowLayer);
@@ -252,14 +251,14 @@ farming.Introduction.prototype.intro9 = function(){
 	var position = {x: this.center.x-160,y: this.center.y + this.game.getFullSize(0.15).height};
 
 	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.30).width, this.game.getFullSize(0.25).height).setPosition(500,160);
+			.setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.3).height).setPosition(450,160);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(500,160).setText(
+	text.setFontWeight('bold').setPosition(450,160).setText(
 			"Here you see all the \n available challenges that \n you can do.");
 
 	this.text.setFontWeight('bold').setPosition(position.x, position.y + 20).setText(
 			"Click on Details to see more \n details about the Challenge");
-	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.30).height)
+	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.35).width, this.game.getFullSize(0.30).height)
 		.setPosition(position.x, position.y-5).setOpacity(1);	
 	
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
@@ -283,12 +282,12 @@ farming.Introduction.prototype.intro10 = function(){
 			.setSize(this.game.getFullSize(0.35).width, this.game.getFullSize(0.35).height).setPosition(position.x - 340,position.y+30);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
 	text.setFontWeight('bold').setPosition(position.x - 340,position.y + 30).setText(
-			"Here you see all the \n details of the challenge. \n \n Starting the challenge removes \n the required items from \n your inventory. ");
+			"Here you see all the \n details of the challenge. \n \n Beware: starting the challenge \n removes the required items \n from your inventory. ");
 	
-	this.text.setFontWeight('bold').setPosition(position.x - 35, position.y + 10).setText(
+	this.text.setFontWeight('bold').setPosition(position.x + 120, position.y - 40).setText(
 			"Press Start to begin \n the exercise.");
-	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.3).width, this.game.getFullSize(0.4).height)
-		.setPosition(position.x - 35, position.y - 20).setOpacity(1);	
+	this.w.setFill('images/textbox/down_right_arrow.png').setSize(this.game.getFullSize(0.3).width, this.game.getFullSize(0.35).height)
+		.setPosition(position.x + 120, position.y - 10).setOpacity(1);	
 	
 	// These layers will be deleted, since the sceneChallengeDetails object is recreated every time
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
@@ -301,14 +300,9 @@ farming.Introduction.prototype.intro10 = function(){
 // 11th screen: 
 farming.Introduction.prototype.intro11 = function(){
 	
-	var position = {x: this.center.x - 170, y: this.center.y + this.game.getFullSize(0.15).height};
-	var requirements = CHALLENGES[this.game.sceneChallengeDetails.challenge.key].requirements;
-	if (requirements.type == 'exercise')
-		console.log(requirements.key);
-	var exercise = CHALLENGES[this.game.sceneChallengeDetails.challenge.key].requirements[2].key;
-	EXERCISES[exercise].type
+	var position = {x: this.center.x - 210, y: this.center.y + this.game.getFullSize(0.15).height};
 	this.text.setFontWeight('bold').setPosition(position.x - 35, position.y + 10).setText(
-			"Press Do to start the \n exercise and earn \n"+ EXERCISES[exercise].points + " "+ EXERCISES[exercise].type +" points.");
+			"Press Do to start the \n exercise and earn \n 6 legs points.");
 	this.w.setFill('images/textbox/top_arrow.png').setSize(this.game.getFullSize(0.3).width, this.game.getFullSize(0.3).height)
 		.setPosition(position.x - 35, position.y - 20).setOpacity(1);	
 	
@@ -339,32 +333,31 @@ farming.Introduction.prototype.intro13 = function(){
 	
 	var position = {x: this.center.x + 100, y: this.center.y + this.game.getFullSize(0.1).height};
 
-	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.45).height).setPosition(position.x - 300,position.y-40);
+	var textbox = new lime.Sprite().setFill('images/textbox/right_arrow.png')
+			.setSize(this.game.getFullSize(0.6).width, this.game.getFullSize(0.7).height).setPosition(position.x - 200,position.y-30);
 	var text = new lime.Label().setFontSize(18).setMultiline(true);
-	text.setFontWeight('bold').setPosition(position.x - 300,position.y-40).setText(
-			"Here you see your \n Bionic Outer Dimension Yeosuit. \n This is your exoskeloton that helps \n you doing your job. \n "
-			+ "\n You can upgrade your BODY \n by doing exercises. \n Upgrading your BODY also unlocks \n new features.");
+	text.setFontWeight('bold').setPosition(position.x - 275,position.y - 30).setText(
+			"This is the BODY: your \n Bionic Outer Dimension Yeosuit. \n" +
+		    "It represents you and is based \n on the exercises you have done \n in this game. \n\n" +
+		    " When you click on a bodypart \n you can see" +
+		    " how much \n you have trained that part \n of your own body. \n\n" +
+		    " As you level up your BODY, \n more challenges and clones \n will become available!")	
 	
-	this.text.setFontWeight('bold').setPosition(position.x + 130, position.y - 40).setText(
+	this.text.setFontWeight('bold').setPosition(position.x + 195, position.y - 0).setText(
 			"Press Statistics \n to see the exercise \n you did in the past.");
-	this.w.setFill('images/textbox/down_right_arrow.png').setSize(this.game.getFullSize(0.3).width, this.game.getFullSize(0.4).height)
-		.setPosition(position.x + 130, position.y - 10).setOpacity(1);	
+	this.w.setFill('images/textbox/down_right_arrow.png').setSize(this.game.getFullSize(0.25).width, this.game.getFullSize(0.3).height)
+		.setPosition(position.x + 195, position.y + 30).setOpacity(1);	
 	
 	// These layers will be deleted, since the sceneChallengeDetails object is recreated every time
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
 	this.game.sceneBody.windowLayer.appendChild(this.windowLayer);	
 	
 	// Listen to the Clone
-	//goog.events.listenOnce(this.game.source,this.game.EventType.DO_CHALLENGE,goog.partial(this.buttonAction,this.game.introduction));
+	goog.events.listenOnce(this.game.source,this.game.EventType.SHOW_BODYSTATS,goog.partial(this.buttonAction,this.game.introduction));
 }
 
 // Wait function, awaits an event to be fired before it continues
 farming.Introduction.prototype.waiter = function(scene){
 	// Wait for an exercise to be completed, then go to buttonAction
 	goog.events.listenOnce(scene.game.source,scene.game.EventType.EXERCISE_DONE,goog.partial(scene.buttonAction,scene));
-}
-
-farming.Introduction.prototype.write = function(text){
-	console.log('test text is: '+text);
 }
