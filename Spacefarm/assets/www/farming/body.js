@@ -8,9 +8,9 @@ goog.require('lime.fill.Stroke');
  * Crop elements
  *
  */
-farming.Body = function(scale) {
+farming.Body = function(scale, game) {
     goog.base(this);
-
+    this.game = game;
     if(!scale)
         scale = 1;
 
@@ -40,7 +40,7 @@ farming.Body.prototype.redraw = function (body, position) {
     this.drawAbs(body.abs, position);
     this.drawChest(body.chest, new goog.math.Coordinate(position.x - (this.scale*1), position.y - (this.scale*30)));
     if(this.scale > 1) {
-        var level = this.getBodyLevel(this);
+        var level = this.getBodyLevel();
         this.levelNumber.setText('Level '+level).setPosition(position.x, position.y + (this.scale*105));
         this.levelLabel.setText(LEVEL_TEXTS[level]).setPosition(position.x, position.y + (this.scale*105)+20);
         this.bodyLayer.appendChild(this.levelLabel).appendChild(this.levelNumber);
@@ -51,7 +51,7 @@ farming.Body.prototype.drawBase= function (center) {
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawBack = function (number, center) {
-    var level = this.getBodyLevel(this);
+    var level = this.getBodyLevel();
     var icon = new farming.Sprite('images/body/back'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Back', number, this.getTargetXP(number), 40, 8, 65, 0));
@@ -59,28 +59,28 @@ farming.Body.prototype.drawBack = function (number, center) {
 
 }
 farming.Body.prototype.drawArms = function (number, center) {
-    var level = this.getBodyLevel(this);
+    var level = this.getBodyLevel();
     var icon = new lime.Sprite().setFill('images/body/arms'+level+'.png').setSize(this.scale*74, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Arms', number, this.getTargetXP(number), 40, 8, 85, -10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawLegs = function (number, center) {
-    var level = this.getBodyLevel(this);
+    var level = this.getBodyLevel();
     var icon = new lime.Sprite().setFill('images/body/legs'+level+'.png').setSize(this.scale*55, this.scale*85).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Legs', number, this.getTargetXP(number), 40, 8, -65, 0));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawChest = function (number, center) {
-    var level = this.getBodyLevel(this);
+    var level = this.getBodyLevel();
     var icon = new lime.Sprite().setFill('images/body/chest'+level+'.png').setSize(this.scale*60, this.scale*30).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Chest', number, this.getTargetXP(number), 40, 8, -85, 10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawAbs = function (number, center) {
-    var level = this.getBodyLevel(this);
+    var level = this.getBodyLevel();
     var icon = new lime.Sprite().setFill('images/body/abs'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Abs', number, this.getTargetXP(number), 40, 8, -85, 10));
@@ -126,14 +126,19 @@ var LEVEL_TEXTS = [null,'Rusted iron body','Amethyst body','EcoPower body','Fire
 
 // Function that returns your overall level
 farming.Body.prototype.getBodyLevel = function (body) {
-    var min_xp = Math.min.apply(null, body);
+    var b = typeof body == 'undefined' ? this.game.player.body : body;
+    var min_xp = Infinity;
+    for(var i in b) {
+        min_xp = Math.min(min_xp, b[i]);
+    }
     return farming.Body.prototype.getLevel(min_xp);
 }
 // Function that returns your current level
 farming.Body.prototype.getLevel = function (points) {
     for (var level in LEVELS) {
-        if (points < LEVELS[level])
+        if (points < LEVELS[level]){
             return level;
+        }
     }
     return 1;
 }
@@ -141,9 +146,9 @@ farming.Body.prototype.getXPOverLevel = function (points) {
     return points-this.getMinLevelXP(points);
 }
 farming.Body.prototype.getMinLevelXP = function (points) {
-    return LEVELS[this.getBodyLevel(this)-1];
+    return LEVELS[this.getBodyLevel()-1];
 }
 // Function that returns the required xp for next level
 farming.Body.prototype.getTargetXP = function (points) {
-    return LEVELS[this.getBodyLevel(this)];
+    return LEVELS[this.getBodyLevel()];
 }
