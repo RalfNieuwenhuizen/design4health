@@ -77,6 +77,7 @@ farming.Exercise.prototype.onError = function () {
 }
 farming.Exercise.prototype.getAnimation = function (key, delay) {
     var exercise = EXERCISES[key];
+    if(!exercise.example_frames) return null;
     var animation = new lime.animation.KeyframeAnimation().setDelay(delay);
     for(var i = 0; i < exercise.example_frames; i++) {
         animation.addFrame('images/exercises/'+key+'/'+i+'.png');

@@ -70,7 +70,8 @@ farming.SceneExercise.prototype.showExercise = function(key) {
         this.animation.setFill('');
     }
     var animation = farming.Exercise.prototype.getAnimation(key, 0.3);
-    this.animation.runAction(animation);
+    if(animation)
+        this.animation.runAction(animation);
     this.animation.stop = function() { animation.stop(); };
     this.finishButton.setHidden(true);
     this.startButton.setHidden(false);
