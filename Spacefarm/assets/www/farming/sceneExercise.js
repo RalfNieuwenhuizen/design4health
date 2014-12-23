@@ -115,17 +115,18 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
     //TODO remove the fake finish button
-    scene.finishButton.setHidden(true);
+    scene.finishButton.setHidden(false);
     scene.startButton.setHidden(true);
     scene.waitMessage.setHidden(false);
     if(scene.countdown) {
         lime.scheduleManager.scheduleWithDelay(function () {
+            scene.countdown--;
             if(scene.countdown)
-                scene.numberLabel.setText((scene.countdown--) + '\"');
+                scene.numberLabel.setText(scene.countdown + '\"');
             else
                 scene.startHeartRate(scene);
 
-        }, this, 1000);
+        }, this, 1000, scene.countdown);
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }
@@ -144,13 +145,13 @@ farming.SceneExercise.prototype.startHeartRate = function(scene) {
     scene.numberIcon.setHidden(true);
     scene.numberLabel.setHidden(true);
     scene.waitMessage.setText('Place your finger on the camera to measure your heart rate.');
-    lime.scheduleManager.scheduleWithDelay(function () {
+    lime.scheduleManager.callAfter(function () {
         lime.scheduleManager.scheduleWithDelay(function () {
             scene.updateHeartRate(scene);
-        }, this, 800, 20);
-        lime.scheduleManager.scheduleWithDelay(function () {
+        }, this, 800, 10);
+        lime.scheduleManager.callAfter(function () {
             scene.finishExercise(scene);
-        }, this, 5000);
+        }, this, 8000);
     }, this, 1000);
 }
 farming.SceneExercise.prototype.updateHeartRate = function(scene) {

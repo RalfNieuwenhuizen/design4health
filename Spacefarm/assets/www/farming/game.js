@@ -135,7 +135,7 @@ farming.Game = function() {
         for(var i in this.tickables) {
             if(this.tickables[i]) this.tickables[i].tick();
         }
-    }, this, 1000*0.5);
+    }, this, 1000);
 
     // Launches introductional screens if still applicable
     this.introduction.intro();
