@@ -137,13 +137,19 @@ farming.Game = function() {
         }
     }, this, 1000);
 
+    lime.scheduleManager.scheduleWithDelay(function() {
+        game.save();
+    }, this, 5000);
     // Launches introductional screens if still applicable
     this.introduction.intro();
 
-    document.addEventListener("pause", function(){ game.saveWrapper(game)}, false);
+    document.addEventListener("pause", function(){
+        if(!game.saveAtClose) return;
+        game.save()
+    }, false);
     window.onbeforeunload = function(){
         if(!game.saveAtClose) return;
-        game.saveWrapper(game)
+        game.save()
     };
 }
 
