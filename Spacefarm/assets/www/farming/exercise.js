@@ -22,25 +22,25 @@ var accelerometerZNeutralLowOffset = -.04;
 var accelerometerZNeutralHighOffset = .06;
 var lastpeak = 1;// 1 is low 0 is high
 
- 
-    //
-    //var appleFirst= 0;
-    //var appleLast=0;
-    //var appleAcc=[];
-   // var appleRep=0;
-    //variables to count acceleration for wheat exercise
-    //var wheatFirst= 0;
-    //var wheatLast=0;
-    //var wheatAcc=[];
-    //var wheatRep=0;
 
-    // variables to measure acceleration 
+//
+//var appleFirst= 0;
+//var appleLast=0;
+//var appleAcc=[];
+// var appleRep=0;
+//variables to count acceleration for wheat exercise
+//var wheatFirst= 0;
+//var wheatLast=0;
+//var wheatAcc=[];
+//var wheatRep=0;
 
-    var first= 0;
-    var last=0;
-    var acc=[];
-    var rep=0;
-    var numOfSteps = 0;
+// variables to measure acceleration
+
+var first= 0;
+var last=0;
+var acc=[];
+var rep=0;
+var numOfSteps = 0;
 
 var prevMagnitude = 9;  //  Initialize previous magnitude as 9.
 var currMagnitude = 0;  //  Initialize current magnitude as 0.
@@ -85,9 +85,9 @@ farming.Exercise.prototype.getAnimation = function (key, delay) {
     return animation;
 }
 farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
-    
 
-     //navigator.plugin.notification.local.add({ sound: null });
+
+    //navigator.plugin.notification.local.add({ sound: null });
 
 //      navigator.plugin.notification.local.add({
 //     id:         1,  // A unique id of the notifiction
@@ -101,7 +101,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
 //     autoCancel: true, // Setting this flag and the notification is automatically canceled when the user clicks it
 //     ongoing:    false, // Prevent clearing of notification (Android only)
 // });
-     
+
 // var now                  = new Date().getTime(),
 //     _60_seconds_from_now = new Date(now + 60*1000);
 //      navigator.plugin.notification.local.add({
@@ -113,31 +113,30 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
 // });
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Apple picking callback:' + "\n" + 'Acceleration X: ' + acceleration.x + "\n" +
-        'Acceleration Y: ' + acceleration.y + "\n" +
-        'Acceleration Z: ' + acceleration.z + "\n" +
-        'Timestamp: ' + acceleration.timestamp + "\n");
+    'Acceleration Y: ' + acceleration.y + "\n" +
+    'Acceleration Z: ' + acceleration.z + "\n" +
+    'Timestamp: ' + acceleration.timestamp + "\n");
 
 
     acc.push(acceleration.y);
-            first= acc[0];
-        //var listLimit = 15;
-        //if (accvalues.length > listLimit) {
-        //accvalues.splice(0, 1); }
-        
-        last= acc[acc.length-1];
-        console.log('first value of array' +first + 'last value of array' +last);
-        console.log('array length is:' +acc.length);
-  
+    first= acc[0];
+    //var listLimit = 15;
+    //if (accvalues.length > listLimit) {
+    //accvalues.splice(0, 1); }
+
+    last= acc[acc.length-1];
+    console.log('first value of array' +first + 'last value of array' +last);
+    console.log('array length is:' +acc.length);
+
     //if (acceleration.y > 10) {
     //if(last>5){
     if(Math.abs(last-first)> 3)
     {
-    rep= rep+1;
-    console.log('repetitions for apple are:' +rep);
-     }
-    
+        exercise.addRepetition();
+    }
+
     //if (rep >=10) {
-        if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         rep=0;
         acc=[];
         navigator.notification.vibrate(2500);
@@ -148,7 +147,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
 
 
     // var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));    
-    
+
     // //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
     // if(prevMagnitude < 9 && currMagnitude > 10)
     // {               
@@ -157,7 +156,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
     //     console.log("number of steps" +numOfSteps)      //  Increment number of steps   
     // }
     // if (numOfSteps>=5){
-       
+
     //     numOfSteps=0;
     //     exercise.onExerciseSuccess(exercise.target);
     //     exercise.stopWatch();
@@ -168,89 +167,54 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
 
 
     /*var x = acceleration.x;
-    var y = acceleration.y;
-    var z = acceleration.z;
-    var magnitude = z; //Math.sqrt(x * x + y * y + z * z);
+     var y = acceleration.y;
+     var z = acceleration.z;
+     var magnitude = z; //Math.sqrt(x * x + y * y + z * z);
 
-    //AddTapMessageRow("val: " + magnitude);
+     //AddTapMessageRow("val: " + magnitude);
 
-    if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
-        steps_peakHigh = steps_prevVal;
-        steps_samplesSinceHighPeak = 0;
-        //AddTapMessageRow("HighPeak: " + steps_peakHigh);
-        if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
+     if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
+     steps_peakHigh = steps_prevVal;
+     steps_samplesSinceHighPeak = 0;
+     //AddTapMessageRow("HighPeak: " + steps_peakHigh);
+     if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
 
-            steps++;
-            console.log("Steps: "+steps);
-            navigator.notification.beep(1);
-        }
-        lastpeak = 0;
-    }
-    else
-        steps_samplesSinceHighPeak++;
-    if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
-        steps_peakLow = steps_prevVal;
-        //AddTapMessageRow("LowPeak: " + steps_peakLow);
-        steps_samplesSinceLowPeak = 0;
-        lastpeak =1;
-    }
-    else
-        steps_samplesSinceLowPeak++;
-    if (magnitude != steps_prevVal) {
-        steps_prevprevVal = steps_prevVal;
-        steps_prevVal = magnitude;
-    }
+     steps++;
+     console.log("Steps: "+steps);
+     navigator.notification.beep(1);
+     }
+     lastpeak = 0;
+     }
+     else
+     steps_samplesSinceHighPeak++;
+     if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
+     steps_peakLow = steps_prevVal;
+     //AddTapMessageRow("LowPeak: " + steps_peakLow);
+     steps_samplesSinceLowPeak = 0;
+     lastpeak =1;
+     }
+     else
+     steps_samplesSinceLowPeak++;
+     if (magnitude != steps_prevVal) {
+     steps_prevprevVal = steps_prevVal;
+     steps_prevVal = magnitude;
+     }
 
 
-       if (steps>=5){
-        steps=0;
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-         navigator.notification.vibrate(2500);
+     if (steps>=5){
+     steps=0;
+     exercise.onExerciseSuccess(exercise.target);
+     exercise.stopWatch();
+     navigator.notification.vibrate(2500);
 
-       }*/
-    
+     }*/
+
 }
 farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
-        'Acceleration Z: ' + acceleration.z + " " +
-        'Timestamp: ' + acceleration.timestamp);
-
-        acc.push(acceleration.x);
-        first= acc[0];
-        //var listLimit = 15;
-        //if (accvalues.length > listLimit) {
-        //accvalues.splice(0, 1); }
-        
-        last= acc[acc.length-1];
-        console.log('first value of array' +first + 'last value of array' +last);
-        console.log('array length is:' +acc.length);
-  
-    //if (acceleration.y > 10) {
-    //if(last>5){
-    if(Math.abs(last-first)> 3)
-    {
-    rep= rep+1;
-    console.log('repetitions for wheat are:' +rep);
-     }
-    
-    //if (rep >=2) {
-        if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
-    
-}
-farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
-    if(!exercise.watchID && !exercise.fakeWebWatchID) return;
-    console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
-        'Acceleration Z: ' + acceleration.z + " " +
-        'Timestamp: ' + acceleration.timestamp);
+    'Acceleration Z: ' + acceleration.z + " " +
+    'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.x);
     first= acc[0];
@@ -266,8 +230,41 @@ farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
     //if(last>5){
     if(Math.abs(last-first)> 3)
     {
-        rep= rep+1;
-        console.log('repetitions for wheat are:' +rep);
+        exercise.addRepetition();
+    }
+
+    //if (rep >=2) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+        //navigator.notification.beep(3);
+        navigator.notification.vibrate(2500);
+        rep=0;
+        acc=[];
+        exercise.onExerciseSuccess(exercise.target);
+        exercise.stopWatch();
+    }
+
+}
+farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
+    if(!exercise.watchID && !exercise.fakeWebWatchID) return;
+    console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
+    'Acceleration Z: ' + acceleration.z + " " +
+    'Timestamp: ' + acceleration.timestamp);
+
+    acc.push(acceleration.x);
+    first= acc[0];
+    //var listLimit = 15;
+    //if (accvalues.length > listLimit) {
+    //accvalues.splice(0, 1); }
+
+    last= acc[acc.length-1];
+    console.log('first value of array' +first + 'last value of array' +last);
+    console.log('array length is:' +acc.length);
+
+    //if (acceleration.y > 10) {
+    //if(last>5){
+    if(Math.abs(last-first)> 3)
+    {
+        exercise.addRepetition();
     }
 
     //if (rep >=2) {
@@ -296,8 +293,7 @@ farming.Exercise.prototype.situps = function (acceleration, exercise) {
 
     if(Math.abs(last-first)> 5)
     {
-        rep= rep+1;
-        console.log('repetitions for carrots are:' +rep);
+        exercise.addRepetition();
     }
 
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
@@ -310,29 +306,27 @@ farming.Exercise.prototype.situps = function (acceleration, exercise) {
 farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Rocket jumps callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
-        'Acceleration Z: ' + acceleration.z + " " +
-        'Timestamp: ' + acceleration.timestamp);
-    
-        acc.push(acceleration.y);
-        first= acc[0];
-        //var listLimit = 15;
-        //if (accvalues.length > listLimit) {
-        //accvalues.splice(0, 1); }
-        
-        last= acc[acc.length-1];
-        console.log('first value of array' +first + 'last value of array' +last);
-        console.log('array length is:' +acc.length);
-  
+    'Acceleration Z: ' + acceleration.z + " " +
+    'Timestamp: ' + acceleration.timestamp);
+
+    acc.push(acceleration.y);
+    first= acc[0];
+    //var listLimit = 15;
+    //if (accvalues.length > listLimit) {
+    //accvalues.splice(0, 1); }
+
+    last= acc[acc.length-1];
+    console.log('first value of array' +first + 'last value of array' +last);
+    console.log('array length is:' +acc.length);
+
     //if (acceleration.y > 10) {
     //if(last>5){
-    if(Math.abs(last-first)> 5)
-    {
-    rep= rep+1;
-    console.log('repetitions for rocket_jumps are:' +rep);
-     }
-    
+    if(Math.abs(last-first)> 5) {
+        exercise.addRepetition();
+    }
+
     //if (rep >=10) {
-        if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
         rep=0;
@@ -345,71 +339,71 @@ farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
 farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('wait_pie callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
-        'Acceleration Z: ' + acceleration.z + " " +
-        'Timestamp: ' + acceleration.timestamp);
-    
-        var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));    
-    
+    'Acceleration Z: ' + acceleration.z + " " +
+    'Timestamp: ' + acceleration.timestamp);
+
+    var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
+
     //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
     if(prevMagnitude < 9 && currMagnitude > 10)
-    {               
-        numOfSteps++; 
+    {
+        numOfSteps++;
         navigator.notification.beep(1);
         console.log("number of steps" +numOfSteps)      //  Increment number of steps   
     }
     if (numOfSteps>=2){
-       
+
         numOfSteps=0;
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
-         navigator.notification.vibrate(2500);
-     }
+        navigator.notification.vibrate(2500);
+    }
 
     prevMagnitude=currMagnitude;
 
 
     /*var x = acceleration.x;
-    var y = acceleration.y;
-    var z = acceleration.z;
-    var magnitude = z; //Math.sqrt(x * x + y * y + z * z);
+     var y = acceleration.y;
+     var z = acceleration.z;
+     var magnitude = z; //Math.sqrt(x * x + y * y + z * z);
 
-    //AddTapMessageRow("val: " + magnitude);
+     //AddTapMessageRow("val: " + magnitude);
 
-    if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
-        steps_peakHigh = steps_prevVal;
-        steps_samplesSinceHighPeak = 0;
-        //AddTapMessageRow("HighPeak: " + steps_peakHigh);
-        if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
+     if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
+     steps_peakHigh = steps_prevVal;
+     steps_samplesSinceHighPeak = 0;
+     //AddTapMessageRow("HighPeak: " + steps_peakHigh);
+     if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
 
-            steps++;
-            console.log("Steps: "+steps);
-            navigator.notification.beep(1);
-        }
-        lastpeak = 0;
-    }
-    else
-        steps_samplesSinceHighPeak++;
-    if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
-        steps_peakLow = steps_prevVal;
-        //AddTapMessageRow("LowPeak: " + steps_peakLow);
-        steps_samplesSinceLowPeak = 0;
-        lastpeak =1;
-    }
-    else
-        steps_samplesSinceLowPeak++;
-    if (magnitude != steps_prevVal) {
-        steps_prevprevVal = steps_prevVal;
-        steps_prevVal = magnitude;
-    }
+     steps++;
+     console.log("Steps: "+steps);
+     navigator.notification.beep(1);
+     }
+     lastpeak = 0;
+     }
+     else
+     steps_samplesSinceHighPeak++;
+     if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
+     steps_peakLow = steps_prevVal;
+     //AddTapMessageRow("LowPeak: " + steps_peakLow);
+     steps_samplesSinceLowPeak = 0;
+     lastpeak =1;
+     }
+     else
+     steps_samplesSinceLowPeak++;
+     if (magnitude != steps_prevVal) {
+     steps_prevprevVal = steps_prevVal;
+     steps_prevVal = magnitude;
+     }
 
 
-       if (steps>=5){
-        steps=0;
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-         navigator.notification.vibrate(2500);
+     if (steps>=5){
+     steps=0;
+     exercise.onExerciseSuccess(exercise.target);
+     exercise.stopWatch();
+     navigator.notification.vibrate(2500);
 
-       }*/
+     }*/
 }
 
 farming.Exercise.prototype.stopWatch = function () {
@@ -429,6 +423,12 @@ farming.Exercise.prototype.getRepetitions = function (exerciseObject) {
         }
     }
     return 1;
+}
+farming.Exercise.prototype.addRepetition = function() {
+    rep = rep + 1;
+    console.log("Repetitions done: " + rep);
+    if (this.target && this.target.numberLabel && this.target.numberLabel.getText() >= 0)
+        this.target.numberLabel.setText(this.target.numberLabel.getText() - 1);
 }
 var EXERCISES = {
     apple_picking: {
@@ -459,7 +459,7 @@ var EXERCISES = {
     situps: {
         title : '\"Sit-ups\"',
         description : '1. Keep your phone in both hands, like in the picture.' +
-            '\n\n 2. Do sit ups!',
+        '\n\n 2. Do sit ups!',
         example_frames: 10,
         repetitions: 20,
         type: 'abs',
@@ -468,8 +468,8 @@ var EXERCISES = {
     butterflies: {
         title : '\"Butterflies\"',
         description : '1. Keep your phone in one hand' +
-            '\n\n 2. Stretch both arms' +
-            '\n\n 3. Stretch your chest by moving your arms back and forth',
+        '\n\n 2. Stretch both arms' +
+        '\n\n 3. Stretch your chest by moving your arms back and forth',
         example_frames: 0,
         repetitions: 10,
         type: 'chest',
