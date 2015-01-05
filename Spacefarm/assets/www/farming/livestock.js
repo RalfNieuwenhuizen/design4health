@@ -94,8 +94,8 @@ farming.Livestock.prototype.getTimeTillHarvest = function(){
 // Get a partial of how close this livestock is to dying (1 == dead)
 farming.Livestock.prototype.getHungriness = function() {
     var lastFed = this.feedTime ? this.feedTime : this.startTime;
-    // Livestock dies in 24 h
-    return (this.getCurrentTime() - lastFed) / (12 * 60 * 60);//(this.prop.time_between_harvests * 4);
+    // Livestock dies in 12 h / level
+    return (this.getCurrentTime() - lastFed) / (12 * 60 * 60 * this.prop.required_level);//(this.prop.time_between_harvests * 4);
 }
 
 farming.Livestock.prototype.isHungry = function() {
