@@ -169,25 +169,28 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
     var props = EXERCISES[exercise.key];
     var exerciseName = new lime.Label().setText('- ' + exercise.name + ' - ' + props.points + ' ' + props.type + (props.points > 1 ? ' points' : ' point'))
         .setAlign('left').setSize(300, 10).setPosition(position.x + 80, position.y);
-    var doButton = new farming.Button('Do!').setColor(SETTINGS.color.button)
+    var doButton = new farming.Button('Do!').setColor(SETTINGS.color.button_primary)
         .setPosition(position.x - 115, position.y)
         .setSize(SETTINGS.size.button_small).setHidden(true);
+    var doneLabel = new farming.Label('\nDone!').setFontWeight(SETTINGS.font.subtitle.weight)
+        .setPosition(position.x - 115, position.y)
+        .setSize(SETTINGS.size.button_small).setMultiline(true).setHidden(true);
 
     // there is an active challenge
     if(opt_active) {
         if (!this.game.player.currentChallenge.exercisesDone)
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
-            doButton.setColor(SETTINGS.color.button_inactive).setText('Done').setHidden(false);
+            doneLabel.setHidden(false);
         } else if (this.exerciseDoable(exercise.key)) {
             doButton.setAction(this.showExercise, {
                 'exercise': exercise.key,
                 'scene': this
-            }).setColor(SETTINGS.color.button_primary).setText('Do!').setHidden(false);
+            }).setHidden(false);
         }
     }
 
-    this.drawLayer.appendChild(exerciseName).appendChild(doButton);
+    this.drawLayer.appendChild(exerciseName).appendChild(doButton).appendChild(doneLabel);
 
 }
 
