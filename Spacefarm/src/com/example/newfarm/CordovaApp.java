@@ -20,7 +20,11 @@
 package com.example.newfarm;
 
 import android.os.Bundle;
+import android.view.WindowManager;
+
 import org.apache.cordova.*;
+import android.view.WindowManager;
+import android.view.Window;
 
 public class CordovaApp extends CordovaActivity
 {
@@ -31,5 +35,7 @@ public class CordovaApp extends CordovaActivity
         super.init();
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+        
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
