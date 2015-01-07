@@ -231,11 +231,11 @@ farming.SceneMap.prototype.drawControls = function () {
     // Zoom buttons
     this.zoomInButton = new farming.Button('+').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.screen.width - 20, 20)
-        .setSize(30, 30).setAction(this.zoomIn, this);
+        .setSize(40, 40).setAction(this.zoomIn, this);
     this.controlsLayer.appendChild(this.zoomInButton);
     this.zoomOutButton = new farming.Button('-').setColor(SETTINGS.color.button)
-        .setPosition(SETTINGS.screen.width - 20, 50)
-        .setSize(30, 30).setAction(this.zoomOut, this);
+        .setPosition(SETTINGS.screen.width - 20, 60)
+        .setSize(40, 40).setAction(this.zoomOut, this);
     this.controlsLayer.appendChild(this.zoomOutButton);
 
     // Temporary introduction button
@@ -364,6 +364,7 @@ farming.SceneMap.prototype.tick = function(){
     if(this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
         this.game.sceneHarvest.hideHarvest(this);
 
+    //Hide zoom buttons when a screen is active
     if(this.sceneLayer.children_.length > 0) {
         this.zoomInButton.setHidden(true);
         this.zoomOutButton.setHidden(true);
