@@ -228,12 +228,6 @@ farming.SceneMap.prototype.drawControls = function () {
         .setSize(70,SETTINGS.size.controls.height).setAction(function(){ scene.game.reset();  }, this);
     this.controlsLayer.appendChild(this.resetButton);
 
-    // Current challenge indicator
-    this.challengeIndicator = new farming.Label().setText('Active Challenge!').setFill(SETTINGS.color.red)
-        .setPosition(0, 0).setAnchorPoint(0, 0).setSize(70,30)
-        .setHidden(true).setAction(this.showChallenge, this);
-    this.controlsLayer.appendChild(this.challengeIndicator);
-
     // Zoom buttons
     this.zoomInButton = new farming.Button('+').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.screen.width - 20, 20)
@@ -404,8 +398,8 @@ farming.SceneMap.prototype.zoomOut = function(scene){
 // function for showing or hiding the current challenge indicator
 farming.SceneMap.prototype.showCurrentChallenge = function(){
     if(this.game.player.currentChallenge) {
-        this.challengeIndicator.setHidden(false);
+        this.challengeButton.setColor(SETTINGS.color.red);
     } else {
-        this.challengeIndicator.setHidden(true);
+        this.challengeButton.setColor(SETTINGS.color.button);
     }
 }
