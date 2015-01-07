@@ -70,7 +70,8 @@ var SETTINGS = {
         subtitle: {
             size: 16,
             weight: 600
-        }
+        },
+        text: 16
     }
 }
 
