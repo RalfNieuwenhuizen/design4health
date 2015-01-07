@@ -115,7 +115,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
     //TODO remove the fake finish button
-    scene.finishButton.setHidden(true);
+    scene.finishButton.setHidden(false);
     scene.startButton.setHidden(true);
     scene.waitMessage.setHidden(false);
     if(scene.countdown) {

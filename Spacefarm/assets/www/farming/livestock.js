@@ -58,23 +58,27 @@ farming.Livestock.prototype.deserialize = function(saved) {
     this.showProgress();
 }
 
+
 farming.Livestock.prototype.showProgress = function(){
     this.removeAllChildren();
 
     // Healthbar
+    /*
     var healthbaroffset = -40;
     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.green).setSize(100, 10).setPosition(0, healthbaroffset));
     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));
     this.appendChild(new lime.Label().setFontSize(10).setText('Food stock').setPosition(0,healthbaroffset));
-   
-    if (this.isDead()) {
-        this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
-    } else if (this.isHarvestable()) {
+    */
+    //if (this.isDead()) {
+    //    this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
+    //} else 
+    if (this.isHarvestable()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_harvestable.png');
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
 }
+
 farming.Livestock.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
 }
@@ -92,21 +96,26 @@ farming.Livestock.prototype.getTimeTillHarvest = function(){
 }
 
 // Get a partial of how close this livestock is to dying (1 == dead)
-farming.Livestock.prototype.getHungriness = function() {
+/*farming.Livestock.prototype.getHungriness = function() {
     var lastFed = this.feedTime ? this.feedTime : this.startTime;
     // Livestock dies in 12 h / level
     return (this.getCurrentTime() - lastFed) / (12 * 60 * 60 * this.prop.required_level);//(this.prop.time_between_harvests * 4);
+}*/
+
+// If the chicken is not fed yet after the 'harvest' it is hungry 
+farming.Livestock.prototype.isHungry = function() {
+    console.log('isHungry: '+(this.firstFeed<this.harvestTime));
+	return (this.firstFeed < this.harvestTime);
 }
 
-farming.Livestock.prototype.isHungry = function() {
-    if(this.isDead()) return false;
-    return this.getHungriness() >= 0.5;
-}
+/*
 farming.Livestock.prototype.isDead = function() {
     return this.getHungriness() >= 1;
 }
+*/
+
 farming.Livestock.prototype.isHarvestable = function() {
-    if (this.isDead()) return false;
+    //if (this.isDead()) return false;
     if (this.firstFeed >= this.harvestTime)
     	return (this.getCurrentTime() - this.firstFeed) > this.prop.time_between_harvests;
     else
@@ -118,7 +127,7 @@ farming.Livestock.prototype.getFood = function(){
 }
 
 farming.Livestock.prototype.feed = function(){
-    if (this.isDead()) return false;
+    //if (this.isDead()) return false;
     this.playSound();
     if (this.firstFeed < this.harvestTime){
     	this.firstFeed = this.getCurrentTime();
@@ -129,7 +138,7 @@ farming.Livestock.prototype.feed = function(){
     return true;
 }
 farming.Livestock.prototype.harvest = function(){
-    if (this.isDead()) return true;
+    //if (this.isDead()) return true;
     this.timesHarvested++;
     this.harvestTime = this.getCurrentTime();
     this.showProgress();
@@ -210,7 +219,7 @@ var LIVESTOCK = {
         revenue: 20,
         revenue_item: 'egg',
         food: 'space_wheat',
-        time_between_harvests: 45 * 60,
+        time_between_harvests: 45, //*60,
         exercise: 'butterflies',
         required_level: 1
     },

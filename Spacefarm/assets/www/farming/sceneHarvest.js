@@ -55,6 +55,8 @@ farming.SceneHarvest.prototype.finishExercise = function(scene) {
     farming.SceneExercise.prototype.finishExercise(scene);
 
     scene.hideHarvest(scene);
+    // Let the event fire
+    scene.game.source.dispatchEvent(scene.game.EventType.CROP_HARVESTED);
 }
 
 farming.SceneHarvest.prototype.hideHarvest = function(scene) {
