@@ -199,7 +199,7 @@ farming.SceneMap.prototype.drawControls = function () {
     this.updateControls();
 
     // Farmbutton
-    this.farmButton = new farming.Button('Farm').setColor(SETTINGS.color.button)
+    this.farmButton = new farming.Button('Inventory').setColor(SETTINGS.color.button)
         .setPosition(50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
