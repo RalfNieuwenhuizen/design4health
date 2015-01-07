@@ -103,7 +103,8 @@ farming.Game = function() {
             space_apple: 3
         },
         currentChallenge : null,
-        introPhase: 0 // Used to check for introductional screens
+        introPhase: 0, // Used to check for introductional screens
+        daysLoggedIn: []
     }
 
     // Current crop defines the crop the user is building, initiated in clone screen
@@ -182,7 +183,34 @@ farming.Game.prototype.close = function(){
     this.sceneMap.sceneLayer.removeAllChildren();
 }
 
+// Check for the daily money bonus
+farming.Game.prototype.checkDailyBonus = function() {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    if(!this.player.daysLoggedIn)
+        this.player.daysLoggedIn = [];
+    if(!this.player.daysLoggedIn[year])
+        this.player.daysLoggedIn[year] = [];
+    if(!this.player.daysLoggedIn[year][month])
+        this.player.daysLoggedIn[year][month] = [];
+    if(!this.player.daysLoggedIn[year][month][day]) {
+        this.player.daysLoggedIn[year][month][day] = true;
+        lime.scheduleManager.callAfter(function() {
+            var bonus = new lime.Label("Welcome back bonus!")
+                .setPosition(SETTINGS.screen.width / 2, SETTINGS.screen.height - (SETTINGS.size.controls.height*2))
+                .setFontSize(50)
+                .setFontColor(SETTINGS.color.green);
 
+            this.sceneMap.controlsLayer.appendChild(bonus);
+            lime.scheduleManager.callAfter(function() {
+                this.parent_.removeChild(this);
+            }, bonus, 2000);
+        }, this, 1000);
+        this.addCoins(20);
+    }
+}
 farming.Game.prototype.load = function(){
     var savedString = localStorage.getItem('save');
     if(!savedString || savedString == 'null') return;
@@ -192,9 +220,10 @@ farming.Game.prototype.load = function(){
     this.introduction.introPhase = save.introPhase;
     for(var x=0; x<SETTINGS.mapSize; x++) {
         for(var y=0; y<SETTINGS.mapSize; y++) {
-           this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
+            this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
         }
     }
+    this.checkDailyBonus();
     this.sceneMap.updateControls();
     this.sceneMap.body.redraw(this.player.body);
 }
@@ -373,7 +402,7 @@ farming.Game.prototype.showChallengeDetails = function(challenge){
     //this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
     this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
-	this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
+    this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
 }
 
 // go back from the details screen to the overview screen
@@ -402,8 +431,8 @@ farming.Game.prototype.addCoins = function(amount) {
     return this.player.coins;
 }
 farming.Game.prototype.removeCoins = function(amount) {
-    this.sceneMap.moneyAnimation(amount);
     if(this.player.coins < amount) return false;
+    this.sceneMap.moneyAnimation(-amount);
     this.player.coins -= amount;
     this.sceneMap.updateControls();
     return this.player.coins;

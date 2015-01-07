@@ -113,7 +113,7 @@ farming.SceneMap.prototype.drawLand = function () {
                 } else if (tile.isDead()) {
                     tile.removeItem();
                 } else if (tile.isHungry()){
-                		tile.showProgress(tile);
+                    tile.showProgress(tile);
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
@@ -295,12 +295,51 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
     }
     animation.setLooping(false);
     this.moneyImage.runAction(animation);
+
+    // When positive amount, show big coin in the middle of the screen
+    if(amount > 0) {
+        lime.scheduleManager.callAfter(function () {
+            var image = new lime.Sprite().setFill('images/coin/0.png')
+                .setSize(300, 300)
+                .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height));
+
+            var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
+                .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 + 150, SETTINGS.screen.height - SETTINGS.size.controls.height))
+                .setFontSize(150)
+                .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
+
+            this.controlsLayer.appendChild(image).appendChild(numberLabel);
+
+            // Move up
+            var moveUp = new lime.animation.MoveBy(0, -(SETTINGS.screen.height / 2)).setDuration(3);
+            image.runAction(moveUp);
+            numberLabel.runAction(moveUp);
+            goog.events.listen(moveUp, lime.animation.Event.STOP, function () {
+                // Twist coin
+                var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
+                for (var i = 5; i >= 0; i--) {
+                    animation.addFrame('images/coin/' + i + '.png');
+                }
+                animation.setLooping(false);
+                image.runAction(animation);
+
+                goog.events.listen(animation, lime.animation.Event.STOP, function () {
+                    // Clean up coin
+                    for (var i in this.targets) {
+                        var target = this.targets[i];
+                        target.parent_.removeChild(numberLabel);
+                        target.parent_.removeChild(target);
+                    }
+                });
+            });
+        }, this, 500);
+    }
 }
 
-// flipping the small coin in the controls panel
+// Animation of decreasing or increasing item
 farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position) {
-    var itemPos = new goog.math.Coordinate(70, SETTINGS.screen.height - SETTINGS.size.controls.height);
-    var labelPos = new goog.math.Coordinate(40, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    var itemPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    var labelPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 + 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
     if(opt_position) {
         itemPos = new goog.math.Coordinate(opt_position.x, opt_position.y - 30);
         labelPos = new goog.math.Coordinate(opt_position.x - 30, opt_position.y - 30);
@@ -312,11 +351,15 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position)
         var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
             .setPosition(labelPos)
             .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
-        if(opt_position)
+
+        if(opt_position) {
             this.landLayer.appendChild(itemSprite).appendChild(numberLabel);
-        else
+        } else {
+            itemSprite.setSize(300, 300);
+            numberLabel.setFontSize(150);
             this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
-        var moveUp = new lime.animation.MoveBy(0,-100).setDuration(3);
+        }
+        var moveUp = new lime.animation.MoveBy(0,opt_position ? -100 : -(SETTINGS.screen.height / 2)).setDuration(3);
         itemSprite.runAction(moveUp);
         numberLabel.runAction(moveUp);
         goog.events.listen(moveUp,lime.animation.Event.STOP,function(){
