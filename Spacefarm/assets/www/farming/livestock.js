@@ -195,17 +195,6 @@ farming.Livestock.prototype.showWarning = function(){
 }
 
 farming.Livestock.prototype.tick = function(){
-    //automatic feeding of livestock
-    /*
-     * if(this.isHungry()) {
-        if(this.parent_ && this.parent_.game && this.parent_.game.hasItem(this.getFood())) {
-            this.parent_.game.removeItem(this.getFood(), 1, this.parent_.getPosition());
-            this.feed();
-        } else {
-            this.showWarning();
-        }
-    }
-    */
     this.showProgress();
 }
 
@@ -219,7 +208,7 @@ var LIVESTOCK = {
         revenue: 20,
         revenue_item: 'egg',
         food: 'space_wheat',
-        time_between_harvests: 45, //*60,
+        time_between_harvests: 45 *60,
         exercise: 'butterflies',
         required_level: 1
     },
