@@ -133,6 +133,10 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
     if(Math.abs(last-first)> 3)
     {
         exercise.addRepetition();
+         var exsound = new Media('file:///android_asset/www/exercise.mp3');
+       
+         
+            exsound.play();
     }
 
     //if (rep >=10) {
@@ -140,6 +144,9 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
         rep=0;
         acc=[];
         navigator.notification.vibrate(2500);
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+         
+            endsound.play();
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
         window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
@@ -231,12 +238,19 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     if(Math.abs(last-first)> 3)
     {
         exercise.addRepetition();
+         var exsound = new Media('file:///android_asset/www/exercise.mp3');
+        //if (exsound.isLoaded() && !exsound.isPlaying()) {
+         
+            exsound.play();
     }
 
     //if (rep >=2) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+         
+            endsound.play();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -265,12 +279,19 @@ farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
     if(Math.abs(last-first)> 3)
     {
         exercise.addRepetition();
+         var exsound = new Media('file:///android_asset/www/exercise.mp3');
+        //if (exsound.isLoaded() && !exsound.isPlaying()) {
+         
+            exsound.play();
     }
 
     //if (rep >=2) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+         
+        endsound.play();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -294,9 +315,16 @@ farming.Exercise.prototype.situps = function (acceleration, exercise) {
     if(Math.abs(last-first)> 5)
     {
         exercise.addRepetition();
+         var exsound = new Media('file:///android_asset/www/exercise.mp3');
+        //if (exsound.isLoaded() && !exsound.isPlaying()) {
+         
+            exsound.play();
     }
 
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+         
+            endsound.play();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -323,12 +351,19 @@ farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
     //if(last>5){
     if(Math.abs(last-first)> 5) {
         exercise.addRepetition();
+         var exsound = new Media('file:///android_asset/www/exercise.mp3');
+        //if (exsound.isLoaded() && !exsound.isPlaying()) {
+         
+            exsound.play();
     }
 
     //if (rep >=10) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+         
+            endsound.play();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -342,6 +377,9 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
     'Acceleration Z: ' + acceleration.z + " " +
     'Timestamp: ' + acceleration.timestamp);
 
+           var strechsound = new Media('file:///android_asset/www/ex_strech.wav');
+            strechsound.play();
+
     var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
 
     //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
@@ -352,6 +390,9 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
         console.log("number of steps" +numOfSteps)      //  Increment number of steps   
     }
     if (numOfSteps>=2){
+
+         
+          strechsound.pause(); 
 
         numOfSteps=0;
         exercise.onExerciseSuccess(exercise.target);
