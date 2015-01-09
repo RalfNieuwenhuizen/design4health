@@ -97,6 +97,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
         if (this.challengeDone()) {
+            this.giveUpButton.setHidden(true);
             lime.scheduleManager.callAfter(function() {
                 this.completeChallenge(this);
             }, this, 1000);

@@ -74,11 +74,10 @@ farming.Tile.prototype.isRipe = function () {
 farming.Tile.prototype.isHungry = function () {
     return this.livestock && this.livestock.isHungry();
 }
-/*
- farming.Tile.prototype.isDead = function () {
- return (this.crop && this.crop.isDead()) || (this.livestock && this.livestock.isDead());
- }
- */
+farming.Tile.prototype.isDead = function () {
+    return this.crop && this.crop.isDead();
+}
+
 farming.Tile.prototype.isRotten = function () {
     return this.crop && this.crop.isRotten();
 }
@@ -98,7 +97,7 @@ farming.Tile.prototype.playSound = function () {
     if (this.livestock)
         this.livestock.playSound();
 }
-farming.Tile.prototype.showProgress = function(tile){
+farming.Tile.prototype.showProgress = function() {
     var progress = this.getItem().getTimeTillHarvest();
 
     if (progress == null){
@@ -115,17 +114,17 @@ farming.Tile.prototype.showProgress = function(tile){
     this.appendChild(bg);
 
     // If this is livestock
-    if (this.livestock != null){
+    if (this.livestock != null) {
         var food = this.getItem().getFood();
 
-        if (tile.isHungry()){
-            bg.setAction(this.feedTile,tile);
-            icon.setFill('images/items/'+food+'.png').setSize(40,30);
-            label.setText('Feed now').setPosition(16,0).setFontWeight('bold');
-
+        if (this.isHungry()) {
+            icon.setFill('images/items/' + food + '.png').setSize(40, 30);
             // If no food left for the animal
-            if (!tile.game.hasItem(tile.livestock.getFood())){
+            if (!this.game.hasItem(this.livestock.getFood())){
                 label.setText('Not in \n stock');
+            } else {
+                bg.setAction(this.feedTile, this);
+                label.setText('Feed now').setPosition(16, 0).setFontWeight('bold');
             }
         }
     }
@@ -140,10 +139,8 @@ farming.Tile.prototype.showProgress = function(tile){
     });
 }
 
-//farming.Tile.prototype.showFoodMenu = function(tile){}
-
 farming.Tile.prototype.feedTile = function(tile){
-    if (tile.game.hasItem(tile.livestock.getFood())){
+    if (tile.game.hasItem(tile.livestock.getFood()) && tile.isHungry()){
         tile.game.removeItem(tile.livestock.getFood());
         tile.livestock.feed();
         tile.showProgress();

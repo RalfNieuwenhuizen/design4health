@@ -110,10 +110,9 @@ farming.SceneMap.prototype.drawLand = function () {
                     scene.game.showHarvest(tile);
                 } else if (tile.isRotten()) {
                     tile.crop.harvest();
-                //} else if (tile.isDead()) {
-                //    tile.removeItem();
-                } 
-                   else if (tile.isHungry()){
+                } else if (tile.isDead()) {
+                    tile.removeItem();
+                } else if (tile.isHungry()){
                     tile.showProgress(tile);
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;

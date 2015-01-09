@@ -48,6 +48,8 @@ farming.Crop.prototype.deserialize = function(saved){
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
+    this.removeAllChildren();
+
     var progress = this.getProgress();
     var suffix = this.isDead() ? '_dead' :
         this.isRotten() ? '_rotten' :
@@ -55,6 +57,9 @@ farming.Crop.prototype.showProgress = function(){
                 this.timesHarvested == 0 ? Math.floor(progress*this.prop.growth_phases) :
                 this.prop.growth_phases - 1;
     this.setFill('images/crops/'+ this.type + suffix + '.png');
+
+    if(progress == 1)
+        this.appendChild(new farming.Sprite('images/tile_active.png').setSize(SETTINGS.size.tiles).setOpacity(0.5));
 }
 farming.Crop.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
