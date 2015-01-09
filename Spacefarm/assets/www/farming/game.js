@@ -21,6 +21,7 @@ goog.require('farming.Introduction');
 goog.require('farming.Crop');
 goog.require('farming.Livestock');
 goog.require('farming.Challenge');
+goog.require('farming.SceneTask');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
@@ -127,6 +128,7 @@ farming.Game = function() {
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneStats = new farming.SceneStats(this);
     this.introduction = new farming.Introduction(this);
+    this.sceneTask = new farming.SceneTask(this);
 
     this.load();
 
@@ -169,7 +171,11 @@ farming.Game.prototype.EventType = {
     EXERCISE_DONE: goog.events.getUniqueId('exercise_done'),
     COMPLETE_CHALLENGE: goog.events.getUniqueId('complete_challenge'),
     OPEN_BODY: goog.events.getUniqueId('open_body'),
-    SHOW_BODYSTATS: goog.events.getUniqueId('show_bodystats')
+    SHOW_BODYSTATS: goog.events.getUniqueId('show_bodystats'),
+    CLOSE_SCENE: goog.events.getUniqueId('close_scene'),
+    FARM_CLICK: goog.events.getUniqueId('farm_click'),
+    CROP_CLONED: goog.events.getUniqueId('crop_cloned'),
+    CROP_HARVESTED: goog.events.getUniqueId('crop_harvested')
 };
 
 // Create source to fire events
@@ -181,6 +187,8 @@ farming.Game.prototype.saveAtClose = true;
 // General close function
 farming.Game.prototype.close = function(){
     this.sceneMap.sceneLayer.removeAllChildren();
+    // Fire the event that the screen is closed, listened to by introduction
+    this.source.dispatchEvent(this.EventType.CLOSE_SCENE);
 }
 
 // Check for the daily money bonus
@@ -263,6 +271,14 @@ farming.Game.prototype.showFarm = function(){
 }
 // -- end farm --
 
+//-- click on farm --
+farming.Game.prototype.showFarmClick = function(){
+ this.source.dispatchEvent(this.EventType.FARM_CLICK);
+ this.sceneTask.task();
+ //this.director.pushScene(this.sceneFarm);
+ //this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
+}
+//-- end click on farm --
 
 // -- BODY --
 farming.Game.prototype.showBody = function(){

@@ -86,20 +86,18 @@ farming.Introduction.prototype.buttonAction = function(scene) {
 // First introduction screen: general story
 farming.Introduction.prototype.intro1 = function(){
 	this.text.setFontWeight('bold').setText("2542 AD \n \n"
-					+ "Your uncle was one of the first people \n"
-					+ "to buy land in an unknown planet and decided to \n"
-					+ "turn it into a farm to facilitate the earth\'s \n"
-					+ "growing needs of foods. As years went by the farm \n "
-					+ "became very profitable and produced the most \n"
-					+ "sought out products. \n\n"
-					+ "You were very surprised when you received a mail \n"
-					+ "saying that your uncle had left you the farm \n"
-					+ "years ago but you only heard of it now. \n \n "
-					+ "After so many years, the fields on planet Yeo are \n"
-					+ "unused and empty. Will you be able to salvage the \n"
-					+ "farm?");
+					+ "Your uncle was one of the first people to buy \n"
+					+ "land in an unknown planet and decided to turn \n"
+					+ "it into a farm to facilitate the earth\'s growing \n"
+					+ "needs of food. Your uncle made the farm very \n "
+					+ "profitable and he produced the best products \n"
+					+ "available on earth.  \n\n"
+					+ "You received a mail telling you that your uncle \n"
+					+ "had left you the farm already years ago. The \n"
+					+ "fields on planet Yeo are unused and empty. Are \n"
+					+ "you able to make the farm succesful again?\n");
 	this.w.setPosition(this.center.x, this.center.y);
-	this.text.setPosition(this.center.x, this.center.y);
+	this.text.setPosition(this.center.x, this.center.y-30);
 	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.37).height).setSize(SETTINGS.size.button).setText('Start');
 	//this.game.sceneMap.introLayer.setOpacity(1);
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button);
@@ -109,21 +107,20 @@ farming.Introduction.prototype.intro1 = function(){
 
 // Second screen: meet the uncle
 farming.Introduction.prototype.intro2 = function(){
-	this.text.setFontWeight('bold').setPosition(this.center.x+58, this.center.y-15).setText(
-			"Hello, welcome to Spaceville. My name \n "
-			+ "is Phil, I am your uncle. \n"
-			+ "I will help you getting through \n"
-			+ "this first period. \n \n"
-			+ "We can make your farm succesful \n"
-			+ "together. If you spend your money \n"
-			+ "wisely you unlock new challenges \n"
-			+ "and possibilities. \n \n"
-			+ "Let's have a look at your farm.");
+	this.text.setFontWeight('bold').setPosition(this.center.x+58, this.center.y-30).setText(
+			"Hello, welcome to Spaceville! My \n"
+			+ "name is Phil, your great-uncle. I \n"
+			+ "will help you through the start. \n\n"
+			+ "You have to work hard on this farm, \n"
+			+ "therefore you have to do real \n"
+			+ "exercises regularly yourself! I hope \n "
+			+ "you are ready for this challenge! \n \n"
+			+ "Ready? Then let's have a look \n at your farm.");
 	
 	this.phil.setSize(150, 200).setPosition(this.center.x-165, this.center.y + 56);
 	
-	this.w.setSize(this.game.getFullSize(0.65));
-	this.button.setPosition(this.center.x, this.center.y + 120)
+	this.w.setSize(this.game.getFullSize(0.65)).setPosition(this.center.x, this.center.y);
+	this.button.setPosition(this.center.x+58, this.center.y + 120)
 		.setSize(SETTINGS.size.button).setText('Let\'s go!');
 	
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.phil);
@@ -131,14 +128,93 @@ farming.Introduction.prototype.intro2 = function(){
 	this.game.showIntroduction();
 }
 
-// Third screen: go to the inventory
+//Second screen: meet the uncle
 farming.Introduction.prototype.intro3 = function(){
+	this.text.setFontWeight('bold').setPosition(this.center.x-80, this.center.y+60).setText(
+			"Oh, one more thing before \n"
+			+ "we go to the farm. \n\n"
+			+ "Please click on BODY \n"
+			+ "and I will explain.");
+	
+	this.w.setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.5).height).setPosition(this.center.x-120, this.center.y+100).setFill('images/textbox/down_right_arrow.png');
+	this.phil.setSize(90,120).setPosition(this.center.x-230, this.center.y+75)
+    this.button.setColor('#999999').setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+            .setSize(100,SETTINGS.size.controls.height).setAction(this.game.sceneMap.showBody, this.game.sceneMap).setText("BODY");
+
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.phil);
+	// Listen to open BODY
+	goog.events.listenOnce(this.game.source,this.game.EventType.OPEN_BODY,goog.partial(this.buttonAction,this.game.introduction));
+	this.game.showIntroduction();
+}
+
+// Fourth screen: Explain the body screen
+farming.Introduction.prototype.intro4 = function(){
+	
+	var position = {x: this.center.x + 100, y: this.center.y + this.game.getFullSize(0.1).height};
+
+	this.w.setFill('images/textbox/no_arrow.png')
+			.setSize(this.game.getFullSize(0.28).width, this.game.getFullSize(0.7).height).setPosition(position.x - 335,position.y-30);
+	this.text.setFontSize(16).setMultiline(true).setFontWeight('bold').setPosition(position.x - 335,position.y - 30).setText(
+			"This game will help you\n"
+			+ "gain a healthy lifestyle\n"
+			+ "by letting you exercise\n"
+			+ "regularly in a fun way.\n\n"
+			+ "The progress of your own\n"
+			+ "body is represented in\n"
+			+ "the BODY shown on the\n"
+			+ "right.\n\n"
+			+ "If you gain the required\n"
+			+ "points for all body parts,\n"
+			+ "the BODY levels up. This\n"
+			+ "also unlocks new products \n"
+			+ "and challenges!")	
+	
+	this.windowLayer.appendChild(this.w).appendChild(this.text);
+	this.game.sceneBody.windowLayer.appendChild(this.windowLayer);	
+	
+	// Listen to the action
+	goog.events.listenOnce(this.game.source,this.game.EventType.CLOSE_SCENE,goog.partial(this.buttonAction,this.game.introduction));
+}
+
+//Fifth screen: Introduce todo screen
+farming.Introduction.prototype.intro5 = function(){
+	var middle = this.game.sceneMap.calculate('middleTile');
+	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
+	middleCor.x = middleCor.x + 20;
+	middleCor.y = middleCor.y - 30;
+    var textbox = new lime.Sprite().setFill('#FFFFFF').setSize(this.game.getFullSize(0.85));
+    var text = new lime.Label().setFontSize(18).setMultiline(true);
+    
+	text.setFontWeight('bold').setPosition(middleCor.x-162,middleCor.y-20).setText(
+			"Now it\'s up to you \n to explore your farm. \n\n"
+			+ "Click on the farm to \n see some tasks to help \n you with the start. \n\n"
+			+ "Good Luck!");
+	
+	this.phil.setSize(100, 133).setPosition(middleCor.x-296,middleCor.y+10);
+	textbox.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.52).width, this.game.getFullSize(0.4).height)
+		.setPosition(middleCor.x-147, middleCor.y-20).setOpacity(0.85);	
+	this.introScrollLayer.setOpacity(0.85);
+	this.introScrollLayer.appendChild(textbox).appendChild(text).appendChild(this.phil);
+	
+	// Listen to the show_farm event
+	goog.events.listenOnce(this.game.source,this.game.EventType.FARM_CLICK,goog.partial(this.buttonAction,this.game.introduction));
+	
+	//this.introPhase += 1;
+	//this.intro6();
+}
+
+// TODO: Maybe check for cloning to start to provide explanation
+
+
+/*
+// Third screen: go to the inventory
+farming.Introduction.prototype.intro3Old = function(){
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 	middleCor.x = middleCor.x + 20;
 	middleCor.y = middleCor.y - 30;
 	this.text.setFontWeight('bold').setPosition(middleCor.x-162,middleCor.y-20).setText(
-			"This is your new farm, \n click on it to see \n your inventory");
+			"This is your farm, \n it's hard working here");
 	
 	this.phil.setSize(100, 133).setPosition(middleCor.x-296,middleCor.y-14);
 	this.w.setFill('images/textbox/right_arrow.png').setSize(this.game.getFullSize(0.52).width, this.game.getFullSize(0.3).height)
@@ -151,7 +227,7 @@ farming.Introduction.prototype.intro3 = function(){
 }
 
 // Fourth screen: show the inventory
-farming.Introduction.prototype.intro4 = function(){
+farming.Introduction.prototype.intro4Old = function(){
 	var position = {x: this.center.x-180,y: this.center.y + this.game.getFullSize(0.25).height};
 
 	var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
@@ -177,7 +253,7 @@ farming.Introduction.prototype.intro4 = function(){
 }
 
 // Fifth screen: click on details in clone screen
-farming.Introduction.prototype.intro5 = function(){
+farming.Introduction.prototype.intro5Old = function(){
 	var position = {x: this.center.x-95,y: this.center.y + this.game.getFullSize(0.20).height};
 
 	//var textbox = new lime.Sprite().setFill('images/textbox/no_arrow.png')
@@ -328,7 +404,7 @@ farming.Introduction.prototype.intro12 = function(){
 		.setPosition(position.x, position.y -15 ).setOpacity(0.8);		
 	
 	this.introLayer.appendChild(this.w).appendChild(this.text);
-	// Listen to stop cloning
+	// Listen to open BODY
 	goog.events.listenOnce(this.game.source,this.game.EventType.OPEN_BODY,goog.partial(this.buttonAction,this.game.introduction));
 }
 
@@ -356,9 +432,11 @@ farming.Introduction.prototype.intro13 = function(){
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(textbox).appendChild(text);
 	this.game.sceneBody.windowLayer.appendChild(this.windowLayer);	
 	
-	// Listen to the Clone
+	// Listen to the action
 	goog.events.listenOnce(this.game.source,this.game.EventType.SHOW_BODYSTATS,goog.partial(this.buttonAction,this.game.introduction));
 }
+
+*/
 
 // Wait function, awaits an event to be fired before it continues
 farming.Introduction.prototype.waiter = function(scene){

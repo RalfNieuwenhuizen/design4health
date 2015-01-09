@@ -104,15 +104,16 @@ farming.SceneMap.prototype.drawLand = function () {
                 var tile = scene.tiles[focus.x][focus.y];
                 var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
                 if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y-1 )) {
-                    scene.game.showFarm();
+                    scene.game.showFarmClick();
                 } else if (tile.canBeHarvested()) {
                     tile.playSound();
                     scene.game.showHarvest(tile);
                 } else if (tile.isRotten()) {
                     tile.crop.harvest();
-                } else if (tile.isDead()) {
-                    tile.removeItem();
-                } else if (tile.isHungry()){
+                //} else if (tile.isDead()) {
+                //    tile.removeItem();
+                } 
+                   else if (tile.isHungry()){
                     tile.showProgress(tile);
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;
@@ -132,7 +133,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     else {
                         scene.noMoneyAnimation(tile.getPosition());
                     }
-                } else if(!tile.isDead()) {
+                } else if(true){//!tile.isDead()) {
                     tile.playSound();
                     tile.showProgress(tile);
                 }
@@ -145,7 +146,7 @@ farming.SceneMap.prototype.drawLand = function () {
 
     // TODO: change this into the image of the crop to be cloned with high opacity and plot in on the tile
     // Make the screen to show what crop is being cloned
-    this.cloningScreen = new lime.Sprite().setSize(150,100).setPosition(85,100);
+    this.cloningScreen = new lime.Sprite().setSize(150,150).setPosition(85,100);
     this.appendChild(this.cloningScreen);
 
     // Make a layer for screens, fixed position
@@ -183,11 +184,11 @@ farming.SceneMap.prototype.drawControls = function () {
 
     // Create the labels for the cloning function
 
-    this.cloningTitle = new lime.Label().setSize(140,25).setPosition(0,40);
-    this.cloningImage = new lime.Sprite().setSize(100, 60).setPosition(-20,-15);
-    this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(30,10);
-    this.cloningText = new lime.Label().setSize(20,20).setPosition(50,15);
-    this.cloningClose = new farming.Button('X').setColor(SETTINGS.color.button).setPosition(54,-29).setSize(SETTINGS.size.close_button).setAction(this.stopCloning,this);
+    this.cloningTitle = new lime.Label().setSize(140,25).setPosition(0,-50);
+    this.cloningImage = new lime.Sprite().setSize(80, 60).setPosition(-20,-15);
+    this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(30,0);
+    this.cloningText = new lime.Label().setSize(20,20).setPosition(50,5);
+    this.cloningClose = new farming.Button('Stop Cloning').setColor(SETTINGS.color.button).setPosition(0,50).setSize(120,SETTINGS.size.close_button.height).setAction(this.stopCloning,this);
 
     this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100,100).setPosition(450,50).setOpacity(0);
 
