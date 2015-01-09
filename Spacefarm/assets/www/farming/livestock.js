@@ -1,6 +1,8 @@
 goog.provide('farming.Livestock');
+
 goog.require('lime.Sprite');
 goog.require('lime.audio.Audio');
+goog.require('farming.Settings');
 
 /**
  * Livestock elements
@@ -64,11 +66,11 @@ farming.Livestock.prototype.showProgress = function(){
 
     // Healthbar
     /*
-    var healthbaroffset = -40;
-    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.green).setSize(100, 10).setPosition(0, healthbaroffset));
-    this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));
-    this.appendChild(new lime.Label().setFontSize(10).setText('Food stock').setPosition(0,healthbaroffset));
-    */
+     var healthbaroffset = -40;
+     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.green).setSize(100, 10).setPosition(0, healthbaroffset));
+     this.appendChild(new farming.Sprite().setFill(SETTINGS.color.red).setSize(Math.min(100 * this.getHungriness(), 100), 10).setAnchorPoint(1,0.5).setPosition(50, healthbaroffset));
+     this.appendChild(new lime.Label().setFontSize(10).setText('Food stock').setPosition(0,healthbaroffset));
+     */
     //if (this.isDead()) {
     //    this.setFill('images/livestock/'+ this.type + this.appearance + '_dead.png');
     //} else 
@@ -86,40 +88,39 @@ farming.Livestock.prototype.getElapsedTime = function(){
     return this.getCurrentTime() - this.startTime;
 }
 farming.Livestock.prototype.getTimeTillHarvest = function(){
-	// Not yet fed after last harvest!
-	if(this.firstFeed < this.harvestTime){
-		return null;
-	}
-	else{
-		return Math.round((this.prop.time_between_harvests - (this.getCurrentTime() - this.firstFeed))/60);
-	}
+    // Not yet fed after last harvest!
+    if(this.firstFeed < this.harvestTime){
+        return null;
+    }
+    else{
+        return Math.round((this.prop.time_between_harvests - (this.getCurrentTime() - this.firstFeed))/60);
+    }
 }
 
 // Get a partial of how close this livestock is to dying (1 == dead)
 /*farming.Livestock.prototype.getHungriness = function() {
-    var lastFed = this.feedTime ? this.feedTime : this.startTime;
-    // Livestock dies in 12 h / level
-    return (this.getCurrentTime() - lastFed) / (12 * 60 * 60 * this.prop.required_level);//(this.prop.time_between_harvests * 4);
-}*/
+ var lastFed = this.feedTime ? this.feedTime : this.startTime;
+ // Livestock dies in 12 h / level
+ return (this.getCurrentTime() - lastFed) / (12 * 60 * 60 * this.prop.required_level);//(this.prop.time_between_harvests * 4);
+ }*/
 
 // If the chicken is not fed yet after the 'harvest' it is hungry 
 farming.Livestock.prototype.isHungry = function() {
-    console.log('isHungry: '+(this.firstFeed<this.harvestTime));
-	return (this.firstFeed < this.harvestTime);
+    return (this.firstFeed < this.harvestTime);
 }
 
 /*
-farming.Livestock.prototype.isDead = function() {
-    return this.getHungriness() >= 1;
-}
-*/
+ farming.Livestock.prototype.isDead = function() {
+ return this.getHungriness() >= 1;
+ }
+ */
 
 farming.Livestock.prototype.isHarvestable = function() {
     //if (this.isDead()) return false;
     if (this.firstFeed >= this.harvestTime)
-    	return (this.getCurrentTime() - this.firstFeed) > this.prop.time_between_harvests;
+        return (this.getCurrentTime() - this.firstFeed) > this.prop.time_between_harvests;
     else
-    	return false;
+        return false;
 }
 
 farming.Livestock.prototype.getFood = function(){
@@ -130,8 +131,7 @@ farming.Livestock.prototype.feed = function(){
     //if (this.isDead()) return false;
     this.playSound();
     if (this.firstFeed < this.harvestTime){
-    	this.firstFeed = this.getCurrentTime();
-    	console.log('firstFeed updated');
+        this.firstFeed = this.getCurrentTime();
     }
     this.feedTime = this.getCurrentTime();
     this.showProgress();
@@ -158,25 +158,25 @@ farming.Livestock.prototype.playSound = function(){
     // var media = new Media(mp3URL, null, mediaError);
     // media.play();
 
-    
-     if (typeof device != 'undefined' && device.platform == "Android") {
+
+    if (typeof device != 'undefined' && device.platform == "Android") {
         console.log("I am in play sound function in android");
         var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
         //if (sound.isLoaded() && !sound.isPlaying()) {
-         
-            sound.play();
-              //}
-          }
-         
-       else {
-        console.log("I am in the limejs sound")
-           var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
-           if (sound.isLoaded() && !sound.isPlaying()) {
-             sound.play();
-             } 
-         }
 
-  
+        sound.play();
+        //}
+    }
+
+    else {
+        console.log("I am in the limejs sound")
+        var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
+        if (sound.isLoaded() && !sound.isPlaying()) {
+            sound.play();
+        }
+    }
+
+
     //var sound = new Media("/android_asset/www/sounds/"+this.type+ ".ogg");
     // var sound = new Media('sounds/'+this.type+'.ogg');
     // if (sound.isLoaded() && !sound.isPlaying()) {
@@ -199,8 +199,7 @@ farming.Livestock.prototype.tick = function(){
 }
 
 var LIVESTOCK = {
-
-		polychick : {
+    polychick : {
         name: 'Polychick',
         key: 'polychick',
         appearances: 1,
@@ -208,7 +207,7 @@ var LIVESTOCK = {
         revenue: 20,
         revenue_item: 'egg',
         food: 'space_wheat',
-        time_between_harvests: 45 *60,
+        time_between_harvests: 45 * SETTINGS.timeUnit(),
         exercise: 'butterflies',
         required_level: 1
     },
@@ -220,7 +219,7 @@ var LIVESTOCK = {
         revenue: 40,
         revenue_item: 'wool',
         food: 'space_wheat',
-        time_between_harvests: 2 * 60 * 60,
+        time_between_harvests: 120 * SETTINGS.timeUnit(),
         exercise: 'apple_picking',
         required_level: 2
     },
@@ -232,7 +231,7 @@ var LIVESTOCK = {
         revenue: 75,
         revenue_item: 'bacon',
         food: 'space_apple',
-        time_between_harvests: 4 * 60 * 60,
+        time_between_harvests: 240 * SETTINGS.timeUnit(),
         exercise: 'apple_picking',
         required_level: 3
     },
@@ -244,7 +243,7 @@ var LIVESTOCK = {
         revenue: 100,
         revenue_item: 'milk',
         food: 'space_wheat',
-        time_between_harvests: 6 * 60 * 60 ,
+        time_between_harvests: 360 * SETTINGS.timeUnit(),
         exercise: 'apple_picking',
         required_level: 3
     }

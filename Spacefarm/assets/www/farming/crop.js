@@ -1,5 +1,7 @@
 goog.provide('farming.Crop');
+
 goog.require('lime.Sprite');
+goog.require('farming.Settings');
 
 /**
  * Crop elements
@@ -92,6 +94,7 @@ farming.Crop.prototype.harvest = function(){
     this.showProgress();
     return false;
 }
+
 var CROPS = {
     apple_tree : {
         name: 'Space Apple tree',
@@ -100,7 +103,7 @@ var CROPS = {
         cost: 20,
         revenue: 10,
         revenue_item: 'space_apple',
-        time_to_ripe: 20 * 60,
+        time_to_ripe: 20 * SETTINGS.timeUnit(),
         harvests: 3,
         exercise: 'apple_picking',
         required_level: 1
@@ -112,7 +115,7 @@ var CROPS = {
         cost: 10,
         revenue: 15,
         revenue_item: 'space_wheat',
-        time_to_ripe: 8 * 60,
+        time_to_ripe: 8 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'arm_circles',
         required_level: 1
@@ -124,7 +127,7 @@ var CROPS = {
         cost: 20,
         revenue: 35,
         revenue_item: 'carrot',
-        time_to_ripe: 45 * 60,
+        time_to_ripe: 45 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'situps',
         required_level: 1
@@ -136,7 +139,7 @@ var CROPS = {
         cost: 50,
         revenue: 75,
         revenue_item: 'strawberry',
-        time_to_ripe: 90 * 60,
+        time_to_ripe: 90 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'arm_circles',
         required_level: 2

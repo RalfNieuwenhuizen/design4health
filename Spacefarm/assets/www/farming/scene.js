@@ -3,6 +3,7 @@
  */
 goog.provide('farming.Scene');
 goog.require('lime.Scene');
+goog.require('farming.Settings');
 
 /**
  * Land elements

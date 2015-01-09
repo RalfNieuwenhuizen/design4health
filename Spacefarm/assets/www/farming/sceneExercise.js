@@ -8,6 +8,7 @@ goog.require('lime.animation.KeyframeAnimation');
 goog.require('lime.Layer');
 goog.require('farming.Exercise');
 goog.require('farming.Scene');
+goog.require('farming.Settings');
 
 /**
  * Scene elements
@@ -114,8 +115,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
-    //TODO remove the fake finish button
-    scene.finishButton.setHidden(true);
+    scene.finishButton.setHidden(!SETTINGS.TESTING);
     scene.startButton.setHidden(true);
     scene.waitMessage.setHidden(false);
     if(scene.countdown) {

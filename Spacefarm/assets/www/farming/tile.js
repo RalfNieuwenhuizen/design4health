@@ -1,6 +1,8 @@
 goog.provide('farming.Tile');
+
 goog.require('farming.Sprite');
 goog.require('lime.Polygon');
+goog.require('farming.Settings');
 
 /**
  * Tile elements
