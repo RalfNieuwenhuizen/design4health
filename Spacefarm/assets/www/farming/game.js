@@ -178,6 +178,8 @@ farming.Game.prototype.load = function(){
 
     this.player = save.player;
     this.introduction.introPhase = save.introPhase;
+    if(save.tasks)
+        this.sceneTask.tasks = save.tasks;
     for(var x=0; x<SETTINGS.mapSize; x++) {
         for(var y=0; y<SETTINGS.mapSize; y++) {
             this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
@@ -199,6 +201,7 @@ farming.Game.prototype.save = function(){
     var save = {};
     save.player = this.player;
     save.introPhase = this.introduction.introPhase;
+    save.tasks = this.sceneTask.tasks;
     save.tiles = [];
     for(var x=0; x<SETTINGS.mapSize; x++) {
         save.tiles[x] = [];
