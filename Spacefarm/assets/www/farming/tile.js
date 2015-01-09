@@ -117,11 +117,10 @@ farming.Tile.prototype.showProgress = function(tile){
     // If this is livestock
     if (this.livestock != null){
     	var food = this.getItem().getFood();
-    	// TODO: change namespace to wheat_ripe instead of space_wheat_ripe
     	
     	if (tile.isHungry()){
     		bg.setAction(this.feedTile,tile);
-	    	icon.setFill('images/crops/'+food+'_ripe.png').setSize(40,30);
+	    	icon.setFill('images/items/'+food+'.png').setSize(40,30);
 	    	label.setText('Feed now').setPosition(16,0).setFontWeight('bold');
 	    	
 	    	// If no food left for the animal
