@@ -40,22 +40,17 @@ farming.SceneChallengeDetails = function (game) {
     this.selectButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary)
         .setPosition(SETTINGS.position.right_button)
         .setSize(SETTINGS.size.button).setHidden(true);
-    this.completeButton = new farming.Button('Complete!').setColor(SETTINGS.color.button_primary)
-        .setPosition(SETTINGS.position.center_button)
-        .setSize(SETTINGS.size.button).setHidden(true);
 
     this.windowLayer
         .appendChild(w).appendChild(this.title).appendChild(this.description)
         .appendChild(this.selectButton)
         .appendChild(this.closeButton)
         .appendChild(this.giveUpButton)
-        .appendChild(this.completeButton)
         .appendChild(this.backButton);
 
     this.closeButton.setAction(this.closeChallengeDetails, this);
     this.backButton.setAction(this.backChallengeDetails, this);
     this.giveUpButton.setAction(this.giveUpChallenge, this);
-    this.completeButton.setAction(this.completeChallenge, this);
 }
 goog.inherits(farming.SceneChallengeDetails, farming.Scene);
 
@@ -89,20 +84,24 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
         this.windowLayer.removeChild(this.drawLayer);
     this.drawLayer = new lime.Layer();
     this.windowLayer.appendChild(this.drawLayer);
+
     this.challenge = challenge;
     var title = opt_active ? 'Current challenge: '+challenge.name : challenge.name;
     this.title.setText(title);
     this.description.setText(challenge.description + "\n" + farming.Challenge.prototype.bodypart(challenge.type));
+
+    this.selectButton.setHidden(true);
+    this.backButton.setHidden(false);
+    this.giveUpButton.setHidden(true);
     if(opt_active) {
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
-        this.selectButton.setHidden(true);
         if (this.challengeDone()) {
             lime.scheduleManager.callAfter(function() {
                 this.completeChallenge(this);
             }, this, 1000);
         }
-    } else if (this.sufficientItems()) {
+    } else if (this.sufficientItems(challenge)) {
         this.selectButton.setAction(this.selectChallenge, {
             'challenge': challenge,
             'scene': this
@@ -196,9 +195,9 @@ farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, posit
 }
 
 // return true iff all items required for this challenge are available
-farming.SceneChallengeDetails.prototype.sufficientItems = function () {
-    for(var i in this.challenge.requirements) {
-        var requirement = this.challenge.requirements[i];
+farming.SceneChallengeDetails.prototype.sufficientItems = function (challenge) {
+    for(var i in challenge.requirements) {
+        var requirement = challenge.requirements[i];
         if(requirement.type === 'item') {
             if(!this.game.hasItem(requirement.key, requirement.number))
                 return false;
