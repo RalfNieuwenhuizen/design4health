@@ -75,10 +75,10 @@ farming.Tile.prototype.isHungry = function () {
     return this.livestock && this.livestock.isHungry();
 }
 /*
-farming.Tile.prototype.isDead = function () {
-    return (this.crop && this.crop.isDead()) || (this.livestock && this.livestock.isDead());
-}
-*/
+ farming.Tile.prototype.isDead = function () {
+ return (this.crop && this.crop.isDead()) || (this.livestock && this.livestock.isDead());
+ }
+ */
 farming.Tile.prototype.isRotten = function () {
     return this.crop && this.crop.isRotten();
 }
@@ -102,34 +102,34 @@ farming.Tile.prototype.showProgress = function(tile){
     var progress = this.getItem().getTimeTillHarvest();
 
     if (progress == null){
-    	progress = 'Not fed yet';
+        progress = 'Not fed yet';
     }
     else{
-    	progress = progress + ' min';
+        progress = progress + ' min';
     }
-    
+
     var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,45).setPosition(0,-60);
     var icon = new farming.Sprite('images/duration.png').setSize(20,20).setPosition(-40 ,0);
     var label = new lime.Label().setPosition(15,0).setMultiline(true).setText("Ready in \n"+progress);
     bg.appendChild(icon).appendChild(label);
     this.appendChild(bg);
-    
+
     // If this is livestock
     if (this.livestock != null){
-    	var food = this.getItem().getFood();
-    	
-    	if (tile.isHungry()){
-    		bg.setAction(this.feedTile,tile);
-	    	icon.setFill('images/items/'+food+'.png').setSize(40,30);
-	    	label.setText('Feed now').setPosition(16,0).setFontWeight('bold');
-	    	
-	    	// If no food left for the animal
-			if (!tile.game.hasItem(tile.livestock.getFood())){
-				label.setText('Not in \n stock');	
-			}
-    	}
+        var food = this.getItem().getFood();
+
+        if (tile.isHungry()){
+            bg.setAction(this.feedTile,tile);
+            icon.setFill('images/items/'+food+'.png').setSize(40,30);
+            label.setText('Feed now').setPosition(16,0).setFontWeight('bold');
+
+            // If no food left for the animal
+            if (!tile.game.hasItem(tile.livestock.getFood())){
+                label.setText('Not in \n stock');
+            }
+        }
     }
-    
+
     var fade = new lime.animation.FadeTo(0).setDuration(4);
     bg.runAction(fade);
     goog.events.listen(fade,lime.animation.Event.STOP,function(){
@@ -143,10 +143,11 @@ farming.Tile.prototype.showProgress = function(tile){
 //farming.Tile.prototype.showFoodMenu = function(tile){}
 
 farming.Tile.prototype.feedTile = function(tile){
-	if (tile.game.hasItem(tile.livestock.getFood())){
-		tile.game.removeItem(tile.livestock.getFood());
-		tile.livestock.feed();	
-	}
+    if (tile.game.hasItem(tile.livestock.getFood())){
+        tile.game.removeItem(tile.livestock.getFood());
+        tile.livestock.feed();
+        tile.showProgress();
+    }
 }
 
 farming.Tile.prototype.getExercise = function () {
