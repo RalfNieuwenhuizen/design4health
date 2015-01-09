@@ -217,16 +217,16 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(this.challengeButton);
 
     // BODYbutton
-    this.bodyButton = new farming.Button('BODY').setColor('#999999')
+    this.bodyButton = new farming.Button('BODY').setColor(SETTINGS.color.button)
         .setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
         .setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
 
-    // RESETButton
-    this.resetButton = new farming.Button('Reset').setColor('#995555')
-        .setPosition(620, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(70,SETTINGS.size.controls.height).setAction(function(){ scene.game.reset();  }, this);
-    this.controlsLayer.appendChild(this.resetButton);
+    // Settingsbutton
+    this.settingsButton = new farming.Button('Settings').setColor(SETTINGS.color.button)
+        .setPosition(600, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(100,SETTINGS.size.controls.height).setAction(this.showSettings, this);
+    this.controlsLayer.appendChild(this.settingsButton);
 
     // Zoom buttons
     this.zoomInButton = new farming.Button('+').setColor(SETTINGS.color.button)
@@ -256,6 +256,9 @@ farming.SceneMap.prototype.showChallenge = function(scene) {
 }
 farming.SceneMap.prototype.showBody = function(scene) {
     scene.game.showBody();
+}
+farming.SceneMap.prototype.showSettings = function(scene) {
+    scene.game.showSettings();
 }
 farming.SceneMap.prototype.showIntro = function(scene) {
     scene.game.introduction.intro();

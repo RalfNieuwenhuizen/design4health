@@ -116,12 +116,14 @@ farming.Livestock.prototype.harvest = function(){
 }
 
 farming.Livestock.prototype.playSound = function(){
+    if(this.parent_ && this.parent_.game && this.parent_.game.player.settings.sound === false) {
+        return;
+    }
+
     if (typeof device != 'undefined' && device.platform == "Android") {
         var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
         sound.play();
-    }
-
-    else {
+    } else {
         var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
         if (sound.isLoaded() && !sound.isPlaying()) {
             sound.play();

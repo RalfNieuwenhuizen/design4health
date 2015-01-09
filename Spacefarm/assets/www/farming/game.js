@@ -18,6 +18,7 @@ goog.require('farming.SceneLivestockDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
 goog.require('farming.SceneStats');
+goog.require('farming.SceneSettings');
 goog.require('farming.SceneTask');
 goog.require('farming.Introduction');
 goog.require('farming.Challenge');
@@ -39,8 +40,6 @@ farming.Game = function() {
         height: SETTINGS.screen.height
     }
 
-
-
     this.player = {
         coins: 250, // + 10000 * SETTINGS.TESTING,
         exercisesDone: [],
@@ -57,7 +56,11 @@ farming.Game = function() {
         },
         currentChallenge : null,
         introPhase: 0, // Used to check for introductional screens
-        daysLoggedIn: []
+        daysLoggedIn: [],
+        settings: {
+            sound: true,
+            music: true
+        }
     }
 
     // Current crop defines the crop the user is building, initiated in clone screen
@@ -80,6 +83,7 @@ farming.Game = function() {
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneStats = new farming.SceneStats(this);
     this.introduction = new farming.Introduction(this);
+    this.sceneSettings = new farming.SceneSettings(this);
     this.sceneTask = new farming.SceneTask(this);
 
     this.load();
@@ -92,6 +96,20 @@ farming.Game = function() {
             if(this.tickables[i]) this.tickables[i].tick();
         }
     }, this, 1000);
+
+    // Background music
+    this.music = new lime.audio.Audio('sounds/music.ogg');
+    if (typeof device != 'undefined' && device.platform == "Android") {
+        var loop = function (status) {
+            if (status === Media.MEDIA_STOPPED) {
+                this.music.play();
+            }
+        };
+        this.music = new Media('file:///android_asset/www/music.ogg', null, null, loop);
+    }
+    if(this.player.settings.music == true) {
+        this.music.play(true);
+    }
 
     lime.scheduleManager.scheduleWithDelay(function() {
         game.save();
@@ -216,6 +234,12 @@ farming.Game.prototype.saveWrapper = function(game){
     game.save();
 }
 
+// -- settings --
+farming.Game.prototype.showSettings = function(){
+    this.sceneSettings.redraw(this.player.settings);
+    this.sceneMap.sceneLayer.appendChild(this.sceneSettings.windowLayer);
+}
+// -- end settings --
 // -- farm --
 farming.Game.prototype.showFarm = function(){
     // Fire the event that farm is showed, listened to by introduction.intro3
