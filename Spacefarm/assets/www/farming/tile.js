@@ -7,9 +7,11 @@ goog.require('lime.Polygon');
  *
  * @param game
  */
-farming.Tile = function (game) {
+farming.Tile = function (game,x,y) {
     goog.base(this);
     this.game = game;
+    this.x = x;
+    this.y = y;
     this.setSize(SETTINGS.size.tiles);
     this.enable();
 
@@ -21,6 +23,10 @@ goog.inherits(farming.Tile, farming.Sprite);
 farming.Tile.prototype.crop = null;
 farming.Tile.prototype.livestock = null;
 farming.Tile.prototype.disabled = false;
+farming.Tile.prototype.fence4 = false;
+farming.Tile.prototype.fence3 = false;
+farming.Tile.prototype.fence2 = false;
+farming.Tile.prototype.fence1 = false;
 
 farming.Tile.prototype.serialize = function(){
     var crop = this.crop ? this.crop.serialize() : null;
@@ -32,7 +38,7 @@ farming.Tile.prototype.deserialize = function(save){
     if(save.crop)
         this.addCrop(new farming.Crop(null, save.crop));
     if(save.livestock)
-        this.addLivestock(new farming.Livestock(null, save.livestock));
+        this.addLivestock(new farming.Livestock(null, save.livestock, this));
 }
 farming.Tile.prototype.addCrop = function (crop) {
     if (!this.isEmpty() || !crop) return false;
@@ -43,15 +49,39 @@ farming.Tile.prototype.addCrop = function (crop) {
 farming.Tile.prototype.addLivestock = function (livestock) {
     if (!this.isEmpty() || !livestock) return false;
     this.livestock = livestock;
-    this.appendChild(new farming.Sprite('images/cattlefence.png').setSize(SETTINGS.size.tiles));
-    this.appendChild(livestock);
+    this.fence4 = new farming.Sprite('images/fence4.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
+    this.fence3 = new farming.Sprite('images/fence3.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
+    this.fence2 = new farming.Sprite('images/fence2.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
+    this.fence1 = new farming.Sprite('images/fence1.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
+
+    this.appendChild(this.fence4).appendChild(this.fence3)
+        .appendChild(livestock).appendChild(this.fence2).appendChild(this.fence1);
+
     this.game.tickables.push(livestock);
 }
+
+farming.Tile.prototype.updateFence = function () {
+    var tile = this;
+    lime.scheduleManager.callAfter(function () {
+        if(!tile.fence4) return;
+        tile.fence4.setHidden(tile.isSameNeighbour(-1,0));
+        tile.fence3.setHidden(tile.isSameNeighbour(0,-1));
+        tile.fence2.setHidden(tile.isSameNeighbour(1,0));
+        tile.fence1.setHidden(tile.isSameNeighbour(0,1));
+    }, this, 50);
+}
+
 farming.Tile.prototype.removeItem = function () {
     this.removeAllChildren();
     this.crop = null;
     this.livestock = null;
     // TODO remove item from the list of game.tickables
+}
+farming.Tile.prototype.isSameNeighbour = function (rx,ry) {
+
+    if(typeof this.game.sceneMap.tiles[this.x+rx][this.y+ry] == 'undefined') return false;
+    if(!this.game.sceneMap.tiles[this.x+rx][this.y+ry].livestock) return false;
+    return this.game.sceneMap.tiles[this.x+rx][this.y+ry].livestock.type == this.livestock.type;
 }
 farming.Tile.prototype.getItem = function () {
     if(this.crop) {
@@ -132,6 +162,7 @@ farming.Tile.prototype.showProgress = function(tile){
 				target.parent_.removeChild(target);
 			}
 		});
+
     }
     
     var fade2 = new lime.animation.FadeTo(0).setDuration(4);

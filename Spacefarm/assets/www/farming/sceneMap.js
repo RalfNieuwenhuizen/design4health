@@ -50,11 +50,12 @@ farming.SceneMap.prototype.calculate = function (key) {
 }
 
 farming.SceneMap.prototype.drawLand = function () {
+
     this.landLayer = new lime.Layer()
         .setPosition(this.game.screen.width / 2, SETTINGS.screen.height / 2 - this.calculate('mapHeight') / 2)
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
-        .setSize(this.landLayer.getSize()).setFill(SETTINGS.color.tile);
+        .setSize(this.landLayer.getSize().scale(1.1)).setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
 
 
@@ -76,15 +77,16 @@ farming.SceneMap.prototype.drawLand = function () {
         for (var x = min; x < max; x++) {
             var y = max - x + min - 1;
             if (typeof this.tiles[x] == 'undefined') this.tiles[x] = [];
-            this.tiles[x][y] = new farming.Tile(this.game).setPosition(this.twoDToScreen(x, y));
+            this.tiles[x][y] = new farming.Tile(this.game,x,y).setPosition(this.twoDToScreen(x, y));
             this.landLayer.appendChild(this.tiles[x][y]);
-            if (middle.x == x && middle.y == y) {
+            if (middle.x - 2 == x && middle.y-2 == y) {
                 this.landLayer.appendChild(this.farm.setPosition(this.twoDToScreen(x, y)));
             }
         }
     }
-    for (var x = middle.x; x < middle.x+2; x++) {
-        for (var y = middle.y-1; y < middle.y+1; y++) {
+    this.landLayer.setPosition(this.landLayer.getPosition().translate(-260, 170));
+    for (var x = middle.x-2; x < middle.x; x++) {
+        for (var y = middle.y-3; y < middle.y-1; y++) {
             this.tiles[x][y].disable();
         }
     }
@@ -126,7 +128,7 @@ farming.SceneMap.prototype.drawLand = function () {
                         if (CROPS[currentClone.key]) {
                             tile.addCrop(new farming.Crop(currentClone.key));
                         } else if (LIVESTOCK[currentClone.key]) {
-                            tile.addLivestock(new farming.Livestock(currentClone.key));
+                            tile.addLivestock(new farming.Livestock(currentClone.key, null, tile));
                         }
                     }
                     else {
@@ -140,7 +142,6 @@ farming.SceneMap.prototype.drawLand = function () {
         }
         e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
     });
-
     this.appendChild(this.landLayer);
 
     // TODO: change this into the image of the crop to be cloned with high opacity and plot in on the tile

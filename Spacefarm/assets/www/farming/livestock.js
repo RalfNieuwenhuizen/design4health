@@ -6,13 +6,13 @@ goog.require('lime.audio.Audio');
  * Livestock elements
  *
  */
-farming.Livestock = function(type, saved) {
+farming.Livestock = function(type, saved, tile) {
     goog.base(this);
     this.setAnchorPoint(0.5, 0.63); //0.5, 0.58
-    this.setSize(80, 60);
+    this.setSize(200 *0.6, 169*0.6);
+    this.tile = tile;
 
-
-    if(typeof saved != 'undefined') {
+    if(typeof saved != 'undefined' && saved) {
         this.deserialize(saved);
     } else {
         this.start(type);
@@ -74,6 +74,7 @@ farming.Livestock.prototype.showProgress = function(){
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
+    this.tile.updateFence();
 }
 farming.Livestock.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
