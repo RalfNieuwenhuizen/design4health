@@ -82,7 +82,7 @@ farming.Exercise.prototype.getAnimation = function (key, delay) {
     }
     return animation;
 }
-farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
+farming.Exercise.prototype.arm_stretches = function (acceleration, exercise) {
 
 
     //navigator.plugin.notification.local.add({ sound: null });
@@ -209,7 +209,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
      }*/
 
 }
-farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
+farming.Exercise.prototype.back_circles = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
     'Acceleration Z: ' + acceleration.z + " " +
@@ -244,7 +244,7 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     }
 
 }
-farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
+farming.Exercise.prototype.dynamic_chest = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
     'Acceleration Z: ' + acceleration.z + " " +
