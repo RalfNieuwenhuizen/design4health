@@ -17,7 +17,7 @@ var SETTINGS = {
     },
     createWindow : function(){
         return new lime.RoundedRect().setRadius(9).setFill(SETTINGS.color.background_layer)
-            .setStroke(SETTINGS.color.background_stroke)//.preventClickThrough()
+            .setStroke(new lime.fill.Stroke(3, SETTINGS.color.background_stroke))//.preventClickThrough()
             .setSize(SETTINGS.size.background_layer).setPosition(400,(480 - SETTINGS.size.controls.height) / 2);
     },
     createOverlay : function(){
@@ -28,7 +28,7 @@ var SETTINGS = {
         tile: '#b08251',
         background_layer: '#f0f0f0',
         background_overlay: 'rgba(71,25,11,0.5)',
-        background_stroke: new lime.fill.Stroke(3, '#662c1b'),
+        background_stroke: '#662c1b',
         button_primary: 'green',
         button_inactive: 'inactive',
         button: '#999999',
