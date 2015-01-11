@@ -38,6 +38,127 @@ farming.Challenge.prototype.bodypart = function (key) {
 }
 
 var CHALLENGES = {
+
+    test1 : {
+        name: 'Bear Hug',
+        key: 'test1',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'bear_hug',
+                key : 'bear_hug' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
+    test2: {
+        name: 'High Knees',
+        key: 'test2',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'high_knees',
+                key : 'high_knees' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
+    test3: {
+        name: 'Mason twist',
+        key: 'test3',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'mason_twist',
+                key : 'mason_twist' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
+    test4: {
+        name: 'wall_arm_pulls',
+        key: 'test4',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'wall_arm_pulls',
+                key : 'wall_arm_pulls' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
+    test5: {
+        name: 'wall_ears',
+        key: 'test5',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'wall_ears',
+                key : 'wall_ears' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
+    test6: {
+        name: 'wall_flapping',
+        key: 'test6',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'wall_flapping',
+                key : 'wall_flapping' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
     apple_pie : {
         name: 'Space Apple Pie',
         key: 'apple_pie',
