@@ -62,11 +62,11 @@ farming.Livestock.prototype.showProgress = function(){
 
     if (this.isHarvestable()) {
         this.setFill('images/livestock/'+ this.type + this.appearance + '_harvestable.png');
-        this.tile.setFill('images/tile_active.png');
     } else {
         this.setFill('images/livestock/'+ this.type + this.appearance + '.png');
     }
     this.tile.updateFence();
+    this.tile.updateColor();
 }
 
 farming.Livestock.prototype.getCurrentTime = function(){
@@ -99,6 +99,9 @@ farming.Livestock.prototype.isHarvestable = function() {
 
 farming.Livestock.prototype.getFood = function(){
     return this.prop.food;
+}
+farming.Livestock.prototype.isRotten = function(){
+    return false;
 }
 
 farming.Livestock.prototype.feed = function(){

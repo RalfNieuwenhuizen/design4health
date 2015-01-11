@@ -74,10 +74,18 @@ farming.Tile.prototype.updateFence = function () {
     }, this, 50);
 }
 
+farming.Tile.prototype.updateColor = function () {
+    var item = this.getItem();
+    if(!item) this.setFill('images/tile.png');
+    else if(item.isRotten() || this.isHungry()) this.setFill('images/tile_rotten.png');
+    else if(item.isHarvestable()) this.setFill('images/tile_active.png');
+    else this.setFill('images/tile.png');
+}
 farming.Tile.prototype.removeItem = function () {
     this.removeAllChildren();
     this.crop = null;
     this.livestock = null;
+    this.updateColor();
     // TODO remove item from the list of game.tickables
 }
 farming.Tile.prototype.isSameNeighbour = function (rx,ry) {
@@ -95,10 +103,10 @@ farming.Tile.prototype.getItem = function () {
     return false;
 }
 farming.Tile.prototype.canBeHarvested = function () {
-    return this.isRipe() || (this.livestock && this.livestock.isHarvestable());
+    return this.isHarvestable() || (this.livestock && this.livestock.isHarvestable());
 }
-farming.Tile.prototype.isRipe = function () {
-    return this.crop && this.crop.isRipe();
+farming.Tile.prototype.isHarvestable = function () {
+    return this.crop && this.crop.isHarvestable();
 }
 
 farming.Tile.prototype.isHungry = function () {

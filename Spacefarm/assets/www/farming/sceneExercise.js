@@ -79,6 +79,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     if(animation) 
         this.animation.runAction(animation);
     this.animation.stop = function() { if(animation) animation.stop(); };
+
     this.finishButton.setHidden(true);
     this.startButton.setHidden(false);
     this.waitMessage.setHidden(true);

@@ -48,6 +48,7 @@ farming.Crop.prototype.deserialize = function(saved){
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
+    if(this.tile.crop != this) return;
     this.removeAllChildren();
 
     var progress = this.getProgress();
@@ -58,8 +59,7 @@ farming.Crop.prototype.showProgress = function(){
                 this.prop.growth_phases - 1;
     this.setFill('images/crops/'+ this.type + suffix + '.png');
 
-    if(progress == 1)
-        this.tile.setFill('images/tile_active.png');
+    this.tile.updateColor();
 }
 farming.Crop.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
@@ -73,7 +73,7 @@ farming.Crop.prototype.getProgress = function(){
 farming.Crop.prototype.getTimeTillHarvest = function(){
     return Math.round((this.prop.time_to_ripe - this.getElapsedTime())/60);
 }
-farming.Crop.prototype.isRipe = function(){
+farming.Crop.prototype.isHarvestable = function(){
     if (this.isDead() || this.isRotten()) return false;
 
     return this.getProgress() == 1;
@@ -94,7 +94,9 @@ farming.Crop.prototype.tick = function(){
 farming.Crop.prototype.harvest = function(){
     if (this.isDead()) return false;
     this.timesHarvested++;
-    if ((this.timesHarvested == this.prop.harvests) && this.prop.harvests == 1) this.parent_.removeItem();
+    if ((this.timesHarvested == this.prop.harvests) && this.prop.harvests == 1) {
+        this.tile.removeItem();
+    }
     this.startTime = this.getCurrentTime();
     this.showProgress();
     return false;

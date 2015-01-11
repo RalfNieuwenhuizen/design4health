@@ -10,14 +10,14 @@ var SETTINGS = {
         return SETTINGS.TESTING === true ? 1 : 60;
     },
 
-    mapSize: 20,
+    mapSize: 11,
     screen: {
         width: 800,
         height: 480
     },
 
     color: {
-        tile: '#000',
+        tile: '#b08251',
         background_layer: '#f0f0f0',
         button_primary: '#22CC22',
         button_inactive: '#BBB',
