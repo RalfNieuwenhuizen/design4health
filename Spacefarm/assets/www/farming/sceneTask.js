@@ -75,21 +75,24 @@ farming.SceneTask.prototype.show1 = function(){
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 
-	var textbox = new lime.Sprite().setFill('#FFFFFF').setSize(this.game.getFullSize(0.8));
-	var text = new lime.Label().setFontSize(18).setMultiline(true);
+	var textbox = new lime.Sprite().setFill('#FFFFFF');
+    var text1 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
+    var text2 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
 
-	var checkbox_1 = new farming.Sprite('images/checkbox_'+this.tasks[0]+'.png').setSize(20, 20).setPosition(-50,-22).setOpacity(0.8);
-	var checkbox_2 = new farming.Sprite('images/checkbox_'+this.tasks[1]+'.png').setSize(20, 20).setPosition(-50, 18).setOpacity(0.8);
-	var checkbox_3 = new farming.Sprite('images/checkbox_'+this.tasks[2]+'.png').setSize(20, 20).setPosition(-50, 58).setOpacity(0.8);
+	var checkbox_1 = new farming.Sprite('images/checkbox_'+this.tasks[0]+'.png').setSize(30, 30).setPosition(-77,-02).setOpacity(0.8);
+	var checkbox_2 = new farming.Sprite('images/checkbox_'+this.tasks[1]+'.png').setSize(30, 30).setPosition(-77, 38).setOpacity(0.8);
+	var checkbox_3 = new farming.Sprite('images/checkbox_'+this.tasks[2]+'.png').setSize(30, 30).setPosition(-77, 78).setOpacity(0.8);
 
-	text.setFontWeight('bold').setPosition(200,0).setAlign('left').setText(
-		"Todo:\n\n "
-		+ "Clone a crop\n\n"
-		+ "Harvest a crop\n\n"
-		+ "Do a challenge");
-	textbox.setFill('images/textbox/left_arrow.png').setSize(this.game.getFullSize(0.6).width, this.game.getFullSize(0.5).height)
-		.setPosition(middleCor.x+270, middleCor.y-200).setOpacity(1);
-	textbox.appendChild(text).appendChild(checkbox_1).appendChild(checkbox_2).appendChild(checkbox_3);
+    text1.setFontWeight('bold').setPosition(150,-50).setAlign('left').setText(
+        "Now it\'s up to you to explore your farm. \n For the start, try out these three things.\n Good luck!\n\n");
+
+    text2.setFontWeight('bold').setPosition(200,38).setAlign('left').setText(
+        "Clone a crop\n\n"
+            + "   Harvest a crop\n\n"
+            + "   Do a challenge\n\n");
+	textbox.setFill('images/textbox/left_arrow.png').setSize(this.game.getFullSize(0.68).width, this.game.getFullSize(0.5).height)
+		.setPosition(middleCor.x+260, middleCor.y-200).setOpacity(1);
+	textbox.appendChild(text1).appendChild(text2).appendChild(checkbox_1).appendChild(checkbox_2).appendChild(checkbox_3);
 	this.taskLayer.appendChild(textbox);
 
 	/*var wait = new lime.animation.FadeTo(1).setDuration(5);
