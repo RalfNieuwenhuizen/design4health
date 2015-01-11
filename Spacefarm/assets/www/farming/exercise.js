@@ -460,6 +460,7 @@ var EXERCISES = {
             'Finally, try to stretch even more by standing on your toes.',
             'Repeat on the other side (switch the phone!).'],
         example_frames: 7, // number of image there are in 'images/exercises/{key}/[0-9].png'
+        horizontal: false,
         repetitions: 10,
         type: 'arms', //full_body, arms, legs, back, abs
         points: 1 //points awarded to 'type' region
@@ -472,6 +473,7 @@ var EXERCISES = {
             'When you rebounce, push one more time to the left.',
             'Repeat the exercise, moving your arms to the right.'],
         example_frames: 20,
+        horizontal: false,
         repetitions: 10,
         type: 'back',
         points: 1
@@ -484,6 +486,7 @@ var EXERCISES = {
             'At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going nearly level with the ground, without touching it.',
             'Repeat 10 times.'],
         example_frames: 10,
+        horizontal: true,
         repetitions: 20,
         type: 'abs',
         points: 1
@@ -494,6 +497,7 @@ var EXERCISES = {
             'Keeping your arms straight, quickly move your arms back as far as possible and back in again, similar to an exaggerated clapping motion. ',
             'Repeat 10 times, increasing speed as you do so.'],
         example_frames: 8,
+        horizontal: false,
         repetitions: 15,
         type: 'chest',
         points: 1
@@ -506,6 +510,7 @@ var EXERCISES = {
             'Fully extend your entire body, reaching overhead as far as possible.',
             'As you land, absorb your impact through the legs.'],
         example_frames: 10,
+        horizontal: false,
         repetitions: 10, // 10 times
         type: 'legs',
         points: 4
@@ -516,6 +521,7 @@ var EXERCISES = {
             'Start running at your place, while pulling your knees up high. Swing your arms properly!',
             'Repeat 15 times (one repetition is one completed movement with both legs)'],
         example_frames: 10,
+        horizontal: false,
         repetitions: 15,
         type: ['arms', 'legs', 'abs'],
         points: 1
@@ -527,6 +533,7 @@ var EXERCISES = {
             'Now move back to starting position.',
             'Repeat 20 times.'],
         example_frames: 8,
+        horizontal: true,
         repetitions: 20,
         type: ['abs', 'legs'],
         points: 3
@@ -539,6 +546,7 @@ var EXERCISES = {
             'Twist your torso to the right side and touch the floor with both hands. Move only your upper body and keep your abdominals engaged.',
             'Twist over to the left side and bring your hands toward the floor. Avoid using momentum - control the motion. Repeat 20 times.'],
         example_frames: 8,
+        horizontal: true,
         duration: 60, // in seconds
         type: ['abs', 'legs'],
         points: 2
@@ -549,6 +557,7 @@ var EXERCISES = {
             'Lower yourself downward until your chest almost touches the floor as you inhale.',
             'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
         example_frames: 6,
+        horizontal: true,
         duration: 40, // in seconds
         type: 'chest',
         points: 2
@@ -559,6 +568,7 @@ var EXERCISES = {
             'Lower yourself downward until your chest almost touches the floor as you inhale.',
             'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
         example_frames: 6,
+        horizontal: true,
         duration: 60, // in seconds
         type: ['chest'],
         points: 3
@@ -569,6 +579,7 @@ var EXERCISES = {
             'Tuck in your chin and touch the wall also with the back of your neck.',
             'Stay in this position and stretch your arms parallel to the wall. Carefully move them up and down in a controlled motion. Repeat 10 times.'],
         example_frames: 10,
+        horizontal: false,
         repetitions: 15,
         type: 'back',
         points: 1
@@ -579,6 +590,7 @@ var EXERCISES = {
             'Tuck in your chin and touch the wall also with the back of your neck.',
             'Stay in this position and stretch your arms parallel to the wall. Bring your arms up and cover your ears. Repeat 10 times.'],
         example_frames: 10,
+        horizontal: false,
         repetitions: 15,
         type: 'back',
         points: 1
@@ -589,6 +601,7 @@ var EXERCISES = {
             'Tuck in your chin and touch the wall also with the back of your neck.',
             'Put your right arm up, flex it and pull down, just as you would climb a rope ladderRepeat 10 times.'],
         example_frames: 8,
+        horizontal: false,
         repetitions: 15,
         type: 'back',
         points: 1
@@ -599,6 +612,7 @@ var EXERCISES = {
             'Lean back a bit and push yourself up with your arms, with the rest of the weight at your feet.',
             'Alternate kicking up your left and right leg, while holding the weight with your arms. Repeat until the timer goes out.'],
         example_frames: 6,
+        horizontal: true,
         duration: 60, // in seconds
         type: ['arms', 'abs', 'legs'],
         points: 2
@@ -610,6 +624,7 @@ var EXERCISES = {
             'Continue until you have squatted a portion of the way down, but are above parallel,',
             'Quickly reverse the motion until you return to the starting position. Repeat 10 times.'],
         example_frames: 9,
+        horizontal: false,
         duration: 60, // in seconds
         type: 'legs',
         points: 2

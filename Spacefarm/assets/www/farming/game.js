@@ -24,6 +24,7 @@ goog.require('farming.Introduction');
 goog.require('farming.Challenge');
 goog.require('farming.Crop');
 goog.require('farming.Livestock');
+goog.require('farming.Slider');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
@@ -69,7 +70,7 @@ farming.Game = function() {
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
     this.director.makeMobileWebAppCapable()
-    this.director.setDisplayFPS(false);
+    this.director.setDisplayFPS(true);
 
     //Define all the scenes
     this.sceneMap = new farming.SceneMap(this);
@@ -280,7 +281,7 @@ farming.Game.prototype.showStats = function(){
 // -- harvest --
 farming.Game.prototype.showHarvest = function(tile){
     this.sceneHarvest.showExercise(tile)
-    this.director.pushScene(this.sceneHarvest, lime.transitions.MoveInDown);
+    this.director.pushScene(this.sceneHarvest);
 }
 
 farming.Game.prototype.hideHarvest = function(){
@@ -514,6 +515,7 @@ farming.Game.prototype.getFullSize = function(percent) {
     return new goog.math.Size(this.screen.width * ratio, this.screen.height * ratio);
 }
 
-farming.Game.prototype.getCenterPosition = function() {
-    return new goog.math.Coordinate(this.screen.width / 2, (this.screen.height - SETTINGS.size.controls.height) / 2)
+farming.Game.prototype.getCenterPosition = function(controls) {
+    var c = typeof controls == 'undefined' ? 1 : +controls;
+    return new goog.math.Coordinate(this.screen.width / 2, (this.screen.height - c*SETTINGS.size.controls.height) / 2)
 }

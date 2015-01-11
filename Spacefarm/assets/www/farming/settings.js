@@ -30,10 +30,11 @@ var SETTINGS = {
     },
 
     size: {
-        button: new goog.math.Size(120, 50),
+        button: new goog.math.Size(160, 70),
         button_small: new goog.math.Size(80, 40),
-        close_button: new goog.math.Size(40, 40),
+        close_button: new goog.math.Size(60, 60),
         background_layer: new goog.math.Size(735, 480 * 0.8),
+        background_layer_full: new goog.math.Size(800,480),
         tiles: new goog.math.Size(200, 116),
         controls: {
             height: 50
@@ -42,16 +43,18 @@ var SETTINGS = {
 
     position: {
         close_button: new goog.math.Coordinate(745, 45),
+        close_button_full: new goog.math.Coordinate(765, 35),
         left_button: new goog.math.Coordinate(100, 375),
         center_button: new goog.math.Coordinate(400, 375),
         right_button: new goog.math.Coordinate(700, 375),
-        title: new goog.math.Coordinate(400, 50)
+        title: new goog.math.Coordinate(400, 50),
+        title_full: new goog.math.Coordinate(400, 30)
     },
 
     font: {
         title: 22,
         subtitle: {
-            size: 16,
+            size: 17,
             weight: 600
         },
         text: 16

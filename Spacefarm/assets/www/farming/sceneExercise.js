@@ -22,16 +22,16 @@ farming.SceneExercise = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
-    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
-    this.description = new lime.Label().setFontSize(12).setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4)).setAlign('left').setMultiline(true);
+        .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
+    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title_full);
+    this.description = new farming.Slider().setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4));
     this.animation = new lime.Sprite().setSize(SETTINGS.size.background_layer.height*0.75, SETTINGS.size.background_layer.height).setPosition(center.x*1.5, center.y);
-    this.pointsLabel = new lime.Label().setPosition(SETTINGS.position.left_button).setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
+    this.pointsLabel = new lime.Label().setSize(300, 30).setAlign('right').setPosition(SETTINGS.position.left_button).setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
     this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(center.x + 180, center.y * 1.5);
     this.numberLabel = new lime.Label().setSize(30, 30).setPosition(center.x + 230, center.y * 1.5).setFontSize(36);
     this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
-        .setPosition(SETTINGS.position.close_button)
+        .setPosition(SETTINGS.position.close_button_full)
         .setSize(SETTINGS.size.close_button);
     this.startButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary).setPosition(SETTINGS.position.center_button).setSize(SETTINGS.size.button);
     this.finishButton = new farming.Button('Fake finish').setColor(SETTINGS.color.button).setPosition(SETTINGS.position.right_button).setSize(SETTINGS.size.button);
@@ -67,7 +67,6 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     this.exerciseKey = key;
     var exercise = EXERCISES[key];
     this.title.setText('Exercise: ' + exercise.title);
-    this.description.setText(exercise.description);
     if(this.animation.stop) {
         this.animation.stop();
         this.animation.setFill('');
@@ -75,6 +74,34 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     if(this.stopWatch && this.stopWatch.stop) {
         this.stopWatch.stop();
     }
+    if(exercise.horizontal) {
+
+    } else {
+        this.description.setSize(470,300).setPosition(545,240);
+        this.animation.setFill('#ff9').setSize(315*0.9,420*0.9).setPosition(150,220);
+        this.startButton.setPosition(700,430);
+        this.numberIcon.setPosition(130,430);
+        this.numberLabel.setPosition(175,425);
+        this.pointsLabel.setPosition(440,435).setFill('#0f0');
+    /*.appendChild(this.title)
+            .appendChild(this.heartRate)
+            .appendChild(this.description)
+            .appendChild(this.animation)
+            .appendChild(this.pointsLabel)
+            .appendChild(this.numberIcon)
+            .appendChild(this.numberLabel)
+            .appendChild(this.startButton)
+            .appendChild(this.closeButton)
+            .appendChild(this.waitMessage)
+            .appendChild(this.finishButton);*/
+    }
+
+
+    this.description.clear();
+    for(var i in exercise.description) {
+        this.description.addTextSlide(exercise.description[i], 20);
+    }
+
     var animation = farming.Exercise.prototype.getAnimation(key, 0.3);
     if(animation) 
         this.animation.runAction(animation);
