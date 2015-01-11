@@ -43,7 +43,7 @@ var CHALLENGES = {
         key: 'apple_pie',
         description: 'Bake a spaceapple pie for your ill neighbour Yeowoman.',
         type: 'full_body', //full_body, arms, legs, back, abs
-        required_level: 0,
+        required_level: 1,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -57,13 +57,13 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Crush it all together\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Prepare cooking utensils',
+                key : 'dynamic_chest' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             },
             {
                 type : 'exercise',
-                name : '\"Wait for it to bake\"',
-                key : 'wait_pie' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Press the dough',
+                key : 'pushup_knees' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -78,7 +78,7 @@ var CHALLENGES = {
         key: 'cookies',
         description: 'Bake some space cookies.',
         type: 'full_body', //full_body, arms, legs, back, abs
-        required_level: 0,
+        required_level: 1,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -92,13 +92,18 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Blend it\"',
-                key : 'ground_cycling' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Press the ingredients together',
+                key : 'squats' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             },
             {
                 type : 'exercise',
-                name : '\"Heat it up\"',
-                key : 'burpees' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Shake the bowl',
+                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Run from Santa Claus!',
+                key : 'high_knees' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -108,37 +113,12 @@ var CHALLENGES = {
             }
         ]
     },
-    baked_eggs : {
-        name: 'Baked Eggs',
-        key: 'baked_eggs',
-        description: 'Bake some eggs.',
-        type: 'full_body', //full_body, arms, legs, back, abs
-        required_level: 1,
-        requirements: [
-            {
-                type : 'item', //item, exercise
-                number: 4, //number of items
-                key : 'egg' //require 'images/items/{key}.png'
-            },
-            {
-                type : 'exercise',
-                name : '\"Light the fire\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
-            }
-        ],
-        rewards: [
-            {
-                type : 'coins',
-                number: 150
-            }
-        ]
-    },
     wool_socks : {
         name: 'Woolysocks',
         key: 'wool_socks',
         description: 'You are cold, make some socks.',
         type: 'full_body',
-        required_level: 1,
+        required_level: 2,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -147,8 +127,18 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Needle time\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Climb the ladder to get to the top shelf',
+                key : 'wall_arm_pulls' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Put on your earplugs',
+                key : 'wall_ears' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Work the weaving machine!',
+                key : 'wall_flapping' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -163,7 +153,7 @@ var CHALLENGES = {
         key: 'carrot_pie',
         description: 'You are hungry, make some carrot pie.',
         type: 'full_body',
-        required_level: 1,
+        required_level: 2,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -182,8 +172,18 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Boil \'em, mash \'em, stick \'em in a stew\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Tear \'em ',
+                key : 'dynamic_chest' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Mash \'em',
+                key : 'pushups' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Press them into a nice pie!',
+                key : 'sky_kicks' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -198,7 +198,7 @@ var CHALLENGES = {
         key: 'apple_sweater',
         description: 'You are cold, make an awesome sweater.',
         type: 'full_body',
-        required_level: 1,
+        required_level: 2,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -212,8 +212,13 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"I needle it\"',
+                name : 'I needle it',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Sew the sweater on yourself',
+                key : 'mason_twist' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -228,7 +233,7 @@ var CHALLENGES = {
         key: 'bacon_egg',
         description: 'You are hungry, make a huge bacon omelet.',
         type: 'full_body',
-        required_level: 2,
+        required_level: 3,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -242,8 +247,13 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Bake-on\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Collect the ingredients',
+                key : 'arm_stretches' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            },
+            {
+                type : 'exercise',
+                name : 'Check on them as they \"bake-on\"',
+                key : 'situps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -254,11 +264,11 @@ var CHALLENGES = {
         ]
     },
     carrot_stew : {
-        name: 'Carrot Stew',
-        key: 'carrot_stew',
-        description: 'You are hungry, make a carrot stew, because you can!',
+        name: 'Carrot Rocket',
+        key: 'carrot_rocket',
+        description: 'Build a carrot rocket to mine a neighbouring moon for gold!',
         type: 'full_body',
-        required_level: 2,
+        required_level: 3,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -272,8 +282,8 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Stew-pit\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Stew-pit',
+                key : 'high_knees' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -288,7 +298,7 @@ var CHALLENGES = {
         key: 'strawberry_jam',
         description: 'You are hungry, jam some berries.',
         type: 'full_body',
-        required_level: 2,
+        required_level: 3,
         requirements: [
             {
                 type : 'item', //item, exercise
@@ -297,8 +307,8 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Jammin\'\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Jammin\'',
+                key : 'wall_flapping' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -322,7 +332,7 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Say cheese!\"',
+                name : 'Say cheese!',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
@@ -357,8 +367,8 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Toss the cake\"',
-                key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+                name : 'Toss the cake',
+                key : 'sky_kicks' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
         rewards: [
@@ -382,7 +392,7 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"It\'s so fluffyyyyyy\"',
+                name : 'It\'s so fluffyyyyyy',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
@@ -417,7 +427,7 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Toss the cake\"',
+                name : 'Toss the cake',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],
@@ -447,7 +457,7 @@ var CHALLENGES = {
             },
             {
                 type : 'exercise',
-                name : '\"Shake it up!\"',
+                name : 'Shake it up!',
                 key : 'rocket_jumps' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
             }
         ],

@@ -8,6 +8,7 @@ goog.require('lime.animation.KeyframeAnimation');
 goog.require('lime.Layer');
 goog.require('farming.Exercise');
 goog.require('farming.Scene');
+goog.require('farming.Settings');
 
 /**
  * Scene elements
@@ -71,6 +72,9 @@ farming.SceneExercise.prototype.showExercise = function(key) {
         this.animation.stop();
         this.animation.setFill('');
     }
+    if(this.stopWatch && this.stopWatch.stop) {
+        this.stopWatch.stop();
+    }
     var animation = farming.Exercise.prototype.getAnimation(key, 0.3);
     if(animation) 
         this.animation.runAction(animation);
@@ -114,19 +118,24 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
-    //TODO remove the fake finish button
-    scene.finishButton.setHidden(true);
+    scene.finishButton.setHidden(!SETTINGS.TESTING);
     scene.startButton.setHidden(true);
     scene.waitMessage.setHidden(false);
+    scene.stopWatch = {};
     if(scene.countdown) {
-        lime.scheduleManager.scheduleWithDelay(function () {
+        var schedule = function () {
             scene.countdown--;
             if(scene.countdown)
                 scene.numberLabel.setText(scene.countdown + '\"');
             else
                 scene.startHeartRate(scene);
 
-        }, this, 1000, scene.countdown);
+        };
+        lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000, scene.countdown);
+        scene.stopWatch.stop = function() {
+            lime.scheduleManager.unschedule(schedule, scene);
+        }
+
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }

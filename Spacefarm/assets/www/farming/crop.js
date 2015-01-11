@@ -1,19 +1,21 @@
 goog.provide('farming.Crop');
+
 goog.require('lime.Sprite');
+goog.require('farming.Settings');
 
 /**
  * Crop elements
  *
  */
-farming.Crop = function(type, saved) {
+farming.Crop = function(type, saved, tile) {
 
     goog.base(this);
     this.setAnchorPoint(0.5, 0.63); //0.5, 0.58
     this.setSize(200, 169);
-
+    this.tile = tile;
     var crop = this;
 
-    if(typeof saved != 'undefined') {
+    if(typeof saved != 'undefined' && saved) {
         this.deserialize(saved);
     } else {
         this.start(type);
@@ -46,6 +48,8 @@ farming.Crop.prototype.deserialize = function(saved){
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
+    this.removeAllChildren();
+
     var progress = this.getProgress();
     var suffix = this.isDead() ? '_dead' :
         this.isRotten() ? '_rotten' :
@@ -53,6 +57,9 @@ farming.Crop.prototype.showProgress = function(){
                 this.timesHarvested == 0 ? Math.floor(progress*this.prop.growth_phases) :
                 this.prop.growth_phases - 1;
     this.setFill('images/crops/'+ this.type + suffix + '.png');
+
+    if(progress == 1)
+        this.tile.setFill('images/tile_active.png');
 }
 farming.Crop.prototype.getCurrentTime = function(){
     return new Date().getTime() / 1000;
@@ -92,6 +99,7 @@ farming.Crop.prototype.harvest = function(){
     this.showProgress();
     return false;
 }
+
 var CROPS = {
     apple_tree : {
         name: 'Space Apple tree',
@@ -100,9 +108,9 @@ var CROPS = {
         cost: 20,
         revenue: 10,
         revenue_item: 'space_apple',
-        time_to_ripe: 20 * 60,
+        time_to_ripe: 20 * SETTINGS.timeUnit(),
         harvests: 3,
-        exercise: 'apple_picking',
+        exercise: 'arm_stretches',
         required_level: 1
     },
     wheat : {
@@ -112,9 +120,9 @@ var CROPS = {
         cost: 10,
         revenue: 15,
         revenue_item: 'space_wheat',
-        time_to_ripe: 8 * 60,
+        time_to_ripe: 8 * SETTINGS.timeUnit(),
         harvests: 1,
-        exercise: 'arm_circles',
+        exercise: 'back_circles',
         required_level: 1
     },
     carrot : {
@@ -124,7 +132,7 @@ var CROPS = {
         cost: 20,
         revenue: 35,
         revenue_item: 'carrot',
-        time_to_ripe: 45 * 60,
+        time_to_ripe: 45 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'situps',
         required_level: 1
@@ -136,10 +144,22 @@ var CROPS = {
         cost: 50,
         revenue: 75,
         revenue_item: 'strawberry',
-        time_to_ripe: 90 * 60,
+        time_to_ripe: 90 * SETTINGS.timeUnit(),
         harvests: 1,
-        exercise: 'arm_circles',
+        exercise: 'mason_twist',
         required_level: 2
+    },
+    spirulina : {
+        name: 'Diamond Spirulina',
+        key: 'spirulina',
+        growth_phases: 3,
+        cost: 70,
+        revenue: 50,
+        revenue_item: 'diamond',
+        time_to_ripe: 120 * SETTINGS.timeUnit(),
+        harvests: 3,
+        exercise: 'rocket_jumps',
+        required_level: 3
     }
 };
 

@@ -7,6 +7,7 @@ goog.require('lime.Director');
 goog.require('lime.Scene');
 goog.require('lime.Layer');
 goog.require('lime.transitions.MoveInDown');
+goog.require('farming.Settings');
 goog.require('farming.SceneMap');
 goog.require('farming.SceneFarm');
 goog.require('farming.SceneBody');
@@ -17,14 +18,17 @@ goog.require('farming.SceneLivestockDetails');
 goog.require('farming.SceneChallenge');
 goog.require('farming.SceneChallengeDetails');
 goog.require('farming.SceneStats');
+goog.require('farming.SceneSettings');
+goog.require('farming.SceneTask');
 goog.require('farming.Introduction');
+goog.require('farming.Challenge');
 goog.require('farming.Crop');
 goog.require('farming.Livestock');
-goog.require('farming.Challenge');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventId');
+
 
 var SETTINGS = {
     mapSize: 11,
@@ -86,10 +90,8 @@ farming.Game = function() {
         height: SETTINGS.screen.height
     }
 
-
-
     this.player = {
-        coins: 250,
+        coins: 250, // + 10000 * SETTINGS.TESTING,
         exercisesDone: [],
         body : {
             arms: 0,
@@ -104,7 +106,11 @@ farming.Game = function() {
         },
         currentChallenge : null,
         introPhase: 0, // Used to check for introductional screens
-        daysLoggedIn: []
+        daysLoggedIn: [],
+        settings: {
+            sound: true,
+            music: true
+        }
     }
 
     // Current crop defines the crop the user is building, initiated in clone screen
@@ -127,6 +133,8 @@ farming.Game = function() {
     this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneStats = new farming.SceneStats(this);
     this.introduction = new farming.Introduction(this);
+    this.sceneSettings = new farming.SceneSettings(this);
+    this.sceneTask = new farming.SceneTask(this);
 
     this.load();
 
@@ -138,6 +146,20 @@ farming.Game = function() {
             if(this.tickables[i]) this.tickables[i].tick();
         }
     }, this, 1000);
+
+    // Background music
+    this.music = new lime.audio.Audio('sounds/music.ogg');
+    if (typeof device != 'undefined' && device.platform == "Android") {
+        var loop = function (status) {
+            if (status === Media.MEDIA_STOPPED) {
+                this.music.play();
+            }
+        };
+        this.music = new Media('file:///android_asset/www/music.ogg', null, null, loop);
+    }
+    if(this.player.settings.music == true) {
+        this.music.play(true);
+    }
 
     lime.scheduleManager.scheduleWithDelay(function() {
         game.save();
@@ -169,7 +191,12 @@ farming.Game.prototype.EventType = {
     EXERCISE_DONE: goog.events.getUniqueId('exercise_done'),
     COMPLETE_CHALLENGE: goog.events.getUniqueId('complete_challenge'),
     OPEN_BODY: goog.events.getUniqueId('open_body'),
-    SHOW_BODYSTATS: goog.events.getUniqueId('show_bodystats')
+    SHOW_BODYSTATS: goog.events.getUniqueId('show_bodystats'),
+    CLOSE_SCENE: goog.events.getUniqueId('close_scene'),
+    FARM_CLICK: goog.events.getUniqueId('farm_click'),
+    CROP_CLONED: goog.events.getUniqueId('crop_cloned'),
+    CROP_HARVESTED: goog.events.getUniqueId('crop_harvested'),
+    WINDOW_OPENED : goog.events.getUniqueId('window_opened')
 };
 
 // Create source to fire events
@@ -181,6 +208,8 @@ farming.Game.prototype.saveAtClose = true;
 // General close function
 farming.Game.prototype.close = function(){
     this.sceneMap.sceneLayer.removeAllChildren();
+    // Fire the event that the screen is closed, listened to by introduction
+    this.source.dispatchEvent(this.EventType.CLOSE_SCENE);
 }
 
 // Check for the daily money bonus
@@ -218,6 +247,8 @@ farming.Game.prototype.load = function(){
 
     this.player = save.player;
     this.introduction.introPhase = save.introPhase;
+    if(save.tasks)
+        this.sceneTask.tasks = save.tasks;
     for(var x=0; x<SETTINGS.mapSize; x++) {
         for(var y=0; y<SETTINGS.mapSize; y++) {
             this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
@@ -239,6 +270,7 @@ farming.Game.prototype.save = function(){
     var save = {};
     save.player = this.player;
     save.introPhase = this.introduction.introPhase;
+    save.tasks = this.sceneTask.tasks;
     save.tiles = [];
     for(var x=0; x<SETTINGS.mapSize; x++) {
         save.tiles[x] = [];
@@ -253,22 +285,38 @@ farming.Game.prototype.saveWrapper = function(game){
     game.save();
 }
 
+// -- settings --
+farming.Game.prototype.showSettings = function(){
+    this.sceneSettings.redraw(this.player.settings);
+    this.sceneMap.sceneLayer.appendChild(this.sceneSettings.windowLayer);
+}
+// -- end settings --
 // -- farm --
 farming.Game.prototype.showFarm = function(){
     // Fire the event that farm is showed, listened to by introduction.intro3
     this.source.dispatchEvent(this.EventType.SHOW_FARM);
+    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
     this.sceneFarm.redraw(this.player.inventory);
     //this.director.pushScene(this.sceneFarm);
     this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
 }
 // -- end farm --
 
+//-- click on farm --
+farming.Game.prototype.showFarmClick = function(){
+    this.source.dispatchEvent(this.EventType.FARM_CLICK);
+    this.sceneTask.task();
+    //this.director.pushScene(this.sceneFarm);
+    //this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
+}
+//-- end click on farm --
 
 // -- BODY --
 farming.Game.prototype.showBody = function(){
     this.sceneBody.redraw(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
     this.source.dispatchEvent(this.EventType.OPEN_BODY);
+    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
 }
 
 farming.Game.prototype.showStats = function(){
@@ -305,6 +353,7 @@ farming.Game.prototype.showClone = function(){
     this.source.dispatchEvent(this.EventType.GO_CLONE);
     this.sceneClone.drawItems(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneClone);
+    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
 }
 
 // Start cloning a crop
@@ -350,6 +399,7 @@ farming.Game.prototype.showChallenge = function(){
         this.showChallengeDetails(this.player.currentChallenge);
     }
     this.source.dispatchEvent(this.EventType.OPEN_CHALLENGES);
+    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
 }
 
 // set the current challenge and close all challenge screens

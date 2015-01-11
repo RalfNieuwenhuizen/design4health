@@ -3,8 +3,6 @@ goog.provide('farming.Exercise');
 /**
  * Exercise accelerometer object
  * Function name callbackName should exist in this class
- *
- * @param {} gameObj
  */
 
 var steps_prevVal = 1.0;
@@ -140,6 +138,7 @@ farming.Exercise.prototype.apple_picking = function (acceleration, exercise) {
         rep=0;
         acc=[];
         navigator.notification.vibrate(2500);
+        playEndSound();
         exercise.onExerciseSuccess(exercise.target);
         exercise.stopWatch();
         window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
@@ -237,6 +236,7 @@ farming.Exercise.prototype.arm_circles = function (acceleration, exercise) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        farming.Exercise.prototype.playEndSound();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -271,6 +271,7 @@ farming.Exercise.prototype.butterflies = function (acceleration, exercise) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        farming.Exercise.prototype.playEndSound();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -297,6 +298,7 @@ farming.Exercise.prototype.situps = function (acceleration, exercise) {
     }
 
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+        farming.Exercise.prototype.playEndSound();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -329,6 +331,7 @@ farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise) {
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
         //navigator.notification.beep(3);
         navigator.notification.vibrate(2500);
+        farming.Exercise.prototype.playEndSound();
         rep=0;
         acc=[];
         exercise.onExerciseSuccess(exercise.target);
@@ -342,6 +345,9 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
     'Acceleration Z: ' + acceleration.z + " " +
     'Timestamp: ' + acceleration.timestamp);
 
+    var strechsound = new Media('file:///android_asset/www/ex_strech.wav');
+    strechsound.play();
+
     var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
 
     //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
@@ -352,6 +358,9 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
         console.log("number of steps" +numOfSteps)      //  Increment number of steps   
     }
     if (numOfSteps>=2){
+
+
+        strechsound.pause();
 
         numOfSteps=0;
         exercise.onExerciseSuccess(exercise.target);
@@ -429,95 +438,180 @@ farming.Exercise.prototype.addRepetition = function() {
     console.log("Repetitions done: " + rep);
     if (this.target && this.target.numberLabel && this.target.numberLabel.getText() >= 0)
         this.target.numberLabel.setText(this.target.numberLabel.getText() - 1);
+
+    if(this.target && this.target.game && this.target.game.player.settings.sound == true) {
+        var exsound = new Media('file:///android_asset/www/exercise.mp3');
+        exsound.play();
+    }
 }
+farming.Exercise.prototype.playEndSound = function() {
+    if(this.target && this.target.game && this.target.game.player.settings.sound == true) {
+        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+        endsound.play();
+    }
+}
+
 var EXERCISES = {
-    apple_picking: {
-        title : '\"Apple Picking\"',
-        description : '1. Keep you phone in one hand, like in the picture' +
-        '\n\n 2. Start from standing up straight.' +
-        '\n\n 3. Raise one arm (with the phone in hand) and the opposite ' +
-        'knee until to a 90 degrees angle.' +
-        '\n\n 4. Finally, try to stretch even more by standing on your toes.' +
-        '\n\n 5. Repeat on the other side (switch the phone!).',
+    arm_stretches : {
+        title:'Arm stretches',
+        description : ['Keep you phone in one hand, like in the picture',
+            'Start from standing up straight.',
+            'Raise one arm (with the phone in hand) and the opposite knee until to a 90 degrees angle.',
+            'Finally, try to stretch even more by standing on your toes.',
+            'Repeat on the other side (switch the phone!).'],
         example_frames: 7, // number of image there are in 'images/exercises/{key}/[0-9].png'
         repetitions: 10,
         type: 'arms', //full_body, arms, legs, back, abs
         points: 1 //points awarded to 'type' region
     },
-    arm_circles: {
-        title : '\"Arm circles\"',
-        description : '1. Keep your phone in one hand, like in the picture.' +
-        '\n\n 2. Stand up and extend your arms straight ahead.' +
-        '\n\n 3. Now move your arms as far to the left as possible.' +
-        '\n\n 4. When you rebounce, push one more time to the left.' +
-        '\n\n 5. Repeat the exercise, moving your arms to the right.',
+    back_circles : {
+        title:'Back stretches',
+        description : ['Keep your phone in one hand, like in the picture.',
+            'Stand up and extend your arms straight ahead.',
+            'Now move your arms as far to the left as possible.',
+            'When you rebounce, push one more time to the left.',
+            'Repeat the exercise, moving your arms to the right.'],
         example_frames: 20,
         repetitions: 10,
         type: 'back',
         points: 1
     },
-    situps: {
-        title : '\"Sit-ups\"',
-        description : '1. Keep your phone in both hands, like in the picture.' +
-        '\n\n 2. Do sit ups!',
+    situps : {
+        title:'Sit-ups',
+        description : ['Lie down on the floor and secure your feet. Your legs should be bent at the knees.',
+            'Place your hands on your chest, with the phone in both hands. You will begin with your back on the ground. This will be your starting position.',
+            'Flex your hips and spine to raise your torso toward your knees.',
+            'At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going nearly level with the ground, without touching it.',
+            'Repeat 10 times.'],
         example_frames: 10,
         repetitions: 20,
         type: 'abs',
         points: 1
     },
-    butterflies: {
-        title : '\"Butterflies\"',
-        description : '1. Keep your phone in one hand' +
-        '\n\n 2. Stretch both arms' +
-        '\n\n 3. Stretch your chest by moving your arms back and forth',
-        example_frames: 0,
-        repetitions: 10,
+    dynamic_chest : {
+        title:'Dynamic chest stretches',
+        description : ['Stand with your hands together, arms extended directly in front of you. This will be your starting position.',
+            'Keeping your arms straight, quickly move your arms back as far as possible and back in again, similar to an exaggerated clapping motion. ',
+            'Repeat 10 times, increasing speed as you do so.'],
+        example_frames: 8,
+        repetitions: 15,
         type: 'chest',
         points: 1
     },
-    rocket_jumps: {
-        title : '\"Rocket Jumps\"',
-        description : '1. Keep your phone in two hands, like in the picture.' +
-        '\n\n 2. Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.' +
-        '\n\n 3. To initiate the move, squat down halfway and jump back up as high as possible.' +
-        '\n\n 4. Fully extend your entire body, reaching overhead as far as possible.' +
-        '\n\n 5. As you land, absorb your impact through the legs.' +
-        '\n\n 6. Good for general fitness and legs specifically.',
+    rocket_jumps : {
+        title:'Rocket jumps',
+        description : ['Keep your phone in two hands, like in the picture.',
+            'Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.',
+            'To initiate the move, squat down halfway and jump back up as high as possible.',
+            'Fully extend your entire body, reaching overhead as far as possible.',
+            'As you land, absorb your impact through the legs.'],
         example_frames: 10,
         repetitions: 10, // 10 times
         type: 'legs',
-        points: 6
+        points: 4
     },
-    wait_pie: {
-        title : 'Stretching on the floor for 2 minutes',
-        description : 'Good for souplesse and specifically for hips and back.',
-        example_frames: 0,
-        duration: 120, // in seconds
+    high_knees : {
+        title:'High knee',
+        description : ['Stand straight up with your phone in one hand.',
+            'Start running at your place, while pulling your knees up high. Swing your arms properly!',
+            'Repeat 15 times (one repetition is one completed movement with both legs)'],
+        example_frames: 10,
+        repetitions: 15,
+        type: ['arms', 'legs', 'abs'],
+        points: 1
+    },
+    bear_hug : {
+        title:'Bear hug crunch',
+        description : ['Lay down on the floor with your legs stretched straigth up in the air and your arms stretched on the floor above your head. Hold the phone in one hand.',
+            'Make a crunch movement and put your arms around your legs on knee hight until you can grab your fingers. Keep your legs in the same position.',
+            'Now move back to starting position.',
+            'Repeat 20 times.'],
+        example_frames: 8,
+        repetitions: 20,
+        type: ['abs', 'legs'],
+        points: 3
+    },
+    mason_twist : {
+        title:'Mason twist',
+        description : ['Sit on the ground or an exercise mat, bend your elbows and hold the phone in your hands together in front of your chest.',
+            'Contract your abs and lean your upper body back, about 45 degrees. Keep your back straight!',
+            'Raise your feet up until your lower legs are parallel to the floor.',
+            'Twist your torso to the right side and touch the floor with both hands. Move only your upper body and keep your abdominals engaged.',
+            'Twist over to the left side and bring your hands toward the floor. Avoid using momentum - control the motion. Repeat 20 times.'],
+        example_frames: 8,
+        duration: 60, // in seconds
+        type: ['abs', 'legs'],
+        points: 2
+    },
+    pushup_knees : {
+        title:'Push up on knees',
+        description : ['Take the starting position as in the picture, with your hands slightly wider than shoulder length. ',
+            'Lower yourself downward until your chest almost touches the floor as you inhale.',
+            'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
+        example_frames: 6,
+        duration: 40, // in seconds
+        type: 'chest',
+        points: 2
+    },
+    pushups : {
+        title:'Push up',
+        description : ['Take the starting position as in the picture, with your hands slightly wider than shoulder length.',
+            'Lower yourself downward until your chest almost touches the floor as you inhale.',
+            'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
+        example_frames: 6,
+        duration: 60, // in seconds
+        type: ['chest'],
+        points: 3
+    },
+    wall_flapping : {
+        title:'Wall flying',
+        description : ['Stand straight with your back to the wall, touching with your heels.',
+            'Tuck in your chin and touch the wall also with the back of your neck.',
+            'Stay in this position and stretch your arms parallel to the wall. Carefully move them up and down in a controlled motion. Repeat 10 times.'],
+        example_frames: 10,
+        repetitions: 15,
         type: 'back',
-        points: 3
+        points: 1
     },
-    ground_cycling: {
-        title : 'Ground cycling',
-        description : '1. begin by lying flat on your back with your hands behind your head.' +
-        '\n\n 2. Lift your legs and bend your knees so they are at a 90-degree angle.' +
-        '\n\n 3. then begin rotating your legs in a manner similar to riding a bicycle.' +
-        '\n\n 4. Lean up and turn to touch your right elbow to your left knee, then lay back down.' +
-        '\n\n 5. Repeat this with the left elbow, touching it to the right knee.',
-        example_frames: 0,
-        duration: 60, // in seconds
-        type: 'abs',
-        points: 3
+    wall_ears : {
+        title:'Wall ear touches',
+        description : ['Stand straight with your back to the wall, touching with your heels.',
+            'Tuck in your chin and touch the wall also with the back of your neck.',
+            'Stay in this position and stretch your arms parallel to the wall. Bring your arms up and cover your ears. Repeat 10 times.'],
+        example_frames: 10,
+        repetitions: 15,
+        type: 'back',
+        points: 1
     },
-    burpees: {
-        title : 'Burpees',
-        description : '1. Begin in a standing position.' +
-        '\n\n 2. Drop into a squat position with your hands on the ground.' +
-        '\n\n 3. Kick your feet back, while keeping your arms extended.' +
-        '\n\n 4. Immediately return your feet to the squat position.' +
-        '\n\n 5. Jump up from the squat position.',
-        example_frames: 0,
+    wall_arm_pulls : {
+        title:'Wall arm pulling',
+        description : ['Stand straight with your back to the wall, touching with your heels.',
+            'Tuck in your chin and touch the wall also with the back of your neck.',
+            'Put your right arm up, flex it and pull down, just as you would climb a rope ladderRepeat 10 times.'],
+        example_frames: 8,
+        repetitions: 15,
+        type: 'back',
+        points: 1
+    },
+    sky_kicks : {
+        title:'Sky kick',
+        description : ['Sit down on the ground or exercise mat. ',
+            'Lean back a bit and push yourself up with your arms, with the rest of the weight at your feet.',
+            'Alternate kicking up your left and right leg, while holding the weight with your arms. Repeat until the timer goes out.'],
+        example_frames: 6,
         duration: 60, // in seconds
-        type: ['arms', 'chest', 'legs'],
+        type: ['arms', 'abs', 'legs'],
+        points: 2
+    },
+    squats : {
+        title:'Squat',
+        description : ['Stand with your feet shoulder width apart. This will be your starting position.',
+            'Begin the movement by flexing your knees and hips, sitting back with your hips.',
+            'Continue until you have squatted a portion of the way down, but are above parallel,',
+            'Quickly reverse the motion until you return to the starting position. Repeat 10 times.'],
+        example_frames: 9,
+        duration: 60, // in seconds
+        type: 'legs',
         points: 2
     }
 }
