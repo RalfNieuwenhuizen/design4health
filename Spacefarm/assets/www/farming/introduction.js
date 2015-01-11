@@ -149,12 +149,11 @@ farming.Introduction.prototype.intro3 = function(){
 
 // Fourth screen: Explain the body screen
 farming.Introduction.prototype.intro3 = function(){
-	
-	var position = {x: this.center.x + 100, y: this.center.y + this.game.getFullSize(0.1).height};
 
-	this.text.setFontSize(16).setMultiline(true).setFontWeight('bold')
-        .setSize(400,300)
-        .setPosition(position.x,position.y - 30).setText(
+
+	this.text.setFontSize(18).setMultiline(true)
+        .setSize(350,500)
+        .setPosition(250,350).setText(
 			"This game will help you "
 			+ "gain a healthy lifestyle "
 			+ "by letting you exercise "
@@ -169,9 +168,11 @@ farming.Introduction.prototype.intro3 = function(){
 			+ "also unlocks new products "
 			+ "and challenges!")
 
-    this.button.setPosition(this.center.x+58, this.center.y + 120)
+    this.body = new farming.Body(1.3, this.game).setPosition(600,160);
+
+    this.button.setPosition(600, 400)
         .setSize(SETTINGS.size.button).setText('Sure!');
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button);
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.body);
     this.game.showIntroduction();
 
 

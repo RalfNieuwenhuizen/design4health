@@ -19,17 +19,16 @@ farming.Body = function(scale, game) {
     this.levelLabel = new lime.Label().setFontSize(15);
     this.scale = scale;
     this.appendChild(this.bodyLayer);
+    this.redraw(this.game.player.body, null);
 }
 goog.inherits(farming.Body,lime.Layer);
 
 farming.Body.prototype.scale = null;
 
 // redraw the inventory
-farming.Body.prototype.redraw = function (body, position) {
-    if(position)
-        this.position = position;
-
-    var position = this.position;
+farming.Body.prototype.redraw = function (body, pos) {
+    var position = pos ? pos : this.getPosition();
+    this.position = pos;
     if(this.bodyLayer) {
         this.bodyLayer.removeAllChildren();
     }

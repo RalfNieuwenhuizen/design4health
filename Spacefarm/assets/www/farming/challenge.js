@@ -38,7 +38,7 @@ farming.Challenge.prototype.bodypart = function (key) {
 }
 
 var CHALLENGES = {
-/*
+
     test1 : {
         name: 'Bear Hug',
         key: 'test1',
@@ -158,7 +158,7 @@ var CHALLENGES = {
                 number: 50
             }
         ]
-    },*/
+    },
     apple_pie : {
         name: 'Space Apple Pie',
         key: 'apple_pie',
@@ -201,7 +201,7 @@ var CHALLENGES = {
         type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
-/* {
+ {
                 type : 'item', //item, exercise
                 number: 2, //number of items
                 key : 'egg' //require 'images/items/{key}.png'
@@ -210,7 +210,7 @@ var CHALLENGES = {
                 type : 'item',
                 number: 2,
                 key : 'space_wheat'
-            },*/
+            },
             {
                 type : 'exercise',
                 name : 'Press the ingredients together',
