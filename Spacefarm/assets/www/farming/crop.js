@@ -1,6 +1,6 @@
 goog.provide('farming.Crop');
 
-goog.require('lime.Sprite');
+goog.require('farming.Sprite');
 goog.require('farming.Settings');
 
 /**
@@ -24,7 +24,7 @@ farming.Crop = function(type, saved, tile) {
 
 
 }
-goog.inherits(farming.Crop,lime.Sprite);
+goog.inherits(farming.Crop, farming.Sprite);
 
 farming.Crop.prototype.timesHarvested = 0;
 farming.Crop.prototype.startTime = null;
@@ -48,7 +48,6 @@ farming.Crop.prototype.deserialize = function(saved){
     this.showProgress();
 }
 farming.Crop.prototype.showProgress = function(){
-    if(this.tile.crop != this) return;
     this.removeAllChildren();
 
     var progress = this.getProgress();

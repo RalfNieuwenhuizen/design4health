@@ -20,8 +20,8 @@ farming.SceneBody = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.w = SETTINGS.createWindow();
+    this.o = SETTINGS.createOverlay();
     this.title = new farming.Label('BODY').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label('Bionic Outer Dimension Yeosuit')
         .setPosition(SETTINGS.position.title.x, SETTINGS.position.title.y+20).setMultiline(true).setFontSize(15);
@@ -37,7 +37,8 @@ farming.SceneBody = function (game) {
     this.statsButton.setAction(this.showStats, this);
 
     this.windowLayer
-        .appendChild(w)
+        .appendChild(this.o)
+        .appendChild(this.w)
         .appendChild(this.title)
         .appendChild(this.description)
         .appendChild(this.statsButton)

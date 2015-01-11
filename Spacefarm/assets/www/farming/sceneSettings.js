@@ -18,8 +18,8 @@ farming.SceneSettings = function (game) {
     this.windowLayer = new lime.Layer();
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
-    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.w = SETTINGS.createWindow();
+    this.o = SETTINGS.createOverlay();
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Settings');
 
@@ -29,7 +29,8 @@ farming.SceneSettings = function (game) {
     this.closeButton.setAction(this.closeSettings, this);
 
     this.windowLayer
-        .appendChild(w).appendChild(this.title)
+        .appendChild(this.o)
+        .appendChild(this.w).appendChild(this.title)
         .appendChild(this.closeButton);
 
     this.redraw(this.game.player.settings);
@@ -80,8 +81,8 @@ farming.SceneSettings.prototype.redraw = function (settings) {
     this.drawLayer.appendChild(this.soundLabel).appendChild(this.soundSlider).appendChild(this.musicLabel).appendChild(this.musicSlider);
 
     // RESETButton
-    this.resetButton = new farming.Button('Reset').setColor('#995555')
-        .setPosition(center.x, center.y + 130)
+    this.resetButton = new farming.Button('Reset game').setColor('red')
+        .setPosition(160, 340)
         .setSize(200, SETTINGS.size.button.height).setAction(function(scene){ scene.game.reset(); }, this);
     this.drawLayer.appendChild(this.resetButton);
 }

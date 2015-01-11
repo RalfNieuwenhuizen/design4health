@@ -28,10 +28,18 @@ goog.inherits(farming.SceneMap, farming.Scene);
 
 farming.SceneMap.prototype.game = null;
 farming.SceneMap.prototype.farm = null;
+farming.SceneMap.prototype.buttons = {};
+farming.SceneMap.prototype.activeButton = null;
 farming.SceneMap.prototype.drag = {
     maxClickDistance: 15
 };
 
+farming.SceneMap.prototype.setActiveButton = function (button) {
+    this.activeButton = button;
+    for (var i in this.buttons) {
+        this.buttons[i].setState(i == button ? lime.Button.State.DOWN : lime.Button.State.UP);
+    }
+}
 farming.SceneMap.prototype.calculate = function (key) {
     var scene = this;
     return {
@@ -77,16 +85,16 @@ farming.SceneMap.prototype.drawLand = function () {
         for (var x = min; x < max; x++) {
             var y = max - x + min - 1;
             if (typeof this.tiles[x] == 'undefined') this.tiles[x] = [];
-            this.tiles[x][y] = new farming.Tile(this.game,x,y).setPosition(this.twoDToScreen(x, y));
+            this.tiles[x][y] = new farming.Tile(this.game, x, y).setPosition(this.twoDToScreen(x, y));
             this.landLayer.appendChild(this.tiles[x][y]);
-            if (middle.x - 2 == x && middle.y-1 == y) {
+            if (middle.x - 2 == x && middle.y - 1 == y) {
                 this.landLayer.appendChild(this.farm.setPosition(this.twoDToScreen(x, y)));
             }
         }
     }
     this.landLayer.setPosition(this.landLayer.getPosition().translate(-170, 100));
-    for (var x = middle.x-2; x < middle.x; x++) {
-        for (var y = middle.y-2; y < middle.y; y++) {
+    for (var x = middle.x - 2; x < middle.x; x++) {
+        for (var y = middle.y - 2; y < middle.y; y++) {
             this.tiles[x][y].disable();
         }
     }
@@ -101,29 +109,33 @@ farming.SceneMap.prototype.drawLand = function () {
             var xDiff = newPos.x - oldPos.x;
             var yDiff = newPos.y - oldPos.y;
             var diff = xDiff * xDiff + yDiff * yDiff;
-            if (diff < scene.drag.maxClickDistance*scene.drag.maxClickDistance) {
+            if (diff < scene.drag.maxClickDistance * scene.drag.maxClickDistance) {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
                 var tile = scene.tiles[focus.x][focus.y];
                 var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
-                if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y-1 )) {
+
+                if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y - 1 )) {
                     scene.game.showFarmClick();
-                } else if (tile.canBeHarvested()) {
+                } else {
+                    scene.game.sceneTask.hide();
+                }
+                if (tile.canBeHarvested()) {
                     tile.playSound();
                     scene.game.showHarvest(tile);
                 } else if (tile.isRotten()) {
                     tile.crop.harvest();
                 } else if (tile.isDead()) {
                     tile.removeItem();
-                } else if (tile.isHungry()){
+                } else if (tile.isHungry()) {
                     tile.showProgress(tile);
                 } else if (tile.isEmpty()) {
                     var currentClone = scene.game.currentClone;
                     // If there is no current crop to be cloned, return
-                    if(currentClone == null)
+                    if (currentClone == null)
                         return;
 
                     // If there is a current crop and the amount of money is sufficient, this can be planted
-                    if(currentClone.cost <= scene.game.player.coins){
+                    if (currentClone.cost <= scene.game.player.coins) {
                         scene.game.removeCoins(currentClone.cost);
                         if (CROPS[currentClone.key]) {
                             tile.addCrop(new farming.Crop(currentClone.key, null, tile));
@@ -134,7 +146,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     else {
                         scene.noMoneyAnimation(tile.getPosition());
                     }
-                } else if(true){//!tile.isDead()) {
+                } else if (tile.getItem()) {//!tile.isDead()) {
                     tile.playSound();
                     tile.showProgress(tile);
                 }
@@ -146,12 +158,12 @@ farming.SceneMap.prototype.drawLand = function () {
 
     // TODO: change this into the image of the crop to be cloned with high opacity and plot in on the tile
     // Make the screen to show what crop is being cloned
-    this.cloningScreen = new lime.Sprite().setSize(150,150).setPosition(85,100);
-    this.appendChild(this.cloningScreen);
 
     // Make a layer for screens, fixed position
+    this.zoomLayer = new lime.Layer().setAnchorPoint(0, 0);
+    this.appendChild(this.zoomLayer);
     this.sceneLayer = new lime.Layer()
-        .setPosition(0,0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
+        .setPosition(0, 0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     this.appendChild(this.sceneLayer);
 
     this.body = new farming.Body(0.5, this.game);
@@ -177,20 +189,25 @@ farming.SceneMap.prototype.drawControls = function () {
     this.controlsLayer.appendChild(controlArea);
 
     // Money
-    this.moneyImage = new lime.Sprite().setFill('images/coin_small/0.png')
-        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width-90, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
-    this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label)
-        .setPosition(this.game.screen.width-50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
+    this.moneyImage = new lime.Sprite().setFill('images/coin_dark.png')
+        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width - 90, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
+    this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label).setFontWeight(600).setFontSize(20)
+        .setPosition(this.game.screen.width - 40, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
 
     // Create the labels for the cloning function
 
-    this.cloningTitle = new lime.Label().setSize(140,25).setPosition(0,-50);
-    this.cloningImage = new lime.Sprite().setSize(80, 60).setPosition(-20,-15);
-    this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(30,0);
-    this.cloningText = new lime.Label().setSize(20,20).setPosition(50,5);
-    this.cloningClose = new farming.Button('Stop Cloning').setColor(SETTINGS.color.button).setPosition(0,50).setSize(120,SETTINGS.size.close_button.height).setAction(this.stopCloning,this);
+    this.cloningScreen = SETTINGS.createWindow().setSize(190, 200).setPosition(115, 120).setHidden(true);
 
-    this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100,100).setPosition(450,50).setOpacity(0);
+    this.cloningTitle = new lime.Label().setSize(180, 25).setPosition(0, -65).setFontSize(20);
+    this.cloningImage = new lime.Sprite().setSize(80, 60).setPosition(-20, -25);
+    this.cloningCoin = new farming.Sprite('images/coin_small/0.png').setSize(20, 20).setPosition(32, 0);
+    this.cloningText = new lime.Label().setSize(20, 20).setPosition(55, 2).setFontSize(18);
+    this.cloningClose = new farming.Button('Done').setColor(SETTINGS.color.button_primary).setPosition(0, 50).setSize(140, SETTINGS.size.close_button.height).setAction(this.stopCloning, this);
+
+    this.cloningScreen.appendChild(this.cloningTitle).appendChild(this.cloningText).appendChild(this.cloningCoin).appendChild(this.cloningClose).appendChild(this.cloningImage);
+    this.appendChild(this.cloningScreen);
+
+    this.noCoinsWarning = new farming.Sprite('images/insufficient_coins.png').setSize(100, 100).setPosition(450, 50).setOpacity(0);
 
     //updating money indicator
     this.controlsLayer.appendChild(this.moneyImage);
@@ -199,73 +216,94 @@ farming.SceneMap.prototype.drawControls = function () {
 
     this.updateControls();
 
+    var bw = 234/2;
+    var bh = 115/2;
     // Farmbutton
-    this.farmButton = new farming.Button('Inventory').setColor(SETTINGS.color.button)
-        .setPosition(50, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showFarm, this);
+    this.farmButton = new farming.Button('images/buttons/items.png','images/buttons/items_active.png').setColor(SETTINGS.color.button)
+        .setPosition(bw/2+60, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(bw, bh).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
+    this.buttons['farm'] = this.farmButton;
 
     // Clonebutton
-    this.cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button)
-        .setPosition(150, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showClone, this);
+    this.cloneButton = new farming.Button('images/buttons/clone.png','images/buttons/clone_active.png').setColor(SETTINGS.color.button)
+        .setPosition(bw/2+60+bw*1, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(bw, bh).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
+    this.buttons['clone'] = this.cloneButton;
 
     // Challengebutton
-    this.challengeButton = new farming.Button('Challenges').setColor(SETTINGS.color.button)
-        .setPosition(250, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showChallenge, this);
+    this.challengeButton = new farming.Button('images/buttons/challenges.png','images/buttons/challenges_active.png').setColor(SETTINGS.color.button)
+        .setPosition(bw/2+60+bw*2+17, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(305/2, bh).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeButton);
+    this.buttons['challenge'] = this.challengeButton;
 
     // BODYbutton
-    this.bodyButton = new farming.Button('BODY').setColor(SETTINGS.color.button)
-        .setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showBody, this);
+    this.bodyButton = new farming.Button('images/buttons/body.png','images/buttons/body_active.png').setColor(SETTINGS.color.button)
+        .setPosition(bw/2+60+bw*3+33, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(bw, bh).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
+    this.buttons['body'] = this.bodyButton;
 
     // Settingsbutton
-    this.settingsButton = new farming.Button('Settings').setColor(SETTINGS.color.button)
-        .setPosition(600, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showSettings, this);
+    this.settingsButton = new farming.Button('images/buttons/settings.png','images/buttons/settings_active.png').setColor(SETTINGS.color.button)
+        .setPosition(30, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setSize(bh, bh).setAction(this.showSettings, this);
     this.controlsLayer.appendChild(this.settingsButton);
-
+    this.buttons['settings'] = this.settingsButton;
     // Zoom buttons
     this.zoomInButton = new farming.Button('+').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.screen.width - 20, 20)
         .setSize(40, 40).setAction(this.zoomIn, this);
-    this.controlsLayer.appendChild(this.zoomInButton);
+    this.zoomLayer.appendChild(this.zoomInButton);
     this.zoomOutButton = new farming.Button('-').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.screen.width - 20, 60)
         .setSize(40, 40).setAction(this.zoomOut, this);
-    this.controlsLayer.appendChild(this.zoomOutButton);
+    this.zoomLayer.appendChild(this.zoomOutButton);
 
     // Temporary introduction button
     this.introButton = new farming.Button('Intro').setColor(SETTINGS.color.button)
         .setPosition(350, this.game.screen.height - SETTINGS.size.controls.height / 2)
-        .setSize(100,SETTINGS.size.controls.height).setAction(this.showIntro, this);
+        .setSize(100, SETTINGS.size.controls.height).setAction(this.showIntro, this);
     // this.controlsLayer.appendChild(this.introButton);
 }
 
-farming.SceneMap.prototype.showFarm = function(scene) {
-    scene.game.showFarm();
+farming.SceneMap.prototype.showFarm = function (scene) {
+    if (scene.activeButton == 'farm')
+        scene.game.close();
+    else
+        scene.game.showFarm();
 }
-farming.SceneMap.prototype.showClone = function(scene) {
-    scene.game.showClone();
+farming.SceneMap.prototype.showClone = function (scene) {
+    if (scene.activeButton == 'clone')
+        scene.game.close();
+    else
+        scene.game.showClone();
 }
-farming.SceneMap.prototype.showChallenge = function(scene) {
-    scene.game.showChallenge();
+farming.SceneMap.prototype.showChallenge = function (scene) {
+    if (scene.activeButton == 'challenge')
+        scene.game.close();
+    else
+        scene.game.showChallenge();
 }
-farming.SceneMap.prototype.showBody = function(scene) {
-    scene.game.showBody();
+farming.SceneMap.prototype.showBody = function (scene) {
+    if (scene.activeButton == 'body')
+        scene.game.close();
+    else
+        scene.game.showBody();
 }
-farming.SceneMap.prototype.showSettings = function(scene) {
-    scene.game.showSettings();
+farming.SceneMap.prototype.showSettings = function (scene) {
+    if (scene.activeButton == 'settings')
+        scene.game.close();
+    else
+        scene.game.showSettings();
 }
-farming.SceneMap.prototype.showIntro = function(scene) {
+farming.SceneMap.prototype.showIntro = function (scene) {
     scene.game.introduction.intro();
 }
 
-farming.SceneMap.prototype.updateControls = function(){
+farming.SceneMap.prototype.updateControls = function () {
     this.moneyLabel.setText(this.game.player.coins);
 }
 
@@ -293,17 +331,17 @@ farming.SceneMap.prototype.isoToTwoD = function (x, y) {
 
 // flipping the small coin in the controls panel
 farming.SceneMap.prototype.moneyAnimation = function (amount) {
-    var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
-    for(var i = 5; i >= 0; i--) {
-        animation.addFrame('images/coin_small/'+i+'.png');
+    /*var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
+    for (var i = 5; i >= 0; i--) {
+        animation.addFrame('images/coin_small/' + i + '.png');
     }
     animation.setLooping(false);
-    this.moneyImage.runAction(animation);
+    this.moneyImage.runAction(animation);*/
 
     // When positive amount, show big coin in the middle of the screen
-    if(amount > 0) {
+    if (amount > 0) {
         lime.scheduleManager.callAfter(function () {
-            var image = new lime.Sprite().setFill('images/coin/0.png')
+            var image = new lime.Sprite().setFill('images/coin0.png')
                 .setSize(300, 300)
                 .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height));
 
@@ -344,30 +382,30 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
 farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position) {
     var itemPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
     var labelPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 + 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
-    if(opt_position) {
+    if (opt_position) {
         itemPos = new goog.math.Coordinate(opt_position.x, opt_position.y - 30);
         labelPos = new goog.math.Coordinate(opt_position.x - 30, opt_position.y - 30);
     }
 
-    lime.scheduleManager.callAfter(function() {
-        var itemSprite = new lime.Sprite().setFill('images/items/'+type+'.png').setSize(SETTINGS.size.close_button)
+    lime.scheduleManager.callAfter(function () {
+        var itemSprite = new lime.Sprite().setFill('images/items/' + type + '.png').setSize(SETTINGS.size.close_button)
             .setPosition(itemPos);
         var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
             .setPosition(labelPos)
             .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
 
-        if(opt_position) {
+        if (opt_position) {
             this.landLayer.appendChild(itemSprite).appendChild(numberLabel);
         } else {
             itemSprite.setSize(300, 300);
             numberLabel.setFontSize(150);
             this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
         }
-        var moveUp = new lime.animation.MoveBy(0,opt_position ? -100 : -(SETTINGS.screen.height / 2)).setDuration(3);
+        var moveUp = new lime.animation.MoveBy(0, opt_position ? -100 : -(SETTINGS.screen.height / 2)).setDuration(3);
         itemSprite.runAction(moveUp);
         numberLabel.runAction(moveUp);
-        goog.events.listen(moveUp,lime.animation.Event.STOP,function(){
-            for(var i in this.targets) {
+        goog.events.listen(moveUp, lime.animation.Event.STOP, function () {
+            for (var i in this.targets) {
                 var target = this.targets[i];
                 target.parent_.removeChild(target);
             }
@@ -378,26 +416,35 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position)
 farming.SceneMap.prototype.startCloning = function (properties) {
     this.cloningTitle.setText(properties.name);
     this.cloningText.setText(properties.cost);
-    this.cloningScreen.setFill(211,211,211,0.8);
+    this.cloningScreen.setHidden(false);
+
     if (CROPS[properties.key]) {
-        this.cloningImage.setFill('images/crops/'+properties.key+'_ripe.png');
+        this.cloningImage.setFill('images/crops/' + properties.key + '_ripe.png');
     } else if (LIVESTOCK[properties.key]) {
-        this.cloningImage.setFill('images/livestock/'+properties.key+properties.appearances+'.png');
+        this.cloningImage.setFill('images/livestock/' + properties.key + properties.appearances + '.png');
     }
-    this.cloningScreen.appendChild(this.cloningTitle).appendChild(this.cloningText).appendChild(this.cloningCoin).appendChild(this.cloningClose).appendChild(this.cloningImage);
+    for(var x=0; x<SETTINGS.mapSize; x++) {
+        for(var y=0; y<SETTINGS.mapSize; y++) {
+            this.tiles[x][y].updateColor();
+        }
+    }
 }
 
 // Shut the screen down for cloning
-farming.SceneMap.prototype.stopCloning = function(scene) {
-    scene.cloningScreen.setFill(211,211,211,0);
-    scene.cloningScreen.removeAllChildren();
+farming.SceneMap.prototype.stopCloning = function (scene) {
+    scene.cloningScreen.setHidden(true)
     scene.game.currentClone = null;
     // Let the event fire
     scene.game.source.dispatchEvent(scene.game.EventType.CLOSE_CLONE);
+    for(var x=0; x<SETTINGS.mapSize; x++) {
+        for(var y=0; y<SETTINGS.mapSize; y++) {
+            scene.tiles[x][y].updateColor();
+        }
+    }
 }
 
 // Warning when trying to plant but there is no money
-farming.SceneMap.prototype.noMoneyAnimation = function(position) {
+farming.SceneMap.prototype.noMoneyAnimation = function (position) {
     this.noCoinsWarning.setPosition(position.x, position.y);
     this.noCoinsWarning.setOpacity(1);
     var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
@@ -405,47 +452,47 @@ farming.SceneMap.prototype.noMoneyAnimation = function(position) {
 }
 
 //In this function you can define all things that have to updated over time
-farming.SceneMap.prototype.tick = function(){
+farming.SceneMap.prototype.tick = function () {
     this.showCurrentChallenge();
 
-    if(this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
+    if (this.game && this.game.sceneHarvest && this.game.sceneHarvest.tile && !this.game.sceneHarvest.tile.canBeHarvested())
         this.game.sceneHarvest.hideHarvest(this);
 
-    //Hide zoom buttons when a screen is active
-    if(this.sceneLayer.children_.length > 0) {
-        this.zoomInButton.setHidden(true);
-        this.zoomOutButton.setHidden(true);
-    } else {
-        this.zoomInButton.setHidden(false);
-        this.zoomOutButton.setHidden(false);
-    }
+    /*//Hide zoom buttons when a screen is active
+     if(this.sceneLayer.children_.length > 0) {
+     this.zoomInButton.setHidden(true);
+     this.zoomOutButton.setHidden(true);
+     } else {
+     this.zoomInButton.setHidden(false);
+     this.zoomOutButton.setHidden(false);
+     }*/
 }
 
 // Zooming
-farming.SceneMap.prototype.zoomIn = function(scene){
+farming.SceneMap.prototype.zoomIn = function (scene) {
     var scale = scene.landLayer.getScale();
-    if(scale.x >= 1.5) return;
-    var newScale = scale.x/.9;
+    if (scale.x >= 1.5) return;
+    var newScale = scale.x / .9;
     scene.landLayer.setScale(newScale, newScale);
     scene.zoomOutButton.setColor(SETTINGS.color.button).setAction(farming.SceneMap.prototype.zoomOut, scene);
-    if(newScale >= 1.5) {
+    if (newScale >= 1.5) {
         scene.zoomInButton.setColor(SETTINGS.color.button_inactive).setAction();
     }
 }
-farming.SceneMap.prototype.zoomOut = function(scene){
+farming.SceneMap.prototype.zoomOut = function (scene) {
     var scale = scene.landLayer.getScale();
-    if(scale.x <= 0.7) return;
-    var newScale = scale.x*.9;
+    if (scale.x <= 0.7) return;
+    var newScale = scale.x * .9;
     scene.landLayer.setScale(newScale, newScale);
     scene.zoomInButton.setColor(SETTINGS.color.button).setAction(farming.SceneMap.prototype.zoomIn, scene);
-    if(newScale <= 0.7) {
+    if (newScale <= 0.7) {
         scene.zoomOutButton.setColor(SETTINGS.color.button_inactive).setAction();
     }
 }
 
 // function for showing or hiding the current challenge indicator
-farming.SceneMap.prototype.showCurrentChallenge = function(){
-    if(this.game.player.currentChallenge) {
+farming.SceneMap.prototype.showCurrentChallenge = function () {
+    if (this.game.player.currentChallenge) {
         this.challengeButton.setColor(SETTINGS.color.red);
     } else {
         this.challengeButton.setColor(SETTINGS.color.button);

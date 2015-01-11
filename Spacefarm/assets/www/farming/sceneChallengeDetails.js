@@ -22,8 +22,8 @@ farming.SceneChallengeDetails = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.w = SETTINGS.createWindow();
+    this.o = SETTINGS.createOverlay().setHidden(true);
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label().setPosition(center.x, center.y * 0.45).setMultiline(true)
         .setFontSize(SETTINGS.font.text);
@@ -37,20 +37,26 @@ farming.SceneChallengeDetails = function (game) {
     this.giveUpButton = new farming.Button('Give up').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.left_button)
         .setSize(SETTINGS.size.button).setHidden(true);
-    this.selectButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary)
+    this.startNextButton = new farming.Button('Start next\n exercise').setColor(SETTINGS.color.button_primary)
+        .setPosition(SETTINGS.position.right_button)
+        .setSize(SETTINGS.size.button).setHidden(true);
+    this.selectButton = new farming.Button('Accept').setColor(SETTINGS.color.button_primary)
         .setPosition(SETTINGS.position.right_button)
         .setSize(SETTINGS.size.button).setHidden(true);
 
     this.windowLayer
-        .appendChild(w).appendChild(this.title).appendChild(this.description)
+        .appendChild(this.o)
+        .appendChild(this.w).appendChild(this.title).appendChild(this.description)
         .appendChild(this.selectButton)
         .appendChild(this.closeButton)
         .appendChild(this.giveUpButton)
+        .appendChild(this.startNextButton)
         .appendChild(this.backButton);
 
     this.closeButton.setAction(this.closeChallengeDetails, this);
     this.backButton.setAction(this.backChallengeDetails, this);
     this.giveUpButton.setAction(this.giveUpChallenge, this);
+    this.startNextButton.setAction(this.startNextExercise, this);
 }
 goog.inherits(farming.SceneChallengeDetails, farming.Scene);
 
@@ -73,11 +79,11 @@ farming.SceneChallengeDetails.prototype.selectChallenge = function (input) {
     input.scene.game.selectChallenge(input.challenge);
     input.scene.game.source.dispatchEvent(input.scene.game.EventType.DO_CHALLENGE);
 }
-farming.SceneChallengeDetails.prototype.showExercise = function (input) {
-    input.scene.game.showExercise(input.exercise);
-    input.scene.game.source.dispatchEvent(input.scene.game.EventType.PRESSED_DO);
-}
 
+farming.SceneChallengeDetails.prototype.startNextExercise = function (scene) {
+    scene.game.showExercise(scene.getNextExercise());
+    scene.game.source.dispatchEvent(scene.game.EventType.PRESSED_DO);
+}
 // update the screen -- set opt_active true iff there is an active challenge
 farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_active) {
     if(this.drawLayer)
@@ -93,16 +99,19 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     this.selectButton.setHidden(true);
     this.backButton.setHidden(false);
     this.giveUpButton.setHidden(true);
+    this.startNextButton.setHidden(true);
     if(opt_active) {
+        this.o.setHidden(false);
         this.backButton.setHidden(true);
         this.giveUpButton.setHidden(false);
+        this.startNextButton.setHidden(false);
         if (this.challengeDone()) {
             this.giveUpButton.setHidden(true);
-            lime.scheduleManager.callAfter(function() {
-                this.completeChallenge(this);
-            }, this, 1000);
+            this.startNextButton.setHidden(true);
+            this.completeChallenge(this);
         }
     } else if (this.sufficientItems(challenge)) {
+        this.o.setHidden(true);
         this.selectButton.setAction(this.selectChallenge, {
             'challenge': challenge,
             'scene': this
@@ -119,7 +128,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             this.drawItem(requirement, new goog.math.Coordinate(items * 100 + center.x*0.5, center.y * 0.73), opt_active);
             items++;
         } else if(requirement.type === 'exercise') {
-            this.drawExercise(requirement, new goog.math.Coordinate(center.x*0.55, center.y * (1 - (opt_active * 0.17)) + exercises * (opt_active ? 40 : 25)), opt_active);
+            this.drawExercise(requirement, exercises, opt_active);
             exercises++;
         }
     }
@@ -141,7 +150,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
         this.drawLayer.appendChild(rewardsLabel);
     }
     if(exercises) {
-        var exercisesLabel = new lime.Label('Exercises').setPosition(120, center.y * (opt_active ? 0.63 :0.92))
+        var exercisesLabel = new lime.Label('Exercises').setPosition(120, 200)
             .setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setAlign('left').setSize(100,10);
         this.drawLayer.appendChild(exercisesLabel);
     }
@@ -166,32 +175,29 @@ farming.SceneChallengeDetails.prototype.drawReward = function (reward, position)
 
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
-farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, position, opt_active) {
+farming.SceneChallengeDetails.prototype.drawExercise = function (exercise, index, opt_active) {
     var props = EXERCISES[exercise.key];
-    var exerciseName = new lime.Label().setText('- ' + exercise.name + ' - ' + props.points + ' ' + props.type + (props.points > 1 ? ' points' : ' point'))
-        .setAlign('left').setSize(300, 10).setPosition(position.x + 80, position.y).setFontSize(SETTINGS.font.text);
-    var doButton = new farming.Button('Do!').setColor(SETTINGS.color.button_primary)
+    var position = new goog.math.Coordinate(460, 207+index*30);
+    var exerciseName = new lime.Label().setText(exercise.name + ' - ' + props.points + ' ' + props.type + (props.points > 1 ? ' points' : ' point'))
+        .setAlign('left').setSize(500, 10).setPosition(position.x, position.y - 5).setFontSize(SETTINGS.font.text);
+    var check = new farming.Sprite('images/checkbox_false.png').setSize(30,30).setPosition(190, position.y);
+    /*var doButton = new farming.Button('Do!').setColor(SETTINGS.color.button_primary)
         .setPosition(position.x - 115, position.y)
-        .setSize(SETTINGS.size.button_small).setHidden(true);
-    var doneLabel = new farming.Label('\nDone!').setFontWeight(SETTINGS.font.subtitle.weight)
+        .setSize(SETTINGS.size.button_small).setHidden(true);*/
+    /*var doneLabel = new farming.Label('\nDone!').setFontWeight(SETTINGS.font.subtitle.weight)
         .setPosition(position.x - 115, position.y)
-        .setSize(SETTINGS.size.button_small).setMultiline(true).setHidden(true);
+        .setSize(SETTINGS.size.button_small).setMultiline(true).setHidden(true);*/
 
     // there is an active challenge
-    if(opt_active) {
+    if(opt_active && this.game.player.currentChallenge) {
         if (!this.game.player.currentChallenge.exercisesDone)
             this.game.player.currentChallenge.exercisesDone = [];
         if (this.exerciseDone(exercise.key)) {
-            doneLabel.setHidden(false);
-        } else if (this.exerciseDoable(exercise.key)) {
-            doButton.setAction(this.showExercise, {
-                'exercise': exercise.key,
-                'scene': this
-            }).setHidden(false);
+            check.setFill('images/checkbox_true.png');
         }
     }
 
-    this.drawLayer.appendChild(exerciseName).appendChild(doButton).appendChild(doneLabel);
+    this.drawLayer.appendChild(exerciseName).appendChild(check);
 
 }
 
@@ -225,7 +231,16 @@ farming.SceneChallengeDetails.prototype.exerciseDoable = function (exercise) {
     }
     return true;
 }
-
+// return true iff exercise is not yet done and prerequisite are fullfilled.
+farming.SceneChallengeDetails.prototype.getNextExercise = function () {
+    for(var i in this.challenge.requirements) {
+        var requirement = this.challenge.requirements[i];
+        if(requirement.type === 'exercise' && !this.exerciseDone(requirement.key)) {
+            return requirement.key;
+        }
+    }
+    return null;
+}
 farming.SceneChallengeDetails.prototype.challengeDone = function () {
     for(var i in this.challenge.requirements) {
         var requirement = this.challenge.requirements[i];

@@ -7,6 +7,8 @@ goog.require('lime.Director');
 goog.require('lime.Scene');
 goog.require('lime.Layer');
 goog.require('lime.transitions.MoveInDown');
+goog.require('lime.fill.Stroke');
+goog.require('lime.RoundedRect');
 goog.require('farming.Settings');
 goog.require('farming.SceneMap');
 goog.require('farming.SceneFarm');
@@ -99,19 +101,9 @@ farming.Game = function() {
         }
     }, this, 1000);
 
-    // Background music
-    this.music = new lime.audio.Audio('sounds/music.ogg');
-    if (typeof device != 'undefined' && device.platform == "Android") {
-        var loop = function (status) {
-            if (status === Media.MEDIA_STOPPED) {
-                this.music.play();
-            }
-        };
-        this.music = new Media('file:///android_asset/www/music.ogg', null, null, loop);
-    }
-    if(this.player.settings.music == true) {
-        this.music.play(true);
-    }
+    if(this.introduction.introPhase > 3)
+        this.playMusic();
+
 
     lime.scheduleManager.scheduleWithDelay(function() {
         game.save();
@@ -156,9 +148,29 @@ farming.Game.prototype.source = new goog.events.EventTarget();
 
 farming.Game.prototype.tickables = [];
 farming.Game.prototype.saveAtClose = true;
+farming.Game.prototype.music = false;
+
 
 // General close function
+farming.Game.prototype.playMusic = function(){
+    if(this.music) return;
+    // Background music
+    this.music = new lime.audio.Audio('sounds/music.ogg');
+    if (typeof device != 'undefined' && device.platform == "Android") {
+        var loop = function (status) {
+            if (status === Media.MEDIA_STOPPED) {
+                this.music.play();
+            }
+        };
+        this.music = new Media('file:///android_asset/www/music.ogg', null, null, loop);
+    }
+    if(this.player.settings.music == true) {
+        this.music.play(true);
+    }
+}
+// General close function
 farming.Game.prototype.close = function(){
+    this.sceneMap.setActiveButton(null);
     this.sceneMap.sceneLayer.removeAllChildren();
     // Fire the event that the screen is closed, listened to by introduction
     this.source.dispatchEvent(this.EventType.CLOSE_SCENE);
@@ -239,12 +251,16 @@ farming.Game.prototype.saveWrapper = function(game){
 
 // -- settings --
 farming.Game.prototype.showSettings = function(){
+    this.close();
+    this.sceneMap.setActiveButton('settings');
     this.sceneSettings.redraw(this.player.settings);
     this.sceneMap.sceneLayer.appendChild(this.sceneSettings.windowLayer);
 }
 // -- end settings --
 // -- farm --
 farming.Game.prototype.showFarm = function(){
+    this.close();
+    this.sceneMap.setActiveButton('farm');
     // Fire the event that farm is showed, listened to by introduction.intro3
     this.source.dispatchEvent(this.EventType.SHOW_FARM);
     this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
@@ -265,6 +281,8 @@ farming.Game.prototype.showFarmClick = function(){
 
 // -- BODY --
 farming.Game.prototype.showBody = function(){
+    this.close();
+    this.sceneMap.setActiveButton('body');
     this.sceneBody.redraw(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
     this.source.dispatchEvent(this.EventType.OPEN_BODY);
@@ -280,7 +298,8 @@ farming.Game.prototype.showStats = function(){
 
 // -- harvest --
 farming.Game.prototype.showHarvest = function(tile){
-    this.sceneHarvest.showExercise(tile)
+    this.close();
+    this.sceneHarvest.showExercise(tile);
     this.director.pushScene(this.sceneHarvest);
 }
 
@@ -302,6 +321,8 @@ farming.Game.prototype.hideExercise = function(){
 
 // -- clone --
 farming.Game.prototype.showClone = function(){
+    this.close();
+    this.sceneMap.setActiveButton('clone');
     this.source.dispatchEvent(this.EventType.GO_CLONE);
     this.sceneClone.drawItems(this.player.body);
     this.sceneMap.sceneLayer.appendChild(this.sceneClone);
@@ -318,22 +339,19 @@ farming.Game.prototype.startCloning = function(properties){
 // -- end clone --
 
 // -- cropdetails --
-farming.Game.prototype.showCropDetails = function(crop){
-    this.sceneCropDetails.showDetails(crop);
-    this.sceneMap.sceneLayer.appendChild(this.sceneCropDetails.windowLayer);
+farming.Game.prototype.showItemDetails = function(item){
+    if(typeof item.food == 'undefined') {
+        this.sceneCropDetails.showDetails(item);
+        this.sceneMap.sceneLayer.appendChild(this.sceneCropDetails.windowLayer);
+    } else {
+        this.sceneLivestockDetails.showDetails(item);
+        this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
+    }
     this.source.dispatchEvent(this.EventType.CLONE_DETAILS);
 }
 
 farming.Game.prototype.backCropDetails = function(){
     this.sceneMap.sceneLayer.removeChild(this.sceneCropDetails.windowLayer);
-}
-// -- end cropdetails --
-
-
-// -- livestockdetails --
-farming.Game.prototype.showLivestockDetails = function(livestock){
-    this.sceneLivestockDetails.showDetails(livestock);
-    this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
 }
 
 farming.Game.prototype.backLivestockDetails = function(){
@@ -344,6 +362,8 @@ farming.Game.prototype.backLivestockDetails = function(){
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
 farming.Game.prototype.showChallenge = function(){
+    this.close();
+    this.sceneMap.setActiveButton('challenge');
     if(!this.player.currentChallenge) {
         this.sceneChallenge.redraw(this.player.body);
         this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
@@ -382,20 +402,15 @@ farming.Game.prototype.completeChallenge = function(){
     for(var i in this.player.currentChallenge.rewards) {
         var reward = this.player.currentChallenge.rewards[i];
         if(reward.type === 'item') {
-            lime.scheduleManager.callAfter(function() {
-                this.game.addItem(this.reward.key, this.reward.number);
-            }, {game: this, reward: reward}, i * 1000);
+            this.addItem(reward.key, reward.number);
         }
         if(reward.type === 'coins') {
-            lime.scheduleManager.callAfter(function() {
-                this.game.addCoins(this.reward.number);
-            }, {game: this, reward: reward}, i * 1000);
+            this.addCoins(reward.number);
         }
     }
 
     this.player.currentChallenge = null;
-    this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
-    this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
+    this.close();
     //this.showChallenge();
 }
 

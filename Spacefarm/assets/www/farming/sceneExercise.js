@@ -25,16 +25,16 @@ farming.SceneExercise = function (game) {
         .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title_full);
     this.description = new farming.Slider().setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4));
-    this.animation = new lime.Sprite().setSize(SETTINGS.size.background_layer.height*0.75, SETTINGS.size.background_layer.height).setPosition(center.x*1.5, center.y);
-    this.pointsLabel = new lime.Label().setSize(300, 30).setAlign('right').setPosition(SETTINGS.position.left_button).setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
-    this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(center.x + 180, center.y * 1.5);
-    this.numberLabel = new lime.Label().setSize(30, 30).setPosition(center.x + 230, center.y * 1.5).setFontSize(36);
+    this.animation = new lime.Sprite();
+    this.pointsLabel = new farming.Label().setSize(300,0).setPosition(440,430).setVerticalAlign(true).setAlign('right').setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
+    this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(110,430);
+    this.numberLabel = new lime.Label().setSize(30, 30).setPosition(155,425).setFontSize(36);
     this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button_full)
         .setSize(SETTINGS.size.close_button);
-    this.startButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary).setPosition(SETTINGS.position.center_button).setSize(SETTINGS.size.button);
-    this.finishButton = new farming.Button('Fake finish').setColor(SETTINGS.color.button).setPosition(SETTINGS.position.right_button).setSize(SETTINGS.size.button);
+    this.startButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary).setSize(SETTINGS.size.button).setPosition(700,430);
+    this.finishButton = new farming.Button('Fake finish').setColor(SETTINGS.color.button).setSize(SETTINGS.size.button).setPosition(700,430);
     this.waitMessage = new farming.Label().setPosition(SETTINGS.position.center_button)
         .setFontColor(SETTINGS.color.red).setFontWeight(600).setFontSize(15).setMultiline(true).setHidden(true);
     this.windowLayer
@@ -75,25 +75,12 @@ farming.SceneExercise.prototype.showExercise = function(key) {
         this.stopWatch.stop();
     }
     if(exercise.horizontal) {
-
+        this.description.setSize(700,160).setPosition(400,135);
+        this.animation.setSize(795*0.55,420*0.55).setPosition(400,300);
     } else {
-        this.description.setSize(470,300).setPosition(545,240);
-        this.animation.setFill('#ff9').setSize(315*0.9,420*0.9).setPosition(150,220);
-        this.startButton.setPosition(700,430);
-        this.numberIcon.setPosition(130,430);
-        this.numberLabel.setPosition(175,425);
-        this.pointsLabel.setPosition(440,435).setFill('#0f0');
-    /*.appendChild(this.title)
-            .appendChild(this.heartRate)
-            .appendChild(this.description)
-            .appendChild(this.animation)
-            .appendChild(this.pointsLabel)
-            .appendChild(this.numberIcon)
-            .appendChild(this.numberLabel)
-            .appendChild(this.startButton)
-            .appendChild(this.closeButton)
-            .appendChild(this.waitMessage)
-            .appendChild(this.finishButton);*/
+        this.description.setSize(490,250).setPosition(515,240);
+        this.animation.setSize(315*0.9,420*0.9).setPosition(130,220);
+
     }
 
 
@@ -117,10 +104,11 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     var center = this.game.getCenterPosition();
     if(exercise.points) {
         if( Object.prototype.toString.call( exercise.type ) === '[object Array]' ) {
-            var text = '';
+            var text = [];
             for(var i = 0; i < exercise.type.length; i++) {
-                text += exercise.points + ' ' + exercise.type[i] + (exercise.points > 1 ? ' points' : ' point') + '\n';
+                text.push(exercise.points + ' ' + exercise.type[i] + (exercise.points > 1 ? ' points' : ' point'));
             }
+            text = text.join('\n');
             this.pointsLabel.setText(text).setHidden(false);
         } else {
             this.pointsLabel.setText(exercise.points + ' ' + exercise.type + (exercise.points > 1 ? ' points' : ' point')).setHidden(false);

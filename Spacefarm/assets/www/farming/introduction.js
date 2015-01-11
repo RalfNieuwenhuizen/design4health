@@ -37,9 +37,9 @@ farming.Introduction = function (game) {
     this.introPhase = 1;
     
     this.center = game.getCenterPosition();
-    this.w = new lime.Sprite().setFill('#FFFFFF').setSize(game.getFullSize(0.85));//.setPosition(this.center.x, this.center.y-10);
+    this.w = SETTINGS.createWindow().setSize(game.getFullSize().scale(1.5));//.setPosition(this.center.x, this.center.y-10);
     this.text = new lime.Label().setFontSize(18).setMultiline(true);//.setPosition(this.center.x, this.center.y-15);
-    this.button = new farming.Button('').setColor(SETTINGS.color.button).setAction(this.buttonAction, this);
+    this.button = new farming.Button(' ').setColor(SETTINGS.color.button).setAction(this.buttonAction, this);
 	this.phil = new farming.Sprite('images/phil_speaking1.png');
 	var talkingPhil = new lime.animation.KeyframeAnimation().setDelay(0.5);
 	for(var i = 1; i < 3; i++) {
@@ -118,8 +118,7 @@ farming.Introduction.prototype.intro2 = function(){
 			+ "Ready? Then let's have a look \n at your farm.");
 	
 	this.phil.setSize(150, 200).setPosition(this.center.x-165, this.center.y + 56);
-	
-	this.w.setSize(this.game.getFullSize(0.65)).setPosition(this.center.x, this.center.y);
+
 	this.button.setPosition(this.center.x+58, this.center.y + 120)
 		.setSize(SETTINGS.size.button).setText('Let\'s go!');
 	
@@ -128,7 +127,7 @@ farming.Introduction.prototype.intro2 = function(){
 	this.game.showIntroduction();
 }
 
-//Second screen: meet the uncle
+/*//Second screen: meet the uncle
 farming.Introduction.prototype.intro3 = function(){
 	this.text.setFontWeight('bold').setPosition(this.center.x-80, this.center.y+60).setText(
 			"Oh, one more thing before \n"
@@ -136,7 +135,8 @@ farming.Introduction.prototype.intro3 = function(){
 			+ "Please click on BODY \n"
 			+ "and I will explain.");
 	
-	this.w.setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.5).height).setPosition(this.center.x-120, this.center.y+100).setFill('images/textbox/down_right_arrow.png');
+	this.w.setSize(this.game.getFullSize(0.4).width, this.game.getFullSize(0.5).height)
+        .setPosition(this.center.x-120, this.center.y+100).setFill('images/textbox/down_right_arrow.png').setStroke('transparent');
 	this.phil.setSize(90,120).setPosition(this.center.x-230, this.center.y+75)
     this.button.setColor('#999999').setPosition(350, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
             .setSize(100,SETTINGS.size.controls.height).setAction(this.game.sceneMap.showBody, this.game.sceneMap).setText("BODY");
@@ -145,39 +145,40 @@ farming.Introduction.prototype.intro3 = function(){
 	// Listen to open BODY
 	goog.events.listenOnce(this.game.source,this.game.EventType.OPEN_BODY,goog.partial(this.buttonAction,this.game.introduction));
 	this.game.showIntroduction();
-}
+}*/
 
 // Fourth screen: Explain the body screen
-farming.Introduction.prototype.intro4 = function(){
+farming.Introduction.prototype.intro3 = function(){
 	
 	var position = {x: this.center.x + 100, y: this.center.y + this.game.getFullSize(0.1).height};
 
-	this.w.setFill('images/textbox/no_arrow.png')
-			.setSize(this.game.getFullSize(0.28).width, this.game.getFullSize(0.7).height).setPosition(position.x - 335,position.y-30);
-	this.text.setFontSize(16).setMultiline(true).setFontWeight('bold').setPosition(position.x - 335,position.y - 30).setText(
-			"This game will help you\n"
-			+ "gain a healthy lifestyle\n"
-			+ "by letting you exercise\n"
+	this.text.setFontSize(16).setMultiline(true).setFontWeight('bold')
+        .setSize(400,300)
+        .setPosition(position.x,position.y - 30).setText(
+			"This game will help you "
+			+ "gain a healthy lifestyle "
+			+ "by letting you exercise "
 			+ "regularly in a fun way.\n\n"
-			+ "The progress of your own\n"
-			+ "body is represented in\n"
-			+ "the BODY shown on the\n"
+			+ "The progress of your own "
+			+ "body is represented in "
+			+ "the BODY shown on the "
 			+ "right.\n\n"
-			+ "If you gain the required\n"
-			+ "points for all body parts,\n"
-			+ "the BODY levels up. This\n"
-			+ "also unlocks new products \n"
-			+ "and challenges!")	
-	
-	this.windowLayer.appendChild(this.w).appendChild(this.text);
-	this.game.sceneBody.windowLayer.appendChild(this.windowLayer);	
-	
-	// Listen to the action
-	goog.events.listenOnce(this.game.source,this.game.EventType.CLOSE_SCENE,goog.partial(this.buttonAction,this.game.introduction));
+			+ "If you gain the required "
+			+ "points for all body parts, "
+			+ "the BODY levels up. This "
+			+ "also unlocks new products "
+			+ "and challenges!")
+
+    this.button.setPosition(this.center.x+58, this.center.y + 120)
+        .setSize(SETTINGS.size.button).setText('Sure!');
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button);
+    this.game.showIntroduction();
+
+
 }
 
 //Fifth screen: Introduce todo screen
-farming.Introduction.prototype.intro5 = function(){
+farming.Introduction.prototype.intro4 = function(){
 	/*var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 	middleCor.x = middleCor.x + 20;
@@ -204,7 +205,7 @@ farming.Introduction.prototype.intro5 = function(){
 	
 	this.introPhase += 1;
 	//this.intro6();
-
+    this.game.playMusic();
     this.game.sceneTask.task();
 }
 

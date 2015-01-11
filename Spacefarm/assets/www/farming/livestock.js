@@ -1,6 +1,5 @@
 goog.provide('farming.Livestock');
 
-goog.require('lime.Sprite');
 goog.require('lime.audio.Audio');
 goog.require('farming.Settings');
 
@@ -21,7 +20,7 @@ farming.Livestock = function(type, saved, tile) {
     }
 }
 
-goog.inherits(farming.Livestock,lime.Sprite);
+goog.inherits(farming.Livestock,farming.Sprite);
 
 farming.Livestock.prototype.timesHarvested = 0;
 farming.Livestock.prototype.startTime = null;

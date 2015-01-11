@@ -22,8 +22,7 @@ farming.SceneStats = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.w = SETTINGS.createWindow();
     this.title = new farming.Label('Statistics').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new farming.Label('').setPosition(center).setMultiline(true).setFontSize(20).setAlign('center');
 
@@ -62,7 +61,7 @@ farming.SceneStats = function (game) {
     this.dayButton.setAction(this.filterDay, this);
 
     this.windowLayer
-        .appendChild(w)
+        .appendChild(this.w)
         .appendChild(this.title)
         .appendChild(this.description)
         .appendChild(this.prevButton)

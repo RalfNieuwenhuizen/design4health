@@ -18,13 +18,13 @@ farming.SceneCropDetails = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
-    var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer).setPosition(game.getCenterPosition());
+    this.w = SETTINGS.createWindow();
 
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Crop Details');
     this.cropIcon = new lime.Sprite();
-    this.cropDetails = new lime.Label().setFontSize(18).setPosition(center.x + 50, center.y).setMultiline(true);
+    this.cropDetails = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
+        .setPosition(center.x + 100, center.y).setMultiline(true);
 
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
@@ -33,14 +33,14 @@ farming.SceneCropDetails = function (game) {
         .setPosition(SETTINGS.position.left_button)
         .setSize(SETTINGS.size.button);
     this.cloneButton = new farming.Button('Clone').setColor(SETTINGS.color.button_primary)
-        .setPosition(SETTINGS.position.center_button)
+        .setPosition(SETTINGS.position.right_button)
         .setSize(SETTINGS.size.button);
 
     this.backButton.setAction(this.backDetails, this);
     this.closeButton.setAction(this.closeDetails, this);
 
     this.windowLayer
-        .appendChild(w)
+        .appendChild(this.w)
         .appendChild(this.title)
         .appendChild(this.closeButton)
         .appendChild(this.cloneButton)
@@ -80,7 +80,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
 
     var game = this.game;
     var center = game.getCenterPosition();
-    this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png').setSize(300, 300).setPosition(center.x + 25 - game.getFullSize(0.3).width, center.y);
+    this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png').setSize(200*1.4, 169*1.4).setPosition(180, 210);
     this.cloneButton.setAction(this.startClone, {'cropProps': crop,'game': this.game} );
     this.crop = crop;
 }

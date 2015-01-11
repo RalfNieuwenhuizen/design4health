@@ -48,6 +48,7 @@ farming.Tile.prototype.addCrop = function (crop) {
     this.appendChild(crop);
     this.game.tickables.push(crop);
     this.game.source.dispatchEvent(this.game.EventType.CROP_CLONED);
+    this.updateColor();
 }
 farming.Tile.prototype.addLivestock = function (livestock) {
     if (!this.isEmpty() || !livestock) return false;
@@ -61,6 +62,7 @@ farming.Tile.prototype.addLivestock = function (livestock) {
         .appendChild(livestock).appendChild(this.fence2).appendChild(this.fence1);
 
     this.game.tickables.push(livestock);
+    this.updateColor();
 }
 
 farming.Tile.prototype.updateFence = function () {
@@ -76,7 +78,8 @@ farming.Tile.prototype.updateFence = function () {
 
 farming.Tile.prototype.updateColor = function () {
     var item = this.getItem();
-    if(!item) this.setFill('images/tile.png');
+    if(this.disabled) return;
+    if(!item) this.setFill(this.game.currentClone ? 'images/tile_cloning.png' : 'images/tile.png');
     else if(item.isRotten() || this.isHungry()) this.setFill('images/tile_rotten.png');
     else if(item.isHarvestable()) this.setFill('images/tile_active.png');
     else this.setFill('images/tile.png');

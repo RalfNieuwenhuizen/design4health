@@ -20,7 +20,21 @@ farming.Sprite = function(fill) {
 goog.inherits(farming.Sprite,lime.Sprite);
 
 farming.Sprite.prototype.parent = null;
+farming.Sprite.prototype.fillString = null;
 
+farming.Sprite.prototype.setFill = function(fill) {
+    if(this.fillString != fill) {
+        goog.base(this, 'setFill', fill);
+        this.fillString = fill;
+    }
+    return this;
+}
+farming.Sprite.prototype.setHidden = function(hidden) {
+    if(this.getHidden() != hidden) {
+        goog.base(this, 'setHidden', hidden);
+    }
+    return this;
+}
 farming.Sprite.prototype.setAction = function(action, target) {
     this.removeAllListeners();
 

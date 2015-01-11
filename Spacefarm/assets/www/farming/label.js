@@ -92,9 +92,9 @@ lime.Renderer.CANVAS.LABEL.draw = function(context) {
                 (goog.isDef(this.getShadowOffset()) ? Math.abs(this.getShadowOffset().y) / 2 : 0),
             offsetX = 0;
         lhpx = goog.userAgent.WEBKIT ? Math.floor(lhpx) : Math.round(lhpx);
-        var centerY = this.verticalAlign ? this.lines_.length * lhpx / 2 : 0;
+        var centerY = this.verticalAlign ? this.lines_.length * lhpx : 0;
         for (var i = 0; i < this.lines_.length; i++) {
-            context.fillText(this.lines_[i], offsetX, lhpx * i + offsetY - 0.5 - centerY);
+            context.fillText(this.lines_[i], offsetX, lhpx * i + offsetY - 0.5 - centerY / 2);
         }
     }
 

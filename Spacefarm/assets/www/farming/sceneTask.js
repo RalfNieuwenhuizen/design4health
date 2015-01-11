@@ -79,21 +79,35 @@ farming.SceneTask.prototype.show1 = function(){
     var text1 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
     var text2 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
 
-	var checkbox_1 = new farming.Sprite('images/checkbox_'+this.tasks[0]+'.png').setSize(30, 30).setPosition(-77,-02).setOpacity(0.8);
+    textbox.setFill('images/textbox/left_arrow.png')
+        .setPosition(middleCor.x+260, middleCor.y-200).setOpacity(1).setSize(520,250);
+    var checkbox_1 = new farming.Sprite('images/checkbox_'+this.tasks[0]+'.png').setSize(30, 30).setPosition(-77,-02).setOpacity(0.8);
 	var checkbox_2 = new farming.Sprite('images/checkbox_'+this.tasks[1]+'.png').setSize(30, 30).setPosition(-77, 38).setOpacity(0.8);
 	var checkbox_3 = new farming.Sprite('images/checkbox_'+this.tasks[2]+'.png').setSize(30, 30).setPosition(-77, 78).setOpacity(0.8);
 
-    text1.setFontWeight('bold').setPosition(150,-50).setAlign('left').setText(
-        "Now it\'s up to you to explore your farm. \n For the start, try out these three things.\n Good luck!\n\n");
+    text1.setFontWeight('bold').setPosition(150,-50).setAlign('left');
 
     text2.setFontWeight('bold').setPosition(200,38).setAlign('left').setText(
         "Clone a crop\n\n"
-            + "   Harvest a crop\n\n"
-            + "   Do a challenge\n\n");
-	textbox.setFill('images/textbox/left_arrow.png').setSize(this.game.getFullSize(0.68).width, this.game.getFullSize(0.5).height)
-		.setPosition(middleCor.x+260, middleCor.y-200).setOpacity(1);
-	textbox.appendChild(text1).appendChild(text2).appendChild(checkbox_1).appendChild(checkbox_2).appendChild(checkbox_3);
-	this.taskLayer.appendChild(textbox);
+            + "   Do a challenge\n\n"
+            + "   Harvest a crop\n\n");
+    var text = '';
+    if(this.tasks[0] && this.tasks[1] && this.tasks[2]) {
+        text = "Perfect! You are truly learning fast. \n Finally I can go take a nap, \n take care of everything!";
+        checkbox_1.setHidden(true);
+        checkbox_2.setHidden(true);
+        checkbox_3.setHidden(true);
+        text2.setHidden(true);
+        textbox.setSize(520,150)
+        text1.setPosition(150,0)
+    } else if(this.tasks[0] || this.tasks[1] || this.tasks[2]) {
+        text = "Good job! You'll make a great farmer.\n Now continue with the others!";
+    } else {
+        text = "Now it\'s up to you to explore your farm. \n For the start, try out these three things.\n Good luck!\n\n";
+    }
+    text1.setText(text);
+    textbox.appendChild(text1).appendChild(text2).appendChild(checkbox_1).appendChild(checkbox_2).appendChild(checkbox_3);
+    this.taskLayer.appendChild(textbox);
 
 	/*var wait = new lime.animation.FadeTo(1).setDuration(5);
 	var fade = new lime.animation.FadeTo(0).setDuration(0.5);
@@ -115,18 +129,23 @@ farming.SceneTask.prototype.start1 = function(){
         scene.hide();
     },false,this.game.sceneTask);
 	// Listen to a crop to be cloned
-	goog.events.listenOnce(this.game.source,this.game.EventType.CROP_CLONED,function(){
-        scene.tasks[0] = true;
+	goog.events.listenOnce(this.game.source,this.game.EventType.CLOSE_CLONE,function(){
+        if(!scene.tasks[0]) {
+            scene.tasks[0] = true;
+            scene.show();
+        }
 	},false,this.game.sceneTask);
 
 	// Listen to a crop to be harvested
 	goog.events.listenOnce(this.game.source,this.game.EventType.CROP_HARVESTED,function(){
-        scene.tasks[1] = true;
+        scene.tasks[2] = true;
+        scene.show();
 	},false,this.game.sceneTask);
 
 	// Listen to a challenge to be completed
 	goog.events.listenOnce(this.game.source,this.game.EventType.COMPLETE_CHALLENGE,function(){
-        scene.tasks[2] = true;
+        scene.tasks[1] = true;
+        scene.show();
 	},false,this.game.sceneTask);
 
 }
