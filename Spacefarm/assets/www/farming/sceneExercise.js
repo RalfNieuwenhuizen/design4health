@@ -140,12 +140,10 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     if(exercise.repetitions) {
         this.numberIcon.setFill('images/repetitions.png');
         this.numberLabel.setText(exercise.repetitions);
-        this.updateProgress(0);
         //this.waitMessage.setText('Do the exercise until you \n feel the phone buzz');
     } else if (exercise.duration) {
         this.numberIcon.setFill('images/duration.png');
         this.numberLabel.setText(exercise.duration + ' s');
-        this.updateProgress(0);
         //this.waitMessage.setText('Do the exercise until \n the timer stops');
         this.countdown = exercise.duration;
     } else {
@@ -162,18 +160,23 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.countdown) {
         var step = 0.2;
         var progress = 0;
-        scene.game.playMusic('ex_stretch.wav');
-        var schedule = function () {
-            progress += step;
-            scene.countdown -= step;
-            if(scene.countdown <= 0)
-                scene.startHeartRate(scene);
-            scene.updateProgress(progress)
-        };
-        lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000*step, scene.countdown/step);
-        scene.stopWatch.stop = function() {
-            lime.scheduleManager.unschedule(schedule, scene);
-        }
+        scene.updateProgress(0);
+        scene.numberLabelDuring1.setText('Get ready!').setFontSize(80);
+        lime.scheduleManager.callAfter(function(){
+            scene.updateProgress(0);
+            scene.game.playMusic('ex_stretch.wav');
+            var schedule = function () {
+                progress += step;
+                scene.countdown -= step;
+                if(scene.countdown <= 0)
+                    scene.startHeartRate(scene);
+                scene.updateProgress(progress)
+            };
+            lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000*step, scene.countdown/step);
+            scene.stopWatch.stop = function() {
+                lime.scheduleManager.unschedule(schedule, scene);
+            }
+        }, scene, 3000)
 
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
@@ -200,7 +203,7 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
 }
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
-    scene.game.stopMusic();
+    scene.game.playMusic();
     scene.windowLayer.removeChild(this.during);
     scene.exercise = null;
     scene.countdown = null;
@@ -226,7 +229,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
     scene.heartRate.setHidden(true);
-    scene.game.stopMusic();
+    scene.game.playMusic();
     scene.game.putStatistics(scene.exerciseKey);
 
     var exercise = EXERCISES[scene.exerciseKey];
