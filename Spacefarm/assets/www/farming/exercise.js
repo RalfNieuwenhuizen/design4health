@@ -564,7 +564,7 @@ farming.Exercise.prototype.addRepetition = function() {
     rep = rep + 1;
     console.log("Repetitions done: " + rep);
     if (this.target && this.target.numberLabel && this.target.numberLabel.getText() >= 0) {
-        this.target.updateProgress(this.target.numberLabelDuring1.getText()-1)
+        this.target.updateProgress(rep)
     }
 
     if(this.target && this.target.game && this.target.game.player.settings.sound == true) {
@@ -685,7 +685,7 @@ var EXERCISES = {
         'Twist over to the left side and bring your hands toward the floor. Avoid using momentum - control the motion. Repeat 20 times.'],
         example_frames: 8,
         horizontal: true,
-        duration: 60, // in seconds
+        repetitions: 10, // in seconds
         type: ['abs', 'legs'],
         points: 2
     },

@@ -157,22 +157,32 @@ farming.Game.prototype.music = false;
 
 
 // General close function
-farming.Game.prototype.playMusic = function(){
-    if(this.music) return;
+farming.Game.prototype.playMusic = function(file){
+    var f = typeof file == 'undefined' ? 'music.ogg' : file;
+    this.stopMusic();
     // Background music
-    this.music = new lime.audio.Audio('sounds/music.ogg');
+    this.music = new lime.audio.Audio('sounds/'+f);
     if (typeof device != 'undefined' && device.platform == "Android") {
         var loop = function (status) {
             if (status === Media.MEDIA_STOPPED) {
                 this.music.play();
             }
         };
-        this.music = new Media('file:///android_asset/www/music.ogg', null, null, loop);
+        this.music = new Media('file:///android_asset/www/'+f, null, null, loop);
     }
     if(this.player.settings.music == true) {
         this.music.play(true);
     }
 }
+farming.Game.prototype.stopMusic = function(){
+    if(this.music) {
+        if(this.music.pause)
+            this.music.pause();
+        else if(this.music.stop)
+            this.music.stop();
+    }
+}
+
 // General close function
 farming.Game.prototype.close = function(){
     this.sceneMap.setActiveButton(null);

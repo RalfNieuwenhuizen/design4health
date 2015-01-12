@@ -121,14 +121,11 @@ farming.SceneSettings.prototype.switchMusic = function(scene) {
     if(scene.game.player.settings.music) {
         scene.musicSliderButtonColor.setFill(SETTINGS.color.green);
         movement = -80;
-        scene.game.music.play(true);
+        scene.game.playMusic();
     } else {
         scene.musicSliderButtonColor.setFill(SETTINGS.color.red);
         movement = 80;
-        if(scene.game.music.pause)
-            scene.game.music.pause();
-        else if(scene.game.music.stop)
-            scene.game.music.stop();
+        scene.game.stopMusic();
     }
     var move = new lime.animation.MoveTo(movement, 0).setDuration(1);
     scene.musicSliderButton.runAction(move);

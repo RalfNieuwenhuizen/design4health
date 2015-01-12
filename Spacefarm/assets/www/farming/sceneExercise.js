@@ -140,12 +140,12 @@ farming.SceneExercise.prototype.showExercise = function(key) {
     if(exercise.repetitions) {
         this.numberIcon.setFill('images/repetitions.png');
         this.numberLabel.setText(exercise.repetitions);
-        this.updateProgress(exercise.repetitions);
+        this.updateProgress(0);
         //this.waitMessage.setText('Do the exercise until you \n feel the phone buzz');
     } else if (exercise.duration) {
         this.numberIcon.setFill('images/duration.png');
         this.numberLabel.setText(exercise.duration + ' s');
-        this.updateProgress(exercise.duration);
+        this.updateProgress(0);
         //this.waitMessage.setText('Do the exercise until \n the timer stops');
         this.countdown = exercise.duration;
     } else {
@@ -159,23 +159,16 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.finishButton.setHidden(!SETTINGS.TESTING);
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
-    var step = 0.2;
     if(scene.countdown) {
-        scene.music = new lime.audio.Audio('sounds/ex_stretch.wav');
-        if (typeof device != 'undefined' && device.platform == "Android") {
-            var loop = function (status) {
-                if (status === Media.MEDIA_STOPPED) {
-                    scene.music.play();
-                }
-            };
-            scene.music = new Media('file:///android_asset/www/ex_stretch.wav', null, null, loop);
-        }
-        scene.music.play(true);
+        var step = 0.2;
+        var progress = 0;
+        scene.game.playMusic('ex_stretch.wav');
         var schedule = function () {
+            progress += step;
             scene.countdown -= step;
             if(scene.countdown <= 0)
                 scene.startHeartRate(scene);
-            scene.updateProgress(scene.countdown)
+            scene.updateProgress(progress)
         };
         lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000*step, scene.countdown/step);
         scene.stopWatch.stop = function() {
@@ -191,15 +184,15 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
     var exercise = EXERCISES[this.exerciseKey];
     if(exercise.repetitions) {
         var total = exercise.repetitions;
-        this.numberLabelDuring1.setText(Math.round(num)).setFontSize(200);
-        this.numberLabelDuring2.setText(Math.round(num)).setFontSize(200);
+        this.numberLabelDuring1.setText(Math.round(total-num)).setFontSize(200);
+        this.numberLabelDuring2.setText(Math.round(total-num)).setFontSize(200);
     } else {
         var total = exercise.duration;
-        this.numberLabelDuring1.setText(Math.round(num)+' s').setFontSize(130);
-        this.numberLabelDuring2.setText(Math.round(num)+' s').setFontSize(130);
+        this.numberLabelDuring1.setText(Math.round(total-num)+' s').setFontSize(130);
+        this.numberLabelDuring2.setText(Math.round(total-num)+' s').setFontSize(130);
     }
 
-    var progress = (total-num) / total;
+    var progress = num / total;
     var color = 'rgb('+Math.round((progress)*109*0.6+4)+','+Math.round((progress)*72*0.6+102)+','+Math.round((1-progress)*157*0.6+7)+')';
     this.bar.setFill(color).setSize(800*progress, 480);
     this.barMask.setSize(800*progress, 480);
@@ -207,10 +200,11 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
 }
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
-    if(scene.music) scene.music.stop();
+    scene.game.stopMusic();
     scene.windowLayer.removeChild(this.during);
     scene.exercise = null;
     scene.countdown = null;
+    scene.heartRate.setHidden(true);
 
 }
 farming.SceneExercise.prototype.startHeartRate = function(scene) {
@@ -232,7 +226,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
     scene.heartRate.setHidden(true);
-    if(scene.music) scene.music.stop();
+    scene.game.stopMusic();
     scene.game.putStatistics(scene.exerciseKey);
 
     var exercise = EXERCISES[scene.exerciseKey];
@@ -256,6 +250,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.exercise = null;
     scene.countdown = null;
     scene.game.hideExercise();
+    scene.heartRate.setHidden(true);
 
     scene.windowLayer.removeChild(this.during);
     if (scene.game.player.currentChallenge)
