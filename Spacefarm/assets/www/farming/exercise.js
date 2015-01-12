@@ -125,10 +125,11 @@ if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
     rep=0;
     acc=[];
     navigator.notification.vibrate(2500);
-    playEndSound();
+   farming.Exercise.prototype.playEndSound();
+
     exercise.onExerciseSuccess(exercise.target);
     exercise.stopWatch();
-    window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
+    //window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
 }
 
 
