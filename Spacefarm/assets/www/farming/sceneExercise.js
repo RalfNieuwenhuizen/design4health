@@ -23,7 +23,8 @@ farming.SceneExercise = function (game) {
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     var w = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
         .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
-    this.during = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
+    this.during = new lime.Layer();
+    var dw = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
         .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title_full);
     this.description = new farming.Slider().setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4));
@@ -32,7 +33,7 @@ farming.SceneExercise = function (game) {
         .setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
     this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(110,430);
     this.numberLabel = new lime.Label().setSize(30, 30).setPosition(155,425).setFontSize(36);
-    this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30);
+    this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30).setHidden(true);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button_full)
         .setSize(SETTINGS.size.close_button);
@@ -52,13 +53,14 @@ farming.SceneExercise = function (game) {
         .appendChild(this.numberIcon)
         .appendChild(this.numberLabel)
         .appendChild(this.startButton)
-        .appendChild(this.closeButton)
-        .appendChild(this.during);
-    this.during.setHidden(true).appendChild(this.finishButton).appendChild(this.heartRate)
+        .appendChild(this.closeButton);
+    
+    this.during.appendChild(dw).appendChild(this.finishButton).appendChild(this.heartRate)
         .appendChild(this.closeButton2);
 
     this.startButton.setAction(this.startExercise, this);
     this.closeButton.setAction(this.closeExercise, this);
+    this.closeButton2.setAction(this.closeExercise, this);
     this.finishButton.setAction(this.finishExercise, this);
 
 
@@ -100,7 +102,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
         this.animation.runAction(animation);
     this.animation.stop = function() { if(animation) animation.stop(); };
 
-    this.during.setHidden(true);
+    this.windowLayer.removeChild(this.during);
     this.exercise = null;
     this.countdown = null;
 
@@ -138,7 +140,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
     scene.finishButton.setHidden(!SETTINGS.TESTING);
-    scene.during.setHidden(false);
+    scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
     if(scene.countdown) {
         var schedule = function () {
