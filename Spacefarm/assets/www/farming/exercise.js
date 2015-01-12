@@ -547,7 +547,7 @@ var EXERCISES = {
             'Twist over to the left side and bring your hands toward the floor. Avoid using momentum - control the motion. Repeat 20 times.'],
         example_frames: 8,
         horizontal: true,
-        duration: 60, // in seconds
+        repetitions: 10,
         type: ['abs', 'legs'],
         points: 2
     },
