@@ -203,14 +203,29 @@ farming.Exercise.prototype.situps = function (acceleration, exercise)
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
 
-    acc.push(acceleration.z);
-    first= acc[0];
 
-    last= acc[acc.length-1];
+
+        var alpha = 0.8;
+        // var gravity=[];
+
+        //   gravity[0] = alpha * gravity[0] + (1 - alpha) * acceleration.x;
+        //   gravity[1] = alpha * gravity[1] + (1 - alpha) * acceleration.y;
+        //   gravity[2] = alpha * gravity[2] + (1 - alpha) * acceleration.z;
+
+        //   linear_acceleration[0] = acceleration.x - gravity[0];
+        //   linear_acceleration[1] = acceleration.y - gravity[1];
+        //   linear_acceleration[2] = acceleration.z - gravity[2];
+        //var gravity=9.81;
+        var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
+
+    acc.push(acceleration.z);
+    first= Math.abs( acc[0] - currMagnitude);
+
+    last= Math.abs(acc[acc.length-1] - currMagnitude);
     console.log('first value of array' +first + 'last value of array' +last);
     console.log('array length is:' +acc.length);
 
-    if(Math.abs(last-first)> 5)
+    if(Math.abs(last-first)> 10)
     {
         exercise.addRepetition();
     }
