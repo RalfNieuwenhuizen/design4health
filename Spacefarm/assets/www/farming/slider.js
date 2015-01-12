@@ -101,6 +101,7 @@ farming.Slider.prototype.update = function(){
     var bubbleWidth = (this.slides.length-1) * bm + (this.slides.length) * bw;
     for(var i in this.slides) {
         this.slides[i].setHidden(i != this.index);
+        this.slides[i].setPosition(0, i != this.index ? 1000 : 0);
         this.bubbles[i].setHidden(this.bubblesHidden);
         this.bubbles[i].setFill(i == this.index ? 'rgba(88,46,16,0.9)' : 'rgba(95,56,28,0.3)').setPosition(i * (bw+bm) - bubbleWidth/2 + bw/2, -size.height/2+20);
     }
