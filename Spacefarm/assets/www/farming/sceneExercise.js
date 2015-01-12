@@ -162,7 +162,7 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.countdown) {
         var step = 0.2;
         var progress = 0;
-        scene.game.playMusic('ex_stretch.wav');
+        scene.game.playMusic('ex_stretch.ogg');
         var schedule = function () {
             progress += step;
             scene.countdown -= step;
