@@ -25,7 +25,12 @@ farming.SceneExercise = function (game) {
         .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
     this.during = new lime.Layer();
     this.dw = new farming.Sprite(SETTINGS.color.background_layer).preventClickThrough()
-        .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false));
+        .setSize(SETTINGS.size.background_layer_full).setPosition(game.getCenterPosition(false))
+        .setFill('#efeada');
+    this.bar = new lime.Sprite(SETTINGS.color.background_layer)
+        .setSize(0,0).setPosition(800,240).setAnchorPoint(1,0.5);
+    this.barMask = new lime.Sprite(SETTINGS.color.background_layer)
+        .setSize(0,0).setPosition(800,240).setAnchorPoint(1,0.5);
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title_full);
     this.description = new farming.Slider().setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4));
     this.animation = new lime.Sprite();
@@ -33,8 +38,10 @@ farming.SceneExercise = function (game) {
         .setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setMultiline(true).setHidden(true);
     this.numberIcon = new lime.Sprite().setSize(30, 30).setPosition(110,430);
     this.numberLabel = new lime.Label().setSize(100, 30).setPosition(185,425).setFontSize(36).setAlign('left');
-    this.numberLabelDuring = new lime.Label().setSize(350, 150).setPosition(400,240).setFontWeight(600)
-        .setRotation(90);
+    this.numberLabelDuring1 = new lime.Label().setSize(350, 150).setPosition(400,240).setFontWeight(600)
+        .setRotation(90).setOpacity(0.8);
+    this.numberLabelDuring2 = new lime.Label().setSize(350, 150).setPosition(400,240).setFontWeight(600)
+        .setRotation(90).setFontColor('#efeada').setMask(this.barMask).setOpacity(0.8);
     this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30).setHidden(true);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button_full)
@@ -58,7 +65,10 @@ farming.SceneExercise = function (game) {
         .appendChild(this.closeButton);
 
     this.during.appendChild(this.dw)
-        .appendChild(this.numberLabelDuring)
+        .appendChild(this.numberLabelDuring1)
+        .appendChild(this.bar)
+        .appendChild(this.barMask)
+        .appendChild(this.numberLabelDuring2)
         .appendChild(this.finishButton)
         .appendChild(this.heartRate)
         .appendChild(this.closeButton2);
@@ -149,14 +159,15 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.finishButton.setHidden(!SETTINGS.TESTING);
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
+    var step = 0.2;
     if(scene.countdown) {
         var schedule = function () {
-            scene.countdown--;
-            if(!scene.countdown)
+            scene.countdown -= step;
+            if(scene.countdown <= 0)
                 scene.startHeartRate(scene);
             scene.updateProgress(scene.countdown)
         };
-        lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000, scene.countdown);
+        lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000*step, scene.countdown/step);
         scene.stopWatch.stop = function() {
             lime.scheduleManager.unschedule(schedule, scene);
         }
@@ -170,14 +181,19 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
     var exercise = EXERCISES[this.exerciseKey];
     if(exercise.repetitions) {
         var total = exercise.repetitions;
-        this.numberLabelDuring.setText(num).setFontSize(200);
+        this.numberLabelDuring1.setText(Math.round(num)).setFontSize(200);
+        this.numberLabelDuring2.setText(Math.round(num)).setFontSize(200);
     } else {
         var total = exercise.duration;
-        this.numberLabelDuring.setText(num+' s').setFontSize(130);
+        this.numberLabelDuring1.setText(Math.round(num)+' s').setFontSize(130);
+        this.numberLabelDuring2.setText(Math.round(num)+' s').setFontSize(130);
     }
-    var progress = num / total;
-    this.dw.setFill('#ff0000');
 
+    var progress = (total-num) / total;
+    var color = 'rgb('+Math.round((progress)*109+4)+','+Math.round((progress)*72+102)+','+Math.round((1-progress)*157+7)+')';
+    this.bar.setFill(color).setSize(800*progress, 480);
+    this.barMask.setSize(800*progress, 480);
+    this.numberLabelDuring1.setFontColor(color);
 }
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();

@@ -118,6 +118,7 @@ farming.Game = function() {
     document.addEventListener("backbutton", function(){
         if(!game.saveAtClose) return;
         game.save()
+        navigator.app.exitApp();
     }, false);
     window.onbeforeunload = function(){
         if(!game.saveAtClose) return;
