@@ -466,7 +466,7 @@ farming.Exercise.prototype.wall_arm_pulls = function (acceleration, exercise)
 }
 
 
-farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
+farming.Exercise.prototype.walking = function (acceleration, exercise) {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
     console.log('wait_pie callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
         'Acceleration Z: ' + acceleration.z + " " +
@@ -475,30 +475,30 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
     var strechsound = new Media('file:///android_asset/www/ex_strech.wav');
     strechsound.play();
 
-    var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
+    // var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
 
-    //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
-    if(prevMagnitude < 9 && currMagnitude > 10)
-    {
-        numOfSteps++;
-        navigator.notification.beep(1);
-        console.log("number of steps" +numOfSteps)      //  Increment number of steps   
-    }
-    if (numOfSteps>=2){
-
-
-        strechsound.pause();
-
-        numOfSteps=0;
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-        navigator.notification.vibrate(2500);
-    }
-
-    prevMagnitude=currMagnitude;
+    // //  Only if the previous magnitude is less than 9 Newtons and the current one is greater than 10 Newtons...
+    // if(prevMagnitude < 9 && currMagnitude > 10)
+    // {
+    //     numOfSteps++;
+    //     navigator.notification.beep(1);
+    //     console.log("number of steps" +numOfSteps)      //  Increment number of steps   
+    // }
+    // if (numOfSteps>=2){
 
 
-    /*var x = acceleration.x;
+    //     strechsound.pause();
+
+    //     numOfSteps=0;
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    //     navigator.notification.vibrate(2500);
+    // }
+
+    // prevMagnitude=currMagnitude;
+
+
+    var x = acceleration.x;
      var y = acceleration.y;
      var z = acceleration.z;
      var magnitude = z; //Math.sqrt(x * x + y * y + z * z);
@@ -533,13 +533,30 @@ farming.Exercise.prototype.wait_pie = function (acceleration, exercise) {
      }
 
 
-     if (steps>=5){
+     if (steps>=20){
      steps=0;
+     navigator.notification.vibrate(2500);
+     strechsound.pause();
+
+    steps_prevVal = 1.0;
+ steps_prevprevVal = 1.0;
+steps_peakLow = 0;
+  steps_peakHigh = 0;
+ steps_samplesSinceHighPeak = 0;
+  steps_samplesSinceLowPeak = 0;
+ 
+
+ peakMinSamplesBetween = 15;
+ highLowPeakDiff = .2;
+ accelerometerZNeutral = -1.1;
+  accelerometerZNeutralLowOffset = -.04;
+  accelerometerZNeutralHighOffset = .06;
+ lastpeak = 1;// 1 is low 0 is high
      exercise.onExerciseSuccess(exercise.target);
      exercise.stopWatch();
-     navigator.notification.vibrate(2500);
+     
 
- }*/
+ }
 }
 
 farming.Exercise.prototype.stopWatch = function () {
@@ -599,7 +616,7 @@ var EXERCISES = {
         example_frames: 0, // number of image there are in 'images/exercises/{key}/[0-9].png'-
         horizontal: false,
         repetitions: 100,
-        options: {frequency : 400},
+        options: {frequency : 100},
         type: 'legs', //full_body, arms, legs, back, abs
         points: 2 //points awarded to 'type' region
     },
