@@ -115,6 +115,10 @@ farming.Game = function() {
         if(!game.saveAtClose) return;
         game.save()
     }, false);
+    document.addEventListener("backbutton", function(){
+        if(!game.saveAtClose) return;
+        game.save()
+    }, false);
     window.onbeforeunload = function(){
         if(!game.saveAtClose) return;
         game.save()

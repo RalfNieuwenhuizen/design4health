@@ -185,14 +185,14 @@ farming.SceneMap.prototype.drawControls = function () {
     var controlArea = new lime.Sprite().setAnchorPoint(0, 0)
         .setPosition(0, SETTINGS.screen.height - SETTINGS.size.controls.height)
         .setSize(this.game.screen.width, SETTINGS.size.controls.height)
-        .setFill(SETTINGS.color.controls_background)
+        .setFill('images/menu.png')
     this.controlsLayer.appendChild(controlArea);
 
     // Money
     this.moneyImage = new lime.Sprite().setFill('images/coin_dark.png')
-        .setSize(SETTINGS.size.controls.height * 0.8, SETTINGS.size.controls.height * 0.8).setPosition(this.game.screen.width - 90, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
+        .setSize(45,45).setPosition(this.game.screen.width - 95, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 8);
     this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label).setFontWeight(600).setFontSize(20)
-        .setPosition(this.game.screen.width - 40, SETTINGS.screen.height - SETTINGS.size.controls.height / 2);
+        .setPosition(this.game.screen.width - 43, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 8);
 
     // Create the labels for the cloning function
 
@@ -220,35 +220,35 @@ farming.SceneMap.prototype.drawControls = function () {
     var bh = 115/2;
     // Farmbutton
     this.farmButton = new farming.Button('images/buttons/items.png','images/buttons/items_active.png').setColor(SETTINGS.color.button)
-        .setPosition(bw/2+60, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(bw/2+60, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 6)
         .setSize(bw, bh).setAction(this.showFarm, this);
     this.controlsLayer.appendChild(this.farmButton);
     this.buttons['farm'] = this.farmButton;
 
     // Clonebutton
     this.cloneButton = new farming.Button('images/buttons/clone.png','images/buttons/clone_active.png').setColor(SETTINGS.color.button)
-        .setPosition(bw/2+60+bw*1, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(bw/2+60+bw*1, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 6)
         .setSize(bw, bh).setAction(this.showClone, this);
     this.controlsLayer.appendChild(this.cloneButton);
     this.buttons['clone'] = this.cloneButton;
 
     // Challengebutton
     this.challengeButton = new farming.Button('images/buttons/challenges.png','images/buttons/challenges_active.png').setColor(SETTINGS.color.button)
-        .setPosition(bw/2+60+bw*2+17, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(bw/2+60+bw*2+17, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 6)
         .setSize(305/2, bh).setAction(this.showChallenge, this);
     this.controlsLayer.appendChild(this.challengeButton);
     this.buttons['challenge'] = this.challengeButton;
 
     // BODYbutton
     this.bodyButton = new farming.Button('images/buttons/body.png','images/buttons/body_active.png').setColor(SETTINGS.color.button)
-        .setPosition(bw/2+60+bw*3+33, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(bw/2+60+bw*3+33, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 6)
         .setSize(bw, bh).setAction(this.showBody, this);
     this.controlsLayer.appendChild(this.bodyButton);
     this.buttons['body'] = this.bodyButton;
 
     // Settingsbutton
     this.settingsButton = new farming.Button('images/buttons/settings.png','images/buttons/settings_active.png').setColor(SETTINGS.color.button)
-        .setPosition(30, SETTINGS.screen.height - SETTINGS.size.controls.height / 2)
+        .setPosition(30, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 6)
         .setSize(bh, bh).setAction(this.showSettings, this);
     this.controlsLayer.appendChild(this.settingsButton);
     this.buttons['settings'] = this.settingsButton;

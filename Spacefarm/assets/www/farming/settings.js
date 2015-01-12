@@ -22,7 +22,7 @@ var SETTINGS = {
     },
     createOverlay : function(){
         return new farming.Sprite().setFill(SETTINGS.color.background_overlay).preventClickThrough()
-            .setSize(800,480-SETTINGS.size.controls.height).setPosition(400,(480 - SETTINGS.size.controls.height) / 2);
+            .setSize(800,480).setPosition(400,240);
     },
     color: {
         tile: '#b08251',
@@ -35,8 +35,7 @@ var SETTINGS = {
         green: '#22CC22',
         red: '#CC2222',
         black: '#000000',
-        controls_label: '#ffe478',
-        controls_background: '#0D0D0D'
+        controls_label: '#ffe478'
     },
 
     size: {
@@ -47,7 +46,7 @@ var SETTINGS = {
         background_layer_full: new goog.math.Size(800,480),
         tiles: new goog.math.Size(200, 116),
         controls: {
-            height: 60
+            height: 77
         }
     },
 

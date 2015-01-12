@@ -80,8 +80,9 @@ farming.Tile.prototype.updateColor = function () {
     var item = this.getItem();
     if(this.disabled) return;
     if(!item) this.setFill(this.game.currentClone ? 'images/tile_cloning.png' : 'images/tile.png');
-    else if(item.isRotten() || this.isHungry()) this.setFill('images/tile_rotten.png');
-    else if(item.isHarvestable()) this.setFill('images/tile_active.png');
+    else if(item.isRotten()) this.setFill('images/tile_rotten.png');
+    else if(this.isHungry()) this.setFill('images/tile_hungry.png');
+    else if(item.isHarvestable()) this.setFill('images/tile_ripe.png');
     else this.setFill('images/tile.png');
 }
 farming.Tile.prototype.removeItem = function () {

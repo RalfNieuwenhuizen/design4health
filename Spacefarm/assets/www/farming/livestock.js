@@ -159,7 +159,7 @@ var LIVESTOCK = {
         cost: 120,
         revenue: 40,
         revenue_item: 'wool',
-        food: 'space_wheat',
+        food: 'carrot',
         time_between_harvests: 120 * SETTINGS.timeUnit(),
         exercise: 'sky_kicks',
         required_level: 2

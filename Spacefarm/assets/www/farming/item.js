@@ -49,6 +49,10 @@ var ITEMS = {
     strawberry : {
         name: 'Space Berry',
         revenue: 15
+    },
+    diamond : {
+        name: 'Diamond',
+        revenue: 30
     }
 };
 
