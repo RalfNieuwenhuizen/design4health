@@ -190,7 +190,7 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
     }
 
     var progress = (total-num) / total;
-    var color = 'rgb('+Math.round((progress)*109+4)+','+Math.round((progress)*72+102)+','+Math.round((1-progress)*157+7)+')';
+    var color = 'rgb('+Math.round((progress)*109*0.6+4)+','+Math.round((progress)*72*0.6+102)+','+Math.round((1-progress)*157*0.6+7)+')';
     this.bar.setFill(color).setSize(800*progress, 480);
     this.barMask.setSize(800*progress, 480);
     this.numberLabelDuring1.setFontColor(color);
