@@ -46,7 +46,7 @@ farming.Game = function() {
 
     this.player = {
         coins: 250, // + 10000 * SETTINGS.TESTING,
-        exercisesDone: [],
+        exercisesDone: {},
         body : {
             arms: 0,
             legs: 0,
@@ -60,7 +60,7 @@ farming.Game = function() {
         },
         currentChallenge : null,
         introPhase: 0, // Used to check for introductional screens
-        daysLoggedIn: [],
+        daysLoggedIn: {},
         settings: {
             sound: true,
             music: true
@@ -520,9 +520,9 @@ farming.Game.prototype.putStatistics = function(exercise) {
     var mm = today.getMonth()+1;
     var yyyy = today.getFullYear();
     if(!this.player.exercisesDone[yyyy])
-        this.player.exercisesDone[yyyy] = [];
+        this.player.exercisesDone[yyyy] = {};
     if(!this.player.exercisesDone[yyyy][mm])
-        this.player.exercisesDone[yyyy][mm] = [];
+        this.player.exercisesDone[yyyy][mm] = {};
     if(!this.player.exercisesDone[yyyy][mm][dd])
         this.player.exercisesDone[yyyy][mm][dd] = [];
     this.player.exercisesDone[yyyy][mm][dd].push(exercise);

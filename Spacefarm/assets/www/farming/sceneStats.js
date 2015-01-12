@@ -170,10 +170,10 @@ farming.SceneStats.prototype.redraw = function(player) {
 
     var exercises = [];
 
-    var monthList = month ? [month] : (player.exercisesDone[year] ? Object.keys(player.exercisesDone[year]) : []);
+    var monthList = month ? [month] : (player.exercisesDone[year] ? Object.keys(player.exercisesDone[year]) : {});
     for(var m in monthList) {
         month = monthList[m];
-        var dayList = day ? [day] : (player.exercisesDone[year] && player.exercisesDone[year][month] ? Object.keys(player.exercisesDone[year][month]) : []);
+        var dayList = day ? [day] : (player.exercisesDone[year] && player.exercisesDone[year][month] ? Object.keys(player.exercisesDone[year][month]) : {});
         for(var d in dayList) {
             day = dayList[d];
             if(!player.exercisesDone[year] || !player.exercisesDone[year][month] || !player.exercisesDone[year][month][day])
