@@ -252,7 +252,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.game.hideExercise();
     scene.heartRate.setHidden(true);
 
-    scene.windowLayer.removeChild(this.during);
+    scene.windowLayer.removeChild(scene.during);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
     

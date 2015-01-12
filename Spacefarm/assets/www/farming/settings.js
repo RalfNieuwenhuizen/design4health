@@ -18,7 +18,7 @@ var SETTINGS = {
     createWindow : function(){
         return new lime.RoundedRect().setRadius(9).setFill(SETTINGS.color.background_layer)
             .setStroke(new lime.fill.Stroke(3, SETTINGS.color.background_stroke))//.preventClickThrough()
-            .setSize(SETTINGS.size.background_layer).setPosition(400,(480 - SETTINGS.size.controls.height) / 2);
+            .setSize(SETTINGS.size.background_layer).setPosition(400,(480 - SETTINGS.size.controls.height) / 2 + 5);
     },
     createOverlay : function(){
         return new farming.Sprite().setFill(SETTINGS.color.background_overlay).preventClickThrough()
@@ -51,11 +51,11 @@ var SETTINGS = {
     },
 
     position: {
-        close_button: new goog.math.Coordinate(725, 65),
+        close_button: new goog.math.Coordinate(725, 60),
         close_button_full: new goog.math.Coordinate(765, 35),
-        left_button: new goog.math.Coordinate(130, 340),
-        center_button: new goog.math.Coordinate(400, 340),
-        right_button: new goog.math.Coordinate(670, 340),
+        left_button: new goog.math.Coordinate(130, 345),
+        center_button: new goog.math.Coordinate(400, 345),
+        right_button: new goog.math.Coordinate(670, 345),
         title: new goog.math.Coordinate(400, 50),
         title_full: new goog.math.Coordinate(400, 30)
     },
