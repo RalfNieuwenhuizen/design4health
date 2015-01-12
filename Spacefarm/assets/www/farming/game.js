@@ -72,7 +72,7 @@ farming.Game = function() {
 
     this.director = new lime.Director(document.body,this.screen.width,this.screen.height);
     this.director.makeMobileWebAppCapable()
-    this.director.setDisplayFPS(true);
+    this.director.setDisplayFPS(false);
 
     //Define all the scenes
     this.sceneMap = new farming.SceneMap(this);
