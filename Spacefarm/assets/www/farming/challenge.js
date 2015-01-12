@@ -59,6 +59,26 @@ var CHALLENGES = {
             }
         ]
     },
+    test0 : {
+        name: 'Timed',
+        key: 'test0',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'pushups',
+                key : 'pushups' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 50
+            }
+        ]
+    },
     test1 : {
         name: 'Bear Hug',
         key: 'test1',

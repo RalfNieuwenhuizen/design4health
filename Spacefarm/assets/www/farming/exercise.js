@@ -563,8 +563,9 @@ farming.Exercise.prototype.getRepetitions = function (exerciseObject) {
 farming.Exercise.prototype.addRepetition = function() {
     rep = rep + 1;
     console.log("Repetitions done: " + rep);
-    if (this.target && this.target.numberLabel && this.target.numberLabel.getText() >= 0)
-        this.target.numberLabel.setText(this.target.numberLabel.getText() - 1);
+    if (this.target && this.target.numberLabel && this.target.numberLabel.getText() >= 0) {
+        this.target.updateProgress(this.target.numberLabel.getText()-1)
+    }
 
     if(this.target && this.target.game && this.target.game.player.settings.sound == true) {
         var exsound = new Media('file:///android_asset/www/exercise.mp3');
