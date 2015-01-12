@@ -198,7 +198,7 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
 
-    this.windowLayer.removeChild(this.during);
+    scene.windowLayer.removeChild(this.during);
     scene.exercise = null;
     scene.countdown = null;
 
