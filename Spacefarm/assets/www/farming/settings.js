@@ -53,9 +53,9 @@ var SETTINGS = {
     position: {
         close_button: new goog.math.Coordinate(725, 65),
         close_button_full: new goog.math.Coordinate(765, 35),
-        left_button: new goog.math.Coordinate(130, 355),
-        center_button: new goog.math.Coordinate(400, 375),
-        right_button: new goog.math.Coordinate(670, 355),
+        left_button: new goog.math.Coordinate(130, 340),
+        center_button: new goog.math.Coordinate(400, 340),
+        right_button: new goog.math.Coordinate(670, 340),
         title: new goog.math.Coordinate(400, 50),
         title_full: new goog.math.Coordinate(400, 30)
     },

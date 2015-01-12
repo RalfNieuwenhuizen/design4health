@@ -38,7 +38,8 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     this.onExerciseSuccess = onExerciseSuccess;
     this.onExerciseCancel = onExerciseCancel;
     var exercise = this;
-    var options = { frequency: 800 };
+    var options = typeof EXERCISES[callbackName].options == 'undefined' ? { frequency: 800 } : EXERCISES[callbackName].options;
+    console.log(options);
     //var options = { frequency: 1000};
     if (typeof navigator.accelerometer == 'undefined') {
         return;
@@ -581,15 +582,25 @@ var EXERCISES = {
     arm_stretches : {
         title:'Arm stretches',
         description : ['Keep your phone in one hand, like in the picture',
-        'Start from standing up straight.',
-        'Raise one arm (with the phone in hand) and the opposite knee until to a 90 degrees angle.',
-        'Finally, try to stretch even more by standing on your toes.',
-        'Repeat on the other side (switch the phone!).'],
+            'Start from standing up straight.',
+            'Raise one arm (with the phone in hand) and the opposite knee until to a 90 degrees angle.',
+            'Finally, try to stretch even more by standing on your toes.',
+            'Repeat on the other side (switch the phone!).'],
         example_frames: 7, // number of image there are in 'images/exercises/{key}/[0-9].png'-
         horizontal: false,
         repetitions: 10,
         type: 'arms', //full_body, arms, legs, back, abs
         points: 1 //points awarded to 'type' region
+    },
+    walking : {
+        title:'Walking',
+        description : ['Put your phone in your pocket','Walk! Walk! Walk! :)'],
+        example_frames: 0, // number of image there are in 'images/exercises/{key}/[0-9].png'-
+        horizontal: false,
+        repetitions: 100,
+        options: {frequency : 400},
+        type: 'legs', //full_body, arms, legs, back, abs
+        points: 2 //points awarded to 'type' region
     },
     back_circles : {
         title:'Back stretches',

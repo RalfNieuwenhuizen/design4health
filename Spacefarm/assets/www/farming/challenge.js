@@ -39,6 +39,26 @@ farming.Challenge.prototype.bodypart = function (key) {
 
 var CHALLENGES = {
 
+    walking : {
+        name: 'Space forest walk',
+        key: 'walking',
+        description: '',
+        type: 'full_body', //full_body, arms, legs, back, abs
+        required_level: 1,
+        requirements: [
+            {
+                type : 'exercise',
+                name : 'Reversed moonwalk',
+                key : 'walking' //require 'images/exercises/{key}/[0-9]+.png'   reference to exercise.js/EXERCISES
+            }
+        ],
+        rewards: [
+            {
+                type : 'coins',
+                number: 20
+            }
+        ]
+    },
     test1 : {
         name: 'Bear Hug',
         key: 'test1',
