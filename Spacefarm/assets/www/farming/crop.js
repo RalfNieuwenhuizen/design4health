@@ -102,18 +102,6 @@ farming.Crop.prototype.harvest = function(){
 }
 
 var CROPS = {
-    apple_tree : {
-        name: 'Space Apple tree',
-        key: 'apple_tree',
-        growth_phases: 3,
-        cost: 20,
-        revenue: 10,
-        revenue_item: 'space_apple',
-        time_to_ripe: 20 * SETTINGS.timeUnit(),
-        harvests: 3,
-        exercise: 'arm_stretches',
-        required_level: 1
-    },
     wheat : {
         name: 'Space Wheat',
         key: 'wheat',
@@ -121,7 +109,7 @@ var CROPS = {
         cost: 10,
         revenue: 15,
         revenue_item: 'space_wheat',
-        time_to_ripe: 8 * SETTINGS.timeUnit(),
+        time_to_ripe: 10 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'back_circles',
         required_level: 1
@@ -136,6 +124,18 @@ var CROPS = {
         time_to_ripe: 45 * SETTINGS.timeUnit(),
         harvests: 1,
         exercise: 'situps',
+        required_level: 1
+    },
+    apple_tree : {
+        name: 'Space Apple tree',
+        key: 'apple_tree',
+        growth_phases: 3,
+        cost: 40,
+        revenue: 25,
+        revenue_item: 'space_apple',
+        time_to_ripe: 20 * SETTINGS.timeUnit(),
+        harvests: 3,
+        exercise: 'arm_stretches',
         required_level: 1
     },
     strawberry : {
@@ -155,7 +155,7 @@ var CROPS = {
         key: 'spirulina',
         growth_phases: 3,
         cost: 70,
-        revenue: 50,
+        revenue: 35,
         revenue_item: 'diamond',
         time_to_ripe: 120 * SETTINGS.timeUnit(),
         harvests: 3,
