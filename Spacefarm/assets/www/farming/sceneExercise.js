@@ -161,6 +161,16 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.stopWatch = {};
     var step = 0.2;
     if(scene.countdown) {
+        scene.music = new lime.audio.Audio('sounds/ex_stretch.wav');
+        if (typeof device != 'undefined' && device.platform == "Android") {
+            var loop = function (status) {
+                if (status === Media.MEDIA_STOPPED) {
+                    scene.music.play();
+                }
+            };
+            scene.music = new Media('file:///android_asset/www/ex_stretch.wav', null, null, loop);
+        }
+        scene.music.play(true);
         var schedule = function () {
             scene.countdown -= step;
             if(scene.countdown <= 0)
@@ -197,7 +207,7 @@ farming.SceneExercise.prototype.updateProgress = function(num) {
 }
 farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
-
+    if(scene.music) scene.music.stop();
     scene.windowLayer.removeChild(this.during);
     scene.exercise = null;
     scene.countdown = null;
@@ -222,6 +232,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
     scene.heartRate.setHidden(true);
+    if(scene.music) scene.music.stop();
     scene.game.putStatistics(scene.exerciseKey);
 
     var exercise = EXERCISES[scene.exerciseKey];
@@ -246,7 +257,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.countdown = null;
     scene.game.hideExercise();
 
-    scene.during.setHidden(true);
+    scene.windowLayer.removeChild(this.during);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
     
