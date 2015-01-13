@@ -42,6 +42,18 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     console.log(options);
     //var options = { frequency: 1000};
     if (typeof navigator.accelerometer == 'undefined') {
+        window.navigator.notification = {vibrate : function(){}, beep:function(){}}
+        Media = function(){}
+        Media.prototype.play = function(){};
+        this.fakeWebWatchID = setInterval(function(){
+            if(target.exercise == null) {
+                exercise.stopWatch();
+                return;
+            }
+            var r = Math.random()*100;
+            callback({x: r, y:r, z:r}, exercise)
+            console.log(rep, '/', farming.Exercise.prototype.getRepetitions(exercise))
+        }, 150);
         return;
     }
     rep = 0;
