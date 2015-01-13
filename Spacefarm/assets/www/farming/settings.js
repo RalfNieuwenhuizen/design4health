@@ -2,6 +2,7 @@
  * Created on 09/01/15.
  */
 goog.provide('farming.Settings');
+goog.require('farming.RoundedRect');
 
 var SETTINGS = {
     TESTING: true,
@@ -16,8 +17,8 @@ var SETTINGS = {
         height: 480
     },
     createWindow : function(){
-        return new lime.RoundedRect().setRadius(9).setFill(SETTINGS.color.background_layer)
-            .setStroke(new lime.fill.Stroke(3, SETTINGS.color.background_stroke))//.preventClickThrough()
+        return new farming.RoundedRect().setRadius(9).setFill(SETTINGS.color.background_layer)
+            .setStroke(new lime.fill.Stroke(3, SETTINGS.color.background_stroke)).preventClickThrough()
             .setSize(SETTINGS.size.background_layer).setPosition(400,(480 - SETTINGS.size.controls.height) / 2 + 5);
     },
     createOverlay : function(){

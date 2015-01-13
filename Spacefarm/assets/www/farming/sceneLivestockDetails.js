@@ -25,8 +25,10 @@ farming.SceneLivestockDetails = function (game) {
     this.icon = new lime.Sprite();
     this.details = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
         .setPosition(center.x + 100, center.y - 20).setMultiline(true);
-    this.foodIcon = new lime.Sprite().setSize(40, 40).setPosition(center.x + 20, center.y + 85);
-    this.foodLabel = new lime.Label().setFontSize(18).setPosition(center.x + 50, center.y + 85);
+    this.foodIcon = new lime.Sprite().setSize(40, 40).setPosition(center.x - 5, center.y + 75);
+    this.foodLabel = new lime.Label().setFontSize(18).setPosition(center.x + 25, center.y + 95).setSize(200, 40).setAlign('left');
+    this.revenueIcon = new lime.Sprite().setSize(40, 40).setPosition(center.x + 180, center.y - 75);
+    this.revenueLabel = new lime.Label().setFontSize(18).setPosition(center.x + 210, center.y - 58).setSize(150, 40).setAlign('left');
 
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
@@ -50,6 +52,8 @@ farming.SceneLivestockDetails = function (game) {
         .appendChild(this.icon)
         .appendChild(this.foodIcon)
         .appendChild(this.foodLabel)
+        .appendChild(this.revenueIcon)
+        .appendChild(this.revenueLabel)
         .appendChild(this.details);
 }
 
@@ -79,6 +83,8 @@ farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
     this.details.setText(text);
     this.foodLabel.setText('Food:         '+ITEMS[livestock.food].name);
     this.foodIcon.setFill('images/items/'+livestock.food+'.png');
+    this.revenueLabel.setText('+1         '+ITEMS[livestock.revenue_item].name);
+    this.revenueIcon.setFill('images/items/'+livestock.revenue_item+'.png');
 
     this.icon.setFill('images/livestock/'+livestock.key+livestock.appearances+'.png')
         .setSize(200*1.4, 169*1.4).setPosition(180, 210);

@@ -25,6 +25,8 @@ farming.SceneCropDetails = function (game) {
     this.cropIcon = new lime.Sprite();
     this.cropDetails = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
         .setPosition(center.x + 100, center.y).setMultiline(true);
+    this.revenueIcon = new lime.Sprite().setSize(40, 40);
+    this.revenueLabel = new lime.Label().setFontSize(18).setSize(200, 40).setAlign('left');
 
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
@@ -46,7 +48,9 @@ farming.SceneCropDetails = function (game) {
         .appendChild(this.cloneButton)
         .appendChild(this.backButton)
         .appendChild(this.cropIcon)
-        .appendChild(this.cropDetails);
+        .appendChild(this.cropDetails)
+        .appendChild(this.revenueIcon)
+        .appendChild(this.revenueLabel);
 }
 
 goog.inherits(farming.SceneCropDetails, farming.Scene);
@@ -66,21 +70,28 @@ farming.SceneCropDetails.prototype.closeDetails = function(scene) {
 }
 
 farming.SceneCropDetails.prototype.showDetails = function(crop) {
+    var game = this.game;
+    var center = game.getCenterPosition();
+
     this.title.setText('Details '+ crop.name);
     var text = 'Cost: '+crop.cost + '\n\n';
     text += 'Growing time: '+crop.time_to_ripe/60 + ' min \n\n';
     if(crop.harvests > 1) {
         text += 'Revenue per harvest: ' + crop.revenue + '\n\n';
         text += 'Number of harvests: ' + crop.harvests + '\n\n';
+        this.revenueIcon.setPosition(center.x + 180, center.y - 15);
+        this.revenueLabel.setPosition(center.x + 235, center.y + 4);
     } else {
+        this.revenueIcon.setPosition(center.x + 80, center.y - 15);
+        this.revenueLabel.setPosition(center.x + 135, center.y + 4);
         text += 'Revenue: '+crop.revenue + '\n\n';
     }
     text += 'Exercise: '+EXERCISES[crop.exercise].title + "\n"+ EXERCISES[crop.exercise].points + ' ' + EXERCISES[crop.exercise].type + (EXERCISES[crop.exercise].points > 1 ? ' points' : ' point') + '\n\n';
     this.cropDetails.setText(text);
 
-    var game = this.game;
-    var center = game.getCenterPosition();
     this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png').setSize(200*1.4, 169*1.4).setPosition(180, 210);
     this.cloneButton.setAction(this.startClone, {'cropProps': crop,'game': this.game} );
+    this.revenueLabel.setText('+1         '+ITEMS[crop.revenue_item].name);
+    this.revenueIcon.setFill('images/items/'+crop.revenue_item+'.png');
     this.crop = crop;
 }
