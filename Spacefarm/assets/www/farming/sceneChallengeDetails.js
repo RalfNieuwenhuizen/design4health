@@ -114,6 +114,12 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             this.startNextButton.setHidden(true);
             this.completeChallenge(this);
         }
+        else {
+        	goog.events.listen(this.w, ['mousedown', 'touchstart'], function (e) {
+        		this.game.sceneFeedback.closeFeedback();
+        	    //e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
+        	 },false,this);
+    	}
     } else if (this.sufficientItems(challenge)) {
         this.o.setHidden(true);
         this.selectButton.setAction(this.selectChallenge, {

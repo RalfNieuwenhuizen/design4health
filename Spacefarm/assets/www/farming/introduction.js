@@ -204,7 +204,6 @@ farming.Introduction.prototype.intro4 = function(){
 	//goog.events.listenOnce(this.game.source,this.game.EventType.FARM_CLICK,goog.partial(this.buttonAction,this.game.introduction));
 	
 	this.introPhase += 1;
-	//this.intro6();
     this.game.playMusic();
     this.game.sceneTask.task();
 }
@@ -214,9 +213,7 @@ farming.Introduction.prototype.intro4 = function(){
 farming.Introduction.prototype.intro6 = function(){
 	
 	// Listen to the show_farm event
-	goog.events.listenOnce(this.game.source,this.game.EventType.COMPLETE_CHALLENGE,goog.partial(this.completedChallenge,this.game.introduction));
-	
-	
+	goog.events.listenOnce(this.game.source,this.game.EventType.COMPLETE_CHALLENGE,goog.partial(this.completedChallenge,this.game.introduction));	
 }
 
 // completedChallenge screen

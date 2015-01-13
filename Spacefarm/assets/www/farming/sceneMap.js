@@ -141,6 +141,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     }
                 } else {
                     scene.game.sceneTask.hide();
+                    scene.game.sceneFeedback.closeFeedback(scene.game);
                 }
                 if (tile.canBeHarvested()) {
                     tile.playSound();

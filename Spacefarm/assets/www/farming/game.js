@@ -222,7 +222,7 @@ farming.Game.prototype.checkDailyBonus = function () {
             }, bonus, 2000);
         }, this, 1000);
         this.addCoins(20);
-        this.source.dispatchEvent(this.EventType.NEW_DAY);
+        this.sceneTask.newDay = true;
     }
 }
 farming.Game.prototype.load = function () {
@@ -233,8 +233,9 @@ farming.Game.prototype.load = function () {
     try {
         this.player = save.player;
         this.introduction.introPhase = save.introPhase;
-        if (save.tasks)
-            this.sceneTask.tasks = save.tasks;
+        this.sceneTask.tasks = save.tasks;
+        this.sceneTask.taskPhase = save.taskPhase;
+        this.sceneTask.newDay = save.newDay;
         for (var x = 0; x < SETTINGS.mapSize; x++) {
             for (var y = 0; y < SETTINGS.mapSize; y++) {
                 this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
@@ -246,6 +247,7 @@ farming.Game.prototype.load = function () {
     }
     this.checkDailyBonus();
     this.sceneMap.updateControls();
+    this.sceneBody.bodyLevel = save.bodyLevel;
     this.sceneBody.redraw(this.player.body);
     this.sceneMap.body.redraw(this.player.body);
 }
@@ -262,6 +264,9 @@ farming.Game.prototype.save = function () {
     save.player = this.player;
     save.introPhase = this.introduction.introPhase;
     save.tasks = this.sceneTask.tasks;
+    save.taskPhase = this.sceneTask.taskPhase;
+    save.newDay = this.sceneTask.newDay;
+    save.bodyLevel = this.sceneBody.bodyLevel;
     save.tiles = [];
     for (var x = 0; x < SETTINGS.mapSize; x++) {
         save.tiles[x] = [];
@@ -349,7 +354,13 @@ farming.Game.prototype.hideExercise = function () {
 // -- show feedback --
 farming.Game.prototype.showFeedback = function (exercise) {
     //this.sceneFeedback.redraw(this.player.body);
-    this.sceneFeedback.showFeedback(exercise);
+    if (this.sceneBody.bodyLevel < this.sceneMap.body.getBodyLevel(this.player.body)){
+    	this.sceneBody.bodyLevel = this.sceneMap.body.getBodyLevel(this.player.body);
+    	this.sceneFeedback.bodyUpgraded();
+    }
+    else {
+    	this.sceneFeedback.showFeedback(exercise);
+    }
     this.sceneMap.sceneLayer.appendChild(this.sceneFeedback.windowLayer);
 }
 
@@ -455,6 +466,8 @@ farming.Game.prototype.showChallengeDetails = function (challenge) {
     //this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
     this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
+    game = this;
+    console.log('sceneChallengeDetails2: ' + goog.dom.contains(game.sceneMap.sceneLayer,game.sceneChallengeDetails.windowLayer));
     this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
 }
 
@@ -537,6 +550,7 @@ farming.Game.prototype.addPoints = function (bodypart, amount) {
     var max = this.sceneMap.body.getTargetXP(this.player.body[bodypart]);
     this.player.body[bodypart] = Math.min(max, this.player.body[bodypart] + amount);
     this.sceneMap.body.redraw(this.player.body);
+    
     return this.player.body[bodypart];
 }
 farming.Game.prototype.getPoints = function (bodypart) {
