@@ -161,10 +161,11 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.countdown) {
         var step = 0.2;
         var progress = 0;
+        scene.updateProgress(0);
         scene.numberLabelDuring1.setText('Get ready!').setFontSize(80);
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
-            scene.game.playMusic('ex_stretch.wav');
+            scene.game.playMusic('ex_stretch.ogg');
             var schedule = function () {
                 progress += step;
                 scene.countdown -= step;
@@ -177,6 +178,7 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
                 lime.scheduleManager.unschedule(schedule, scene);
             }
         }, scene, 3000)
+
 
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
@@ -249,7 +251,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
         }
         scene.game.player.currentChallenge.exercisesDone.push(scene.exerciseKey);
     }
-
+    
     scene.exercise = null;
     scene.countdown = null;
     scene.game.hideExercise();
@@ -258,6 +260,8 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.windowLayer.removeChild(scene.during);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
+    
+    scene.game.showFeedback(exercise);
     
     // Fire that exercise is done
     scene.game.source.dispatchEvent(scene.game.EventType.EXERCISE_DONE);

@@ -182,10 +182,10 @@ farming.SceneMap.prototype.drawControls = function () {
     this.appendChild(this.controlsLayer);
     var scene = this;
     //controls area
-    var controlArea = new lime.Sprite().setAnchorPoint(0, 0)
+    var controlArea = new farming.Sprite().setAnchorPoint(0, 0)
         .setPosition(0, SETTINGS.screen.height - SETTINGS.size.controls.height)
         .setSize(this.game.screen.width, SETTINGS.size.controls.height)
-        .setFill('images/menu.png')
+        .setFill('images/menu.png').preventClickThrough();
     this.controlsLayer.appendChild(controlArea);
 
     // Money
@@ -342,7 +342,7 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
     // When positive amount, show big coin in the middle of the screen
     if (amount > 0) {
         lime.scheduleManager.callAfter(function () {
-            var image = new lime.Sprite().setFill('images/coin0.png')
+            var image = new lime.Sprite().setFill('images/coin/0.png')
                 .setSize(300, 300)
                 .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height));
 

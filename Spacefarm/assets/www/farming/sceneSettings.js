@@ -50,31 +50,35 @@ farming.SceneSettings.prototype.redraw = function (settings) {
     this.windowLayer.appendChild(this.drawLayer);
     var center = this.game.getCenterPosition();
 
+    var slider_width = 120;
+    this.slider_off = -(slider_width * 0.5) + 20;
+    this.slider_on = (slider_width * 0.5) - 20;
+
     this.soundLabel = new farming.Label("Sounds").setPosition(center.x - 120, center.y - 97).setFontSize(SETTINGS.font.title);
-    this.soundSlider = new farming.Sprite('#CCCCCC').setSize(200, 20).setPosition(center.x + 100, center.y - 100)
+    this.soundSlider = new farming.Sprite('#CCCCCC').setSize(slider_width, 20).setPosition(center.x + (slider_width / 2), center.y - 100)
         .setAction(this.switchSound, this);
-    this.soundSlider.appendChild(new farming.Sprite('#111111').setSize(180, 10));
-    this.soundSlider.appendChild(new farming.Sprite('#FFFFFF').setSize(170, 2));
-    this.soundSliderButton = new farming.Sprite('#888888').setSize(30, 30).setPosition(-80, 0);
+    this.soundSlider.appendChild(new farming.Sprite('#111111').setSize(slider_width * 0.9, 10));
+    this.soundSlider.appendChild(new farming.Sprite('#FFFFFF').setSize(slider_width * 0.85, 2));
+    this.soundSliderButton = new farming.Sprite('#888888').setSize(30, 30).setPosition(this.slider_on, 0);
     this.soundSliderButtonColor = new farming.Sprite(SETTINGS.color.green).setSize(15, 15);
     this.soundSliderButton.appendChild(this.soundSliderButtonColor);
     this.soundSlider.appendChild(this.soundSliderButton);
     if(settings.sound == false) {
-        this.soundSliderButton.setPosition(80, 0);
+        this.soundSliderButton.setPosition(this.slider_off, 0);
         this.soundSliderButtonColor.setFill(SETTINGS.color.red);
     }
 
     this.musicLabel = new farming.Label("Music").setPosition(center.x - 120, center.y + 3).setFontSize(SETTINGS.font.title);
-    this.musicSlider = new farming.Sprite('#CCCCCC').setSize(200, 20).setPosition(center.x + 100, center.y)
+    this.musicSlider = new farming.Sprite('#CCCCCC').setSize(slider_width, 20).setPosition(center.x + (slider_width / 2), center.y)
         .setAction(this.switchMusic, this);
-    this.musicSlider.appendChild(new farming.Sprite('#111111').setSize(180, 10));
-    this.musicSlider.appendChild(new farming.Sprite('#FFFFFF').setSize(170, 2));
-    this.musicSliderButton = new farming.Sprite('#888888').setSize(30, 30).setPosition(-80, 0);
+    this.musicSlider.appendChild(new farming.Sprite('#111111').setSize(slider_width * 0.9, 10));
+    this.musicSlider.appendChild(new farming.Sprite('#FFFFFF').setSize(slider_width * 0.85, 2));
+    this.musicSliderButton = new farming.Sprite('#888888').setSize(30, 30).setPosition(this.slider_on, 0);
     this.musicSliderButtonColor = new farming.Sprite(SETTINGS.color.green).setSize(15, 15);
     this.musicSliderButton.appendChild(this.musicSliderButtonColor);
     this.musicSlider.appendChild(this.musicSliderButton);
     if(settings.music == false) {
-        this.musicSliderButton.setPosition(80, 0);
+        this.musicSliderButton.setPosition(this.slider_off, 0);
         this.musicSliderButtonColor.setFill(SETTINGS.color.red);
     }
 
@@ -99,12 +103,12 @@ farming.SceneSettings.prototype.switchSound = function(scene) {
     var movement = 0;
     if(scene.game.player.settings.sound) {
         scene.soundSliderButtonColor.setFill(SETTINGS.color.green);
-        movement = -80;
+        movement = scene.slider_on;
     } else {
         scene.soundSliderButtonColor.setFill(SETTINGS.color.red);
-        movement = 80;
+        movement = scene.slider_off;
     }
-    var move = new lime.animation.MoveTo(movement, 0).setDuration(1);
+    var move = new lime.animation.MoveTo(movement, 0).setDuration(.5);
     scene.soundSliderButton.runAction(move);
 }
 
@@ -120,13 +124,13 @@ farming.SceneSettings.prototype.switchMusic = function(scene) {
     var movement = 0;
     if(scene.game.player.settings.music) {
         scene.musicSliderButtonColor.setFill(SETTINGS.color.green);
-        movement = -80;
+        movement = scene.slider_on;
         scene.game.playMusic();
     } else {
         scene.musicSliderButtonColor.setFill(SETTINGS.color.red);
-        movement = 80;
+        movement = scene.slider_off;
         scene.game.stopMusic();
     }
-    var move = new lime.animation.MoveTo(movement, 0).setDuration(1);
+    var move = new lime.animation.MoveTo(movement, 0).setDuration(.5);
     scene.musicSliderButton.runAction(move);
 }

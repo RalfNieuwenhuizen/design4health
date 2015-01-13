@@ -27,6 +27,7 @@ goog.require('farming.Challenge');
 goog.require('farming.Crop');
 goog.require('farming.Livestock');
 goog.require('farming.Slider');
+goog.require('farming.SceneFeedback');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
@@ -45,7 +46,7 @@ farming.Game = function() {
     }
 
     this.player = {
-        coins: 250, // + 10000 * SETTINGS.TESTING,
+        coins: 150, // + 10000 * SETTINGS.TESTING,
         exercisesDone: {},
         body : {
             arms: 0,
@@ -59,7 +60,6 @@ farming.Game = function() {
             space_apple: 3
         },
         currentChallenge : null,
-        introPhase: 0, // Used to check for introductional screens
         daysLoggedIn: {},
         settings: {
             sound: true,
@@ -89,6 +89,7 @@ farming.Game = function() {
     this.introduction = new farming.Introduction(this);
     this.sceneSettings = new farming.SceneSettings(this);
     this.sceneTask = new farming.SceneTask(this);
+    this.sceneFeedback = new farming.SceneFeedback(this);
 
     this.load();
 
@@ -145,7 +146,8 @@ farming.Game.prototype.EventType = {
     FARM_CLICK: goog.events.getUniqueId('farm_click'),
     CROP_CLONED: goog.events.getUniqueId('crop_cloned'),
     CROP_HARVESTED: goog.events.getUniqueId('crop_harvested'),
-    WINDOW_OPENED : goog.events.getUniqueId('window_opened')
+    WINDOW_OPENED : goog.events.getUniqueId('window_opened'),
+    NEW_DAY : goog.events.getUniqueId('new_day')
 };
 
 // Create source to fire events
@@ -217,6 +219,7 @@ farming.Game.prototype.checkDailyBonus = function() {
             }, bonus, 2000);
         }, this, 1000);
         this.addCoins(20);
+        this.source.dispatchEvent(this.EventType.NEW_DAY);
     }
 }
 farming.Game.prototype.load = function(){
@@ -333,6 +336,15 @@ farming.Game.prototype.hideExercise = function(){
     if(this.director.getCurrentScene() == this.sceneExercise) this.director.popScene();
 }
 // -- end exercise --
+
+// -- show feedback --
+farming.Game.prototype.showFeedback = function(exercise){
+    //this.sceneFeedback.redraw(this.player.body);
+	this.sceneFeedback.showFeedback(exercise);
+	this.sceneMap.sceneLayer.appendChild(this.sceneFeedback.windowLayer);
+}
+
+// -- end feedback-- 
 
 // -- clone --
 farming.Game.prototype.showClone = function(){
