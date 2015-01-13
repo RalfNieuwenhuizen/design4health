@@ -23,11 +23,12 @@ farming.SceneChallengeDetails = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = SETTINGS.createWindow();
-    this.o = SETTINGS.createOverlay().setHidden(true);
+    this.o = SETTINGS.createOverlay().setSize(SETTINGS.size.background_layer.width-10,SETTINGS.size.background_layer.height-10);
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.description = new lime.Label().setPosition(center.x, center.y * 0.45).setMultiline(true)
         .setFontSize(SETTINGS.font.text);
-
+    this.insufficient = new lime.Label().setSize(220,70).setPosition(630,360).setMultiline(true)
+        .setFontSize(19).setFontWeight(600).setFontColor('#877b72').setText('Required items missing,\n harvest them first!').setHidden(true);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
         .setSize(SETTINGS.size.close_button);
@@ -47,6 +48,7 @@ farming.SceneChallengeDetails = function (game) {
     this.windowLayer
         .appendChild(this.o)
         .appendChild(this.w).appendChild(this.title).appendChild(this.description)
+        .appendChild(this.insufficient)
         .appendChild(this.selectButton)
         .appendChild(this.closeButton)
         .appendChild(this.giveUpButton)
@@ -96,10 +98,12 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     this.title.setText(title);
     this.description.setText(challenge.description + "\n" + farming.Challenge.prototype.bodypart(challenge.type));
 
+
     this.selectButton.setHidden(true);
     this.backButton.setHidden(false);
     this.giveUpButton.setHidden(true);
     this.startNextButton.setHidden(true);
+    this.insufficient.setHidden(true);
     if(opt_active) {
         this.o.setHidden(false);
         this.backButton.setHidden(true);
@@ -116,6 +120,9 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             'challenge': challenge,
             'scene': this
         }).setHidden(false);
+        this.insufficient.setHidden(true);
+    } else {
+        this.insufficient.setHidden(false);
     }
 
     var center = this.game.getCenterPosition();
@@ -125,7 +132,7 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     for(var i in challenge.requirements) {
         var requirement = challenge.requirements[i];
         if(requirement.type === 'item' && !opt_active) {
-            this.drawItem(requirement, new goog.math.Coordinate(items * 100 + center.x*0.5, center.y * 0.73), opt_active);
+            this.drawItem(requirement, new goog.math.Coordinate(items * 100 + center.x*0.5, center.y * 0.73+7), opt_active);
             items++;
         } else if(requirement.type === 'exercise') {
             this.drawExercise(requirement, exercises, opt_active);
@@ -135,17 +142,17 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     for(var i in challenge.rewards) {
         var reward = challenge.rewards[i];
         if((reward.type === 'item' || reward.type === 'coins') && !opt_active) {
-            this.drawReward(reward, new goog.math.Coordinate(rewards * 100 + center.x*1.55, center.y * 0.73));
+            this.drawReward(reward, new goog.math.Coordinate(rewards * 100 + center.x*1.55, center.y * 0.72+7));
             rewards++;
         }
     }
     if(items){
-        var itemsLabel = new lime.Label('Item cost').setPosition(120, center.y * 0.68)
+        var itemsLabel = new lime.Label('Item cost').setPosition(126, center.y * 0.70+7)
             .setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setAlign('left').setSize(100,10);
         this.drawLayer.appendChild(itemsLabel);
     }
     if(rewards){
-        var rewardsLabel = new lime.Label('Rewards').setPosition(550, center.y * 0.68)
+        var rewardsLabel = new lime.Label('Rewards').setPosition(550, center.y * 0.70+7)
             .setFontWeight(SETTINGS.font.subtitle.weight).setFontSize(SETTINGS.font.subtitle.size).setAlign('left').setSize(100,10);
         this.drawLayer.appendChild(rewardsLabel);
     }
@@ -157,21 +164,21 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
 };
 
 farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt_active) {
+    var currentNumber = this.game.getInventory(item.key);
     var itemIcon = new lime.Sprite().setFill('images/items/'+item.key+'.png').setSize(60, 60).setPosition(position);
-    var itemLabel = new lime.Label().setText(item.number).setFontSize(SETTINGS.font.subtitle.size).setSize(20, 20).setPosition(position.x + 28, position.y - 25);
+    var itemNeeded = new lime.Label().setText(item.number).setText(item.number).setAlign('left')
+        .setFontSize(SETTINGS.font.subtitle.size).setSize(30, 20).setPosition(position.x + 40, position.y - 15).setFontSize(22).setFontWeight(600);
+    var itemStock = new lime.Label().setText(item.number).setText(currentNumber + '/').setAlign('right').setFontColor('#ffffff')
+        .setFontSize(SETTINGS.font.subtitle.size).setSize(30, 20).setPosition(position.x + 8, position.y - 11).setFontSize(17);
+    var itemCircle = new lime.Circle().setSize(40,40).setPosition(position.x+23, position.y - 13);
+    itemCircle.setFill(currentNumber >= item.number ? '#7cc437' : '#de5959');
+    this.drawLayer.appendChild(itemIcon).appendChild(itemCircle).appendChild(itemStock).appendChild(itemNeeded);
 
-    if(!opt_active) {
-        var currentNumber = this.game.getInventory(item.key);
-        var color = currentNumber >= item.number ? SETTINGS.color.green : SETTINGS.color.red;
-        itemLabel.setText(currentNumber + '/' + item.number).setFontColor(color);
-    }
-
-    this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
 farming.SceneChallengeDetails.prototype.drawReward = function (reward, position) {
     var image = reward.type === 'coins' ? 'images/coin_small/0.png' : 'images/items/'+reward.key+'.png'
     var itemIcon = new lime.Sprite().setFill(image).setSize(60, 60).setPosition(position);
-    var itemLabel = new lime.Label().setText(reward.number).setFontSize(SETTINGS.font.subtitle.size).setSize(20, 20).setPosition(position.x + 34, position.y - 25);
+    var itemLabel = new lime.Label().setText(reward.number).setFontSize(26).setSize(30, 30).setPosition(position);
 
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }

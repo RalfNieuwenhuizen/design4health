@@ -78,10 +78,21 @@ farming.SceneChallenge.prototype.drawChallenge = function(slide, challenge, posi
         challengeTitle.setText('Level '+challenge.required_level)
         bg.setFill('#bfbfbf').setStroke('#6e7d79');
         var icon = new farming.Sprite('images/lock.png').setSize(60*0.5, 85*0.5).setPosition(position.x + 80, position.y - 55);
-        slide.appendChild(icon)
+        slide.appendChild(icon);
     } else {
         //this.drawFood(slide, item.food, position);
         bg.setColor('challenge').setAction(this.showChallengeDetails, {'challenge': challenge,'scene': this} );
+        var x = 0;
+        for(var i in challenge.requirements) {
+            var item = challenge.requirements[i];
+            if(item.type != 'item') continue;
+            var currentNumber = this.game.getInventory(item.key);
+            var itemIcon = new lime.Sprite().setFill('images/items/'+item.key+'.png').setSize(35, 35).setPosition(position.x + 77 - x * 40, position.y - 63);
+            var itemCircle = new lime.Circle().setSize(35,35).setPosition(position.x + 77 - x * 40, position.y - 57);
+            itemCircle.setFill(currentNumber >= item.number ? '#7cc437' : '#de5959').setStroke(new lime.fill.Stroke(2,'#a19454'));
+            slide.appendChild(itemCircle).appendChild(itemIcon);
+            x++;
+        }
     }
 }
 

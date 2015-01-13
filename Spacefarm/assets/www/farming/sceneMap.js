@@ -192,7 +192,8 @@ farming.SceneMap.prototype.drawControls = function () {
     this.moneyImage = new lime.Sprite().setFill('images/coin_dark.png')
         .setSize(45,45).setPosition(this.game.screen.width - 95, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 8);
     this.moneyLabel = new lime.Label().setFontColor(SETTINGS.color.controls_label).setFontWeight(600).setFontSize(20)
-        .setPosition(this.game.screen.width - 43, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 8);
+        .setPosition(this.game.screen.width - 43, SETTINGS.screen.height - SETTINGS.size.controls.height / 2 + 8)
+        .setShadow('#200800',3,1,1);
 
     // Create the labels for the cloning function
 

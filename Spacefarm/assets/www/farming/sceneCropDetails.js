@@ -19,6 +19,7 @@ farming.SceneCropDetails = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = SETTINGS.createWindow();
+    this.o = SETTINGS.createOverlay().setSize(SETTINGS.size.background_layer.width-10,SETTINGS.size.background_layer.height-10);
 
     this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
     this.title.setText('Crop Details');
@@ -40,6 +41,7 @@ farming.SceneCropDetails = function (game) {
     this.closeButton.setAction(this.closeDetails, this);
 
     this.windowLayer
+        .appendChild(this.o)
         .appendChild(this.w)
         .appendChild(this.title)
         .appendChild(this.closeButton)

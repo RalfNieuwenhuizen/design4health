@@ -44,6 +44,7 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     if (typeof navigator.accelerometer == 'undefined') {
         return;
     }
+    rep = 0;
     this.watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
         if(target.exercise == null) {
             exercise.stopWatch();

@@ -157,10 +157,10 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.finishButton.setHidden(!SETTINGS.TESTING);
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
+    scene.updateProgress(0);
     if(scene.countdown) {
         var step = 0.2;
         var progress = 0;
-        scene.updateProgress(0);
         scene.numberLabelDuring1.setText('Get ready!').setFontSize(80);
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
