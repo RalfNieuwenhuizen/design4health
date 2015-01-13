@@ -709,9 +709,9 @@ var EXERCISES = {
     },
     pushup_knees : {
         title:'Push up on knees',
-        description : ['Take the starting position as in the picture, with your hands slightly wider than shoulder length. ',
+        description : ['Take the starting position as in the picture, with your hands on shoulder width. ',
         'Lower yourself downward until your chest almost touches the floor as you inhale.',
-        'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
+        'Press your upper body back up to the starting position while squeezing your chest and breathing out. Repeat until the timer goes out.'],
         example_frames: 6,
         horizontal: true,
         duration: 40, // in seconds
@@ -720,9 +720,9 @@ var EXERCISES = {
     },
     pushups : {
         title:'Push up',
-        description : ['Take the starting position as in the picture, with your hands slightly wider than shoulder length.',
+        description : ['Take the starting position as shown in the picture, with your hands on shoulder width.',
         'Lower yourself downward until your chest almost touches the floor as you inhale.',
-        'Breathe out and press your upper body back up to the starting position while squeezing your chest. Repeat until the timer goes out.'],
+        'Press your upper body back up to the starting position while squeezing your chest and breathing out. Repeat until the timer goes out.'],
         example_frames: 6,
         horizontal: true,
         duration: 60, // in seconds
