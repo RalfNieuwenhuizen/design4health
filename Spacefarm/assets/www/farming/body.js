@@ -27,8 +27,8 @@ farming.Body.prototype.scale = null;
 
 // redraw the inventory
 farming.Body.prototype.redraw = function (body, pos) {
-    var position = pos ? pos : this.getPosition();
-    this.position = pos;
+    var position = pos ? pos : (this.position ? this.position : new goog.math.Coordinate(0,0));
+    this.position = position;
     if(this.bodyLayer) {
         this.bodyLayer.removeAllChildren();
     }
