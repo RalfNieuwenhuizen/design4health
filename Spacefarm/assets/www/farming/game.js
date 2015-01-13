@@ -60,7 +60,6 @@ farming.Game = function() {
             space_apple: 3
         },
         currentChallenge : null,
-        introPhase: 0, // Used to check for introductional screens
         daysLoggedIn: {},
         settings: {
             sound: true,
