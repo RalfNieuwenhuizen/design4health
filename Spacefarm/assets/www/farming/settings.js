@@ -11,7 +11,7 @@ var SETTINGS = {
         return SETTINGS.TESTING === true ? 1 : 60;
     },
 
-    mapSize: 11,
+    mapSize: 13,
     screen: {
         width: 800,
         height: 480
@@ -26,7 +26,6 @@ var SETTINGS = {
             .setSize(800,480).setPosition(400,240);
     },
     color: {
-        tile: '#b08251',
         background_layer: '#f0f0f0',
         background_overlay: 'rgba(71,25,11,0.5)',
         background_stroke: '#662c1b',

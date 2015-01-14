@@ -101,6 +101,7 @@ farming.Button.prototype.setAction = function (action, target) {
     if (action && target) {
         goog.events.listen(this, ['mousedown', 'touchstart'], function (e) {
             if (this.lastAction != thisAction) return;
+            if (this.parent_.getHidden() || (this.parent_.parent_ && this.parent_.parent_.getHidden())) return;
             e.swallow(['touchend', 'mouseup'], function () {
                 action(target, e);
             }, true);

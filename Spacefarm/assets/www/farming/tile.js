@@ -14,6 +14,7 @@ farming.Tile = function (game,x,y) {
     this.game = game;
     this.x = x;
     this.y = y;
+    this.randomType = ((x*x+y*7) % 23) % 4 + 1;
     this.setSize(SETTINGS.size.tiles);
     this.enable();
 
@@ -24,11 +25,12 @@ goog.inherits(farming.Tile, farming.Sprite);
 
 farming.Tile.prototype.crop = null;
 farming.Tile.prototype.livestock = null;
-farming.Tile.prototype.disabled = false;
+farming.Tile.prototype.disabled = 0;
 farming.Tile.prototype.fence4 = false;
 farming.Tile.prototype.fence3 = false;
 farming.Tile.prototype.fence2 = false;
 farming.Tile.prototype.fence1 = false;
+farming.Tile.prototype.randomType = 0;
 
 farming.Tile.prototype.serialize = function(){
     var crop = this.crop ? this.crop.serialize() : null;
@@ -78,12 +80,11 @@ farming.Tile.prototype.updateFence = function () {
 
 farming.Tile.prototype.updateColor = function () {
     var item = this.getItem();
-    if(this.disabled) return;
-    if(!item) this.setFill(this.game.currentClone ? 'images/tile_cloning.png' : 'images/tile.png');
-    else if(item.isRotten()) this.setFill('images/tile_rotten.png');
-    else if(this.isHungry()) this.setFill('images/tile_hungry.png');
-    else if(item.isHarvestable()) this.setFill('images/tile_ripe.png');
-    else this.setFill('images/tile.png');
+    if(!item) this.setFill(this.disabled ? 'images/tile/tile_grass'+this.disabled+'.png' : (this.game.currentClone ? 'images/tile/tile_cloning.png' : 'images/tile/tile'+this.randomType+'.png'));
+    else if(item.isRotten()) this.setFill('images/tile/tile_rotten.png');
+    else if(this.isHungry()) this.setFill('images/tile/tile_hungry.png');
+    else if(item.isHarvestable()) this.setFill('images/tile/tile_ripe.png');
+    else this.setFill('images/tile/tile'+this.randomType+'.png');
 }
 farming.Tile.prototype.removeItem = function () {
     this.removeAllChildren();
@@ -123,13 +124,13 @@ farming.Tile.prototype.isDead = function () {
 farming.Tile.prototype.isRotten = function () {
     return this.crop && this.crop.isRotten();
 }
-farming.Tile.prototype.disable = function () {
-    this.disabled = true;
-    this.setFill('');
+farming.Tile.prototype.disable = function (level) {
+    this.disabled = level;
+    this.updateColor();
 }
 farming.Tile.prototype.enable = function () {
     this.disabled = false;
-    this.setFill('images/tile.png');
+    this.updateColor();
 }
 farming.Tile.prototype.isEmpty = function () {
     return !this.disabled && !this.crop && !this.livestock;

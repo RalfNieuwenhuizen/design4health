@@ -9,6 +9,7 @@ goog.require('farming.Button');
 goog.require('farming.Label');
 goog.require('farming.Introduction');
 goog.require('lime.animation.FadeTo');
+goog.require('goog.math.Box');
 
 /**
  * Scene elements
@@ -22,7 +23,7 @@ farming.SceneMap = function (game) {
 
     // make the map updateable
     this.game.tickables.push(this);
-
+    this.zoomOut(this);
 }
 goog.inherits(farming.SceneMap, farming.Scene);
 
@@ -58,18 +59,18 @@ farming.SceneMap.prototype.calculate = function (key) {
 }
 
 farming.SceneMap.prototype.drawLand = function () {
-
+    var screenCenter = new goog.math.Coordinate(this.game.screen.width / 2, SETTINGS.screen.height / 2 - this.calculate('mapHeight') / 2);
     this.landLayer = new lime.Layer()
-        .setPosition(this.game.screen.width / 2, SETTINGS.screen.height / 2 - this.calculate('mapHeight') / 2)
+        .setPosition(screenCenter.x+50, screenCenter.y+150)
         .setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     var bg = new lime.Sprite().setAnchorPoint(0.5, 0).setPosition(0, -SETTINGS.size.tiles.height / 2)
-        .setSize(this.landLayer.getSize().scale(1.1)).setFill(SETTINGS.color.tile);
+        .setSize(this.landLayer.getSize().scale(1.1));//.setFill(SETTINGS.color.tile);
     this.landLayer.appendChild(bg);
 
 
     var middle = this.calculate('middleTile');
 
-    this.farm = new farming.Sprite('images/farm.png').setAnchorPoint(0.25, 0.579).setSize(400, 278);
+    this.farm = new farming.Sprite('images/farm.png').setAnchorPoint(1/6, 0.53).setSize(600, 370);
 
     var min = 0;
     var max = 0;
@@ -90,12 +91,20 @@ farming.SceneMap.prototype.drawLand = function () {
             if (middle.x - 2 == x && middle.y - 1 == y) {
                 this.landLayer.appendChild(this.farm.setPosition(this.twoDToScreen(x, y)));
             }
+            if(x == 0) this.tiles[x][y].disable(1);
+            else if(y == 0) this.tiles[x][y].disable(2);
+            else if(x == SETTINGS.mapSize-1) this.tiles[x][y].disable(3);
+            else if(y == SETTINGS.mapSize-1) this.tiles[x][y].disable(4);
         }
     }
-    this.landLayer.setPosition(this.landLayer.getPosition().translate(-170, 100));
-    for (var x = middle.x - 2; x < middle.x; x++) {
-        for (var y = middle.y - 2; y < middle.y; y++) {
-            this.tiles[x][y].disable();
+    this.tiles[0][0].disable('1_2');
+    this.tiles[0][SETTINGS.mapSize-1].disable('4_1');
+    this.tiles[SETTINGS.mapSize-1][SETTINGS.mapSize-1].disable('3_4');
+    this.tiles[SETTINGS.mapSize-1][0].disable('2_3');
+    //this.landLayer.setPosition(this.landLayer.getPosition().translate(0, 150));
+    for (var x = middle.x - 2; x < middle.x+1; x++) {
+        for (var y = middle.y - 3; y < middle.y; y++) {
+            this.tiles[x][y].disable('_none');
         }
     }
     var scene = this;
@@ -103,7 +112,16 @@ farming.SceneMap.prototype.drawLand = function () {
     //drag land elements
     goog.events.listen(this.landLayer, ['mousedown', 'touchstart'], function (e) { // clicking on the map and dragging it
         var oldPos = this.getPosition();
-        e.startDrag(false);
+        var mapWidth = scene.calculate('mapWidth');
+        var mapHeight = scene.calculate('mapHeight');
+        //e.startDrag(false, new goog.math.Box(-mapHeight/2,mapWidth/2,mapHeight/2,-mapWidth/2));
+        var scale = this.getScale();
+        var boundBox = new goog.math.Box(
+            -mapHeight+SETTINGS.screen.height/scale.x+SETTINGS.size.tiles.height/2-85,
+            +mapWidth/2,
+            +SETTINGS.size.tiles.height/2,
+            -mapWidth/2+SETTINGS.screen.width/scale.x).scale(scale.x, scale.y);
+        e.startDrag(false, boundBox);
         var drag = function (e) {
             var newPos = this.getPosition();
             var xDiff = newPos.x - oldPos.x;
@@ -111,11 +129,16 @@ farming.SceneMap.prototype.drawLand = function () {
             var diff = xDiff * xDiff + yDiff * yDiff;
             if (diff < scene.drag.maxClickDistance * scene.drag.maxClickDistance) {
                 var focus = scene.screenToTwoD(e.position.x, e.position.y);
+                if(typeof scene.tiles[focus.x]== 'undefined' || typeof scene.tiles[focus.x][focus.y] == 'undefined') return;
                 var tile = scene.tiles[focus.x][focus.y];
                 var farmPos = scene.screenToTwoD(scene.farm.getPosition().x, scene.farm.getPosition().y);
 
-                if ((focus.x == farmPos.x || focus.x == farmPos.x + 1) && (focus.y == farmPos.y || focus.y == farmPos.y - 1 )) {
-                    scene.game.showFarmClick();
+                if ((focus.x >= middle.x - 2 && focus.x < middle.x+1) && (focus.y >= middle.y - 3 && focus.y < middle.y )) {
+                    if(e.position.x < farmPos.x+SETTINGS.size.tiles.width/2){
+                        scene.game.showFarmClick();
+                    } else {
+                        scene.showBody(scene);
+                    }
                 } else {
                     scene.game.sceneTask.hide();
                 }
@@ -152,6 +175,11 @@ farming.SceneMap.prototype.drawLand = function () {
                 }
             }
         }
+        e.swallow(['touchmove', 'mousemove', 'touchend', 'touchcancel', 'mouseup'],
+            function(){
+                var newPos = scene.landLayer.getPosition();
+                scene.game.director.containerElement.style.backgroundPosition = newPos.x+' '+newPos.y;
+            }, false);
         e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
     });
     this.appendChild(this.landLayer);
@@ -166,15 +194,11 @@ farming.SceneMap.prototype.drawLand = function () {
         .setPosition(0, 0).setSize(this.calculate('mapWidth'), this.calculate('mapHeight'));
     this.appendChild(this.sceneLayer);
 
-    this.body = new farming.Body(0.5, this.game);
+    this.body = new farming.Body(0.6, this.game);
     var farmPos = scene.farm.getPosition();
-    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 50, farmPos.y), false);
-    goog.events.listen(this.body, ['mousedown', 'touchstart'], function (e) {
-        e.swallow(['touchend', 'mouseup'], function () {
-            this.parent_.parent_.showBody(this.parent_.parent_, e)
-        }, true);
-    });
-    this.landLayer.appendChild(this.body);
+    var bodyFence = new lime.Sprite().setFill('images/body_fence.png').setSize(37,36).setPosition(farmPos.x + 260, farmPos.y+100);
+    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 260, farmPos.y+50), false);
+    this.landLayer.appendChild(this.body).appendChild(bodyFence);
 }
 
 farming.SceneMap.prototype.drawControls = function () {
@@ -424,6 +448,7 @@ farming.SceneMap.prototype.startCloning = function (properties) {
     } else if (LIVESTOCK[properties.key]) {
         this.cloningImage.setFill('images/livestock/' + properties.key + properties.appearances + '.png');
     }
+    this.farm.setFill('images/farm_cloning.png');
     for(var x=0; x<SETTINGS.mapSize; x++) {
         for(var y=0; y<SETTINGS.mapSize; y++) {
             this.tiles[x][y].updateColor();
@@ -437,6 +462,7 @@ farming.SceneMap.prototype.stopCloning = function (scene) {
     scene.game.currentClone = null;
     // Let the event fire
     scene.game.source.dispatchEvent(scene.game.EventType.CLOSE_CLONE);
+    scene.farm.setFill('images/farm.png');
     for(var x=0; x<SETTINGS.mapSize; x++) {
         for(var y=0; y<SETTINGS.mapSize; y++) {
             scene.tiles[x][y].updateColor();
