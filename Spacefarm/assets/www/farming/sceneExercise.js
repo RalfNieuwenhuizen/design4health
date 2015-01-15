@@ -165,7 +165,7 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
         scene.numberLabelDuring1.setText('Get ready!').setFontSize(80);
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
-            scene.game.playMusic('ex_stretch.ogg');
+            scene.game.playMusic('ex_walking2.ogg');
             var schedule = function () {
                 progress += step;
                 scene.countdown -= step;
