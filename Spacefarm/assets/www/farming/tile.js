@@ -140,22 +140,45 @@ farming.Tile.prototype.playSound = function () {
     if (this.livestock)
         this.livestock.playSound();
 }
+farming.Tile.prototype.scheduleNotification = function (item) {
+    var settings = {
+        icon: 'file://android_asset/www/farming/images/'+(item.prop.food ? 'livestock/'+item.type+'1_harvestable.png' : 'crops/'+item.type+'_ripe.png'),
+        id : 'harvest_'+item.type,
+        title: 'Your '+item.prop.name+' is ready!' ,
+        message: 'Spare a minute for '+EXERCISES[item.prop.exercise].name+'?' ,
+        date : new Date(item.getHarvestTime()*1000),
+        sound: null
+    };
+    console.log(settings);
+    if(!window.plugin || !window.plugin.notification) return;
+    window.plugin.notification.local.add(settings);
+}
 farming.Tile.prototype.showProgress = function() {
     var progress = this.getItem().getTimeTillHarvest();
-
+    var tile = this;
     if (progress == null){
         progress = 'Not fed yet';
     }
     else{
         progress = progress + ' min';
     }
-
-    var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,45).setPosition(0,-60);
+    var progressLayer = new lime.Layer();
+    var bg = new farming.Sprite(SETTINGS.color.background_layer).setSize(130,45).setPosition(0,-60).preventClickThrough();
+    var notify = new farming.Sprite('#d4ed5f').setSize(130,45).setPosition(0,-60).setHidden(true).preventClickThrough()
+        .setAction(function(item) {
+            tile.scheduleNotification(item);
+            notify.setFill('#abcd0e')
+            labelNotify.setText('I will!')
+        }, this.getItem());
     var icon = new farming.Sprite('images/duration.png').setSize(20,20).setPosition(-40 ,0);
     var label = new lime.Label().setPosition(15,0).setMultiline(true).setText("Ready in \n"+progress);
-    bg.appendChild(icon).appendChild(label);
-    this.appendChild(bg);
+    var labelNotify = new lime.Label().setPosition(0,0).setFontSize(17).setMultiline(true).setText("Notify me")
 
+    bg.appendChild(icon).appendChild(label);
+    notify.appendChild(labelNotify);
+    progressLayer.appendChild(bg).appendChild(notify);
+    this.appendChild(progressLayer);
+    var showNotify = true;
     // If this is livestock
     if (this.livestock != null) {
         var food = this.getItem().getFood();
@@ -169,17 +192,20 @@ farming.Tile.prototype.showProgress = function() {
                 bg.setAction(this.feedTile, this);
                 label.setText('Feed now').setPosition(16, 0).setFontWeight('bold');
             }
+            showNotify = false;
         }
     }
-
-    var fade = new lime.animation.FadeTo(0).setDuration(4);
-    bg.runAction(fade);
-    goog.events.listen(fade,lime.animation.Event.STOP,function(){
-        for(var i in this.targets) {
-            var target = this.targets[i];
-            target.parent_.removeChild(target);
-        }
-    });
+    if(showNotify) {
+        bg.setPosition(0,-60-45);
+        notify.setHidden(false);
+    }
+    lime.scheduleManager.callAfter(function(){
+        var fade = new lime.animation.FadeTo(0).setDuration(3);
+        progressLayer.runAction(fade);
+        goog.events.listen(fade,lime.animation.Event.STOP,function(){
+            tile.removeChild(progressLayer);
+        });
+    }, this, 2000);
 }
 
 farming.Tile.prototype.feedTile = function(tile){

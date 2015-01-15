@@ -177,9 +177,11 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
             scene.stopWatch.stop = function() {
                 lime.scheduleManager.unschedule(schedule, scene);
             }
-        }, scene, 3000)
+        }, scene, 3000);
 
 
+    } else {
+        scene.game.stopMusic();
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }

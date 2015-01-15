@@ -46,12 +46,12 @@ farming.Body.prototype.redraw = function (body, pos) {
     }
 }
 farming.Body.prototype.drawBase= function (center) {
-    var icon = new farming.Sprite('images/body/exoskeleton.png').setSize(this.scale*100, this.scale*200).setPosition(center);
+    var icon = new farming.Sprite('images/body/'+(+this.getBodyLevel())+'.png').setSize(this.scale*100, this.scale*200).setPosition(center);
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawBack = function (number, center) {
     var level = this.getBodyLevel();
-    var icon = new farming.Sprite('images/body/back'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
+    var icon = new farming.Sprite().setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Back', number, this.getTargetXP(number), 40, 8, 65, 0));
     this.bodyLayer.appendChild(icon);
@@ -59,28 +59,28 @@ farming.Body.prototype.drawBack = function (number, center) {
 }
 farming.Body.prototype.drawArms = function (number, center) {
     var level = this.getBodyLevel();
-    var icon = new lime.Sprite().setFill('images/body/arms'+level+'.png').setSize(this.scale*74, this.scale*50).setPosition(center);
+    var icon = new lime.Sprite().setSize(this.scale*74, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Arms', number, this.getTargetXP(number), 40, 8, 85, -10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawLegs = function (number, center) {
     var level = this.getBodyLevel();
-    var icon = new lime.Sprite().setFill('images/body/legs'+level+'.png').setSize(this.scale*55, this.scale*85).setPosition(center);
+    var icon = new lime.Sprite().setSize(this.scale*55, this.scale*85).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Legs', number, this.getTargetXP(number), 40, 8, -65, 0));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawChest = function (number, center) {
     var level = this.getBodyLevel();
-    var icon = new lime.Sprite().setFill('images/body/chest'+level+'.png').setSize(this.scale*60, this.scale*30).setPosition(center);
+    var icon = new lime.Sprite().setSize(this.scale*60, this.scale*30).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Chest', number, this.getTargetXP(number), 40, 8, -85, 10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawAbs = function (number, center) {
     var level = this.getBodyLevel();
-    var icon = new lime.Sprite().setFill('images/body/abs'+level+'.png').setSize(this.scale*50, this.scale*50).setPosition(center);
+    var icon = new lime.Sprite().setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
     icon.appendChild(this.getProgressBar('Abs', number, this.getTargetXP(number), 40, 8, -85, 10));
     this.bodyLayer.appendChild(icon);
@@ -118,8 +118,8 @@ farming.Body.prototype.addPopup = function (target, text, yPos) {
 }*/
 
 var LEVELS = [0, 5, 15, 30, 50, 80, 120, 200, 300];
-var LEVEL_TEXTS = [null,'Rusted iron body','Amethyst body','EcoPower body','Fire body',
-    'Obsidian body','Plasma body','Golden body','Diamond body','Platinum body','Printer ink body',
+var LEVEL_TEXTS = [null,'Rusted iron body','Water body','EcoPower body','Fire body',
+    'Streamlined ice body','Plant body','Plasma body','Diamond body','Platinum body','Printer ink body',
     'Caramel body','Chocolate body','Banana smoothie body','Last body'
 ];
 

@@ -66,6 +66,9 @@ farming.Crop.prototype.getCurrentTime = function(){
 farming.Crop.prototype.getElapsedTime = function(){
     return this.getCurrentTime() - this.startTime;
 }
+farming.Crop.prototype.getHarvestTime = function(){
+    return this.startTime + this.prop.time_to_ripe;
+}
 farming.Crop.prototype.getProgress = function(){
     return Math.min(this.getElapsedTime() / this.prop.time_to_ripe, 1);
 }

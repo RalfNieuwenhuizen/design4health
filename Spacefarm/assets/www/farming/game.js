@@ -247,6 +247,7 @@ farming.Game.prototype.load = function () {
     this.checkDailyBonus();
     this.sceneMap.updateControls();
     this.sceneBody.redraw(this.player.body);
+    this.sceneMap.body.redraw(this.player.body);
 }
 farming.Game.prototype.loadWrapper = function (game) {
     game.load();

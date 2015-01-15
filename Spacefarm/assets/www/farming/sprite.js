@@ -11,7 +11,7 @@ goog.require('lime.Sprite');
  */
 farming.Sprite = function(fill) {
     goog.base(this);
-    if(fill)
+    if(typeof fill != 'undefined' && fill)
         this.setFill(fill);
     else
         this.setFill('');

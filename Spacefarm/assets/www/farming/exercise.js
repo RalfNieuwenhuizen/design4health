@@ -39,9 +39,10 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     this.onExerciseCancel = onExerciseCancel;
     var exercise = this;
     var options = typeof EXERCISES[callbackName].options == 'undefined' ? { frequency: 800 } : EXERCISES[callbackName].options;
-    console.log(options);
     //var options = { frequency: 1000};
-    if (typeof navigator.accelerometer == 'undefined') {
+    if ((typeof device != 'undefined' && device.platform == "Android")) {
+
+    } else {
         window.navigator.notification = {vibrate : function(){}, beep:function(){}}
         Media = function(){}
         Media.prototype.play = function(){};

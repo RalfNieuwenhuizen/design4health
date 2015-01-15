@@ -60,5 +60,5 @@ farming.SceneBody.prototype.showStats = function(scene) {
 
 farming.SceneBody.prototype.redraw = function(body) {
     if (this.body)
-        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y-5));
+        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y+5));
 }

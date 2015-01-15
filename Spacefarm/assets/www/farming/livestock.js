@@ -74,6 +74,9 @@ farming.Livestock.prototype.getCurrentTime = function(){
 farming.Livestock.prototype.getElapsedTime = function(){
     return this.getCurrentTime() - this.startTime;
 }
+farming.Livestock.prototype.getHarvestTime = function(){
+    return this.startTime + this.prop.time_to_ripe;
+}
 farming.Livestock.prototype.getTimeTillHarvest = function(){
     // Not yet fed after last harvest!
     if(this.feedTime < this.harvestTime){
