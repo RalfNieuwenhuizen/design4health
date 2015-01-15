@@ -20,6 +20,7 @@ farming.Body = function(scale, game) {
     this.scale = scale;
     this.appendChild(this.bodyLayer);
     this.redraw(this.game.player.body, null);
+    
 }
 goog.inherits(farming.Body,lime.Layer);
 

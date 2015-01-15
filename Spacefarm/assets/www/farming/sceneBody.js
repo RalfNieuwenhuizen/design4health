@@ -51,6 +51,9 @@ farming.SceneBody = function (game) {
         .appendChild(this.closeButton);
     this.body = new farming.Body(1.35, this.game);
     this.windowLayer.appendChild(this.body);
+    
+    // Remember the current body level
+    this.bodyLevel = 1;
 }
 goog.inherits(farming.SceneBody, farming.Scene);
 

@@ -48,7 +48,7 @@ farming.SceneTask.prototype.visible = false;
 // The task function has been called by pressing the farm
 farming.SceneTask.prototype.task = function(){
     if(this.visible){
-        this.hide();
+    	this.hide();
     } else {
         this.show();
     }
@@ -61,8 +61,10 @@ farming.SceneTask.prototype.startupTask = function(){
 }
 
 farming.SceneTask.prototype.hide = function(){
-    this.visible = false;
-    this.taskLayer.setHidden(true);
+    if(!(this.tasks[0] && this.tasks[1] && this.tasks[2])){
+    	this.visible = false;
+    	this.taskLayer.setHidden(true);
+    }
 }
 
 // Show next task
@@ -75,36 +77,30 @@ farming.SceneTask.prototype.show = function(){
     	this['show'+this.taskPhase]();
     }    
     else if(!this.newDay){
+    	console.log('it\'s not a new day in show()');
     	this.wait();
     }
 }
 
 // Wait for next day
 farming.SceneTask.prototype.wait = function(){
-	this.visible = true;
-	this.taskLayer.setHidden(false);
- 
-	// Check for a new day
-	goog.events.listenOnce(this.game.source,this.game.EventType.NEW_DAY,function(){
-		this.newDay = true;
-		this.show();
-	},false,this);
-	
 	if (this['show'+this.taskPhase] && this.newDay){
 		this.show();
 	}    
 	else{
+		this.visible = true;
+		this.taskLayer.setHidden(false);
 		var middle = this.game.sceneMap.calculate('middleTile');
 		var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 		this.text.setText("If you login tomorrow you \n will receive a new task.").setPosition(40,0);
 		this.w.setPosition(middleCor.x+260, middleCor.y-200).appendChild(this.text);
 		this.taskLayer.appendChild(this.w);
+		this.tasks = [false, false, false];
 	}
 }
 
 // Task1: Todo screen: show todo-list
 farming.SceneTask.prototype.show1 = function(){
-    this.taskLayer.removeAllChildren();
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
 
@@ -180,7 +176,7 @@ farming.SceneTask.prototype.start1 = function(){
 farming.SceneTask.prototype.show2 = function(){
 	var middle = this.game.sceneMap.calculate('middleTile');
 	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
-	this.text.setText("This is your task of the day: \n\n"
+	this.text.setText("This is your task of today: \n\n"
 			+ "Take the stairs instead \n of the elevator").setPosition(50,0);
 	this.w.setPosition(middleCor.x+260, middleCor.y-200).setSize(520,200).appendChild(this.text);
 	this.taskLayer.appendChild(this.w);
