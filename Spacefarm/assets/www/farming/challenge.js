@@ -42,8 +42,7 @@ var CHALLENGES = {
     walking : {
         name: 'Space forest walk',
         key: 'walking',
-        description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
+        description: 'Take a casual reversed moonwalk in the Yeopark. \nIt will give you the energy required to get to your urgent matters again. \nGood for your legs as well.',
         required_level: 1,
         requirements: [
             {
@@ -63,7 +62,6 @@ var CHALLENGES = {
         name: 'Timed',
         key: 'test0',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -83,7 +81,6 @@ var CHALLENGES = {
         name: 'Bear Hug',
         key: 'test1',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -103,7 +100,6 @@ var CHALLENGES = {
         name: 'High Knees',
         key: 'test2',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -123,7 +119,6 @@ var CHALLENGES = {
         name: 'Mason twist',
         key: 'test3',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -143,7 +138,6 @@ var CHALLENGES = {
         name: 'wall_arm_pulls',
         key: 'test4',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -163,7 +157,6 @@ var CHALLENGES = {
         name: 'wall_ears',
         key: 'test5',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -183,7 +176,6 @@ var CHALLENGES = {
         name: 'wall_flapping',
         key: 'test6',
         description: '',
-        type: 'full_body', //full_body, arms, legs, back, abs
         required_level: 1,
         requirements: [
             {
@@ -202,8 +194,7 @@ var CHALLENGES = {
     apple_pie : {
         name: 'Space Apple Pie',
         key: 'apple_pie',
-        description: 'Bake a spaceapple pie for your ill neighbour Yeowoman.',
-        type: 'full_body', //full_body, arms, legs, back, abs
+        description: 'Bake a spaceapple pie for your ill neighbour Yeowoman. \n You will feel relieved when you have done this. \n Good for your karma as well as for your chest and arms.',
         required_level: 1,
         requirements: [
            {
@@ -237,8 +228,7 @@ var CHALLENGES = {
     cookies : {
         name: 'Space Cookies',
         key: 'cookies',
-        description: 'Bake some space cookies.',
-        type: 'full_body', //full_body, arms, legs, back, abs
+        description: 'Bake some space cookies. \nThese have the special ability that they don\'t sink to your belly,\n but to your muscles instead! Specifically good for your legs.',
         required_level: 1,
         requirements: [
  {
@@ -277,8 +267,7 @@ var CHALLENGES = {
     wool_socks : {
         name: 'Woolysocks',
         key: 'wool_socks',
-        description: 'You are cold, make some socks.',
-        type: 'full_body',
+        description: 'You are cold, make some socks. \nYou would not expect it, but the comfortable warmth is very good for your back!',
         required_level: 2,
         requirements: [
             {
@@ -312,8 +301,7 @@ var CHALLENGES = {
     carrot_pie : {
         name: 'Carrot Pie',
         key: 'carrot_pie',
-        description: 'You are hungry, make some carrot pie.',
-        type: 'full_body',
+        description: 'You are hungry, make some carrot pie. \n Carrot pie truly makes your whole body feel better.',
         required_level: 2,
         requirements: [
             {
@@ -357,8 +345,7 @@ var CHALLENGES = {
     apple_sweater : {
         name: 'Apple Sweater',
         key: 'apple_sweater',
-        description: 'You are cold, make an awesome sweater.',
-        type: 'full_body',
+        description: 'You are cold, make an awesome sweater. \n After doing this, you should feel your legs. Your abs will feel better too.',
         required_level: 2,
         requirements: [
             {
@@ -392,8 +379,7 @@ var CHALLENGES = {
     bacon_egg : {
         name: 'Bacon & Eggs',
         key: 'bacon_egg',
-        description: 'You are hungry, make a huge bacon omelet.',
-        type: 'full_body',
+        description: 'You are hungry, make a huge bacon omelet. \n Bacon is good for your arms, and your abs will be relieved.',
         required_level: 3,
         requirements: [
             {
@@ -427,8 +413,7 @@ var CHALLENGES = {
     carrot_stew : {
         name: 'Carrot Rocket',
         key: 'carrot_rocket',
-        description: 'Build a carrot rocket to mine a neighbouring moon for gold!',
-        type: 'full_body',
+        description: 'Build a carrot rocket to mine a neighbouring moon for gold! \n This is good for a big deal of your body.',
         required_level: 3,
         requirements: [
             {
@@ -457,8 +442,7 @@ var CHALLENGES = {
     strawberry_jam : {
         name: 'Spaceberry Jam',
         key: 'strawberry_jam',
-        description: 'You are hungry, jam some berries.',
-        type: 'full_body',
+        description: 'You are hungry, jam some berries. \n The taste is the most rewarding. \n Your back will like it as well.',
         required_level: 3,
         requirements: [
             {
@@ -482,8 +466,7 @@ var CHALLENGES = {
     cheese : {
         name: 'Cheesy',
         key: 'cheese',
-        description: 'You are hungry, make spacecheese.',
-        type: 'full_body',
+        description: 'You are hungry, make spacecheese. \n Your legs will remember this day.',
         required_level: 3,
         requirements: [
             {
@@ -507,8 +490,7 @@ var CHALLENGES = {
     apple_pancakes : {
         name: 'Apple Pancakes',
         key: 'apple_pancakes',
-        description: 'You are hungry, make apple, in pancakes.',
-        type: 'full_body',
+        description: 'You are hungry, make apple, in pancakes. \n Takes care of most bodyparts!',
         required_level: 3,
         requirements: [
             {
@@ -542,8 +524,7 @@ var CHALLENGES = {
     earmuffs : {
         name: 'Earmuffs',
         key: 'earmuffs',
-        description: 'Yeo is cold, make it (b)earable.',
-        type: 'full_body',
+        description: 'Yeo is cold, make it (b)earable. \n Your ears will carry the muffs, your legs will carry the burden.',
         required_level: 4,
         requirements: [
             {
@@ -567,8 +548,7 @@ var CHALLENGES = {
     bacon_pancakes : {
         name: 'Bacon Pancakes',
         key: 'bacon_pancakes',
-        description: 'You are hungry, make bacon, in pancakes.',
-        type: 'full_body',
+        description: 'You are hungry, make bacon, in pancakes. \n You never knew you could bake with your legs? Now you do!',
         required_level: 5,
         requirements: [
             {
@@ -602,8 +582,7 @@ var CHALLENGES = {
     strawberry_milkshake : {
         name: 'Spaceberry Milkshake',
         key: 'strawberry_milkshake',
-        description: 'You are hungry, shake some berries.',
-        type: 'full_body',
+        description: 'You are hungry, shake some berries. \n Not tired of jumping yet? \n Your legs are!',
         required_level: 6,
         requirements: [
             {
