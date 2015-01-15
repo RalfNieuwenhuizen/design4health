@@ -30,7 +30,8 @@ farming.SceneBody = function (game) {
         .setPosition(SETTINGS.position.close_button)
         .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeBody, this);
-    this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,135).setSize(300,20).setText('This week you did:');
+    this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,135).setSize(300,20)
+        .setText('Today you did:');
     this.statsText = new lime.Label().setFontSize(18).setLineHeight(1.2).setFontColor('#637706').setMultiline(true)
         .setPosition(580,265).setSize(300,220);
 
