@@ -231,11 +231,9 @@ farming.SceneExercise.prototype.updateHeartRate = function(scene) {
 
 farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
-
     scene.heartRate.setHidden(true);
     scene.game.playMusic();
     scene.game.putStatistics(scene.exerciseKey);
-
     var exercise = EXERCISES[scene.exerciseKey];
     if(exercise && exercise.type && exercise.points) {
         if( Object.prototype.toString.call( exercise.type ) === '[object Array]' ) {
@@ -246,23 +244,20 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
             scene.game.addPoints(exercise.type, exercise.points);
         }
     }
-
     if (scene.game.player.currentChallenge) {
         if (!scene.game.player.currentChallenge.exercisesDone) {
             scene.game.player.currentChallenge.exercisesDone = [];
         }
         scene.game.player.currentChallenge.exercisesDone.push(scene.exerciseKey);
-    }
-    
+    }   
     scene.exercise = null;
     scene.countdown = null;
     scene.game.hideExercise();
     scene.heartRate.setHidden(true);
-
     scene.windowLayer.removeChild(scene.during);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
-    
+
     scene.game.showFeedback(exercise);
     
     // Fire that exercise is done
