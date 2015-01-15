@@ -59,7 +59,7 @@ var CHALLENGES = {
             }
         ]
     },
-    test0 : {
+    /*test0 : {
         name: 'Timed',
         key: 'test0',
         description: '',
@@ -198,7 +198,7 @@ var CHALLENGES = {
                 number: 50
             }
         ]
-    },
+    },*/
     apple_pie : {
         name: 'Space Apple Pie',
         key: 'apple_pie',

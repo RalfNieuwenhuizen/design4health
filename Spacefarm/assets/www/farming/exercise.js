@@ -686,7 +686,7 @@ var EXERCISES = {
         points: 4
     },
     high_knees : {
-        title:'High knee',
+        title:'High knees',
         description : ['Stand straight up with your phone in one hand.',
         'Start running at your place, while pulling your knees up high. Swing your arms properly!',
         'Repeat 15 times (one repetition is one completed movement with both legs)'],
@@ -697,7 +697,7 @@ var EXERCISES = {
         points: 1
     },
     bear_hug : {
-        title:'Bear hug crunch',
+        title:'Bear hug crunches',
         description : ['Lay down on the floor with your legs stretched straigth up in the air and your arms stretched on the floor above your head. Hold the phone in one hand.',
         'Make a crunch movement and put your arms around your legs on knee hight until you can grab your fingers. Keep your legs in the same position.',
         'Now move back to starting position. Repeat 20 times.'],
@@ -708,7 +708,7 @@ var EXERCISES = {
         points: 3
     },
     mason_twist : {
-        title:'Mason twist',
+        title:'Mason twists',
         description : ['Sit on the ground or an exercise mat, bend your elbows and hold the phone in your hands together in front of your chest.',
         'Contract your abs and lean your upper body back, about 45 degrees. Keep your back straight!',
         'Raise your feet up until your lower legs are parallel to the floor.',
@@ -721,26 +721,26 @@ var EXERCISES = {
         points: 2
     },
     pushup_knees : {
-        title:'Push up on knees',
+        title:'Push ups on knees',
         description : ['Take the starting position as in the picture, with your hands on shoulder width. ',
         'Lower yourself downward until your chest almost touches the floor as you inhale.',
         'Press your upper body back up to the starting position while squeezing your chest and breathing out. Repeat until the timer stops.'],
         example_frames: 6,
         horizontal: true,
         duration: 40, // in seconds
-        type: 'chest',
-        points: 2
+        type: ['chest','arms'],
+        points: 1
     },
     pushups : {
-        title:'Push up',
+        title:'Push ups',
         description : ['Take the starting position as shown in the picture, with your hands on shoulder width.',
         'Lower yourself downward until your chest almost touches the floor as you inhale.',
         'Press your upper body back up to the starting position while squeezing your chest and breathing out. Repeat until the timer stops.'],
         example_frames: 6,
         horizontal: true,
         duration: 60, // in seconds
-        type: ['chest'],
-        points: 3
+        type: ['chest','arms'],
+        points: 2
     },
     wall_flapping : {
         title:'Wall flying',
@@ -776,7 +776,7 @@ var EXERCISES = {
         points: 1
     },
     sky_kicks : {
-        title:'Sky kick',
+        title:'Sky kicks',
         description : ['Sit down on the ground or exercise mat. ',
         'Lean back a bit and push yourself up with your arms, with the rest of the weight at your feet.',
         'Alternate kicking up your left and right leg, while holding the weight with your arms. Repeat until the timer stops.'],
@@ -787,7 +787,7 @@ var EXERCISES = {
         points: 2
     },
     squats : {
-        title:'Squat',
+        title:'Squats',
         description : ['Stand with your feet shoulder width apart. This will be your starting position.',
         'Begin the movement by flexing your knees and hips, sitting back with your hips.',
         'Continue until you have squatted a portion of the way down, but are above parallel,',

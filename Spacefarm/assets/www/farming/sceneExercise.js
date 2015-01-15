@@ -212,7 +212,7 @@ farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.exercise = null;
     scene.countdown = null;
     scene.heartRate.setHidden(true);
-
+    if(scene.exercise) scene.exercise.stopWatch();
 }
 farming.SceneExercise.prototype.startHeartRate = function(scene) {
     //scene.waitMessage.setText('Place your finger on the camera to measure your heart rate.');
@@ -232,6 +232,7 @@ farming.SceneExercise.prototype.updateHeartRate = function(scene) {
 farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
 
+    scene.exercise.stopWatch();
     scene.heartRate.setHidden(true);
     scene.game.playMusic();
     scene.game.putStatistics(scene.exerciseKey);

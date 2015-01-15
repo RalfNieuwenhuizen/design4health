@@ -30,10 +30,13 @@ farming.SceneBody = function (game) {
         .setPosition(SETTINGS.position.close_button)
         .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeBody, this);
+    this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,135).setSize(300,20).setText('This week you did:');
+    this.statsText = new lime.Label().setFontSize(18).setLineHeight(1.2).setFontColor('#637706').setMultiline(true)
+        .setPosition(580,265).setSize(300,220);
 
-    this.statsButton = new farming.Button('Statistics').setColor('#999999')
-        .setPosition(SETTINGS.position.right_button)
-        .setSize(SETTINGS.size.button);
+    this.statsButton = new farming.Button('More statistics').setColor('green')
+        .setPosition(580,345)
+        .setSize(230,60);
     this.statsButton.setAction(this.showStats, this);
 
     this.windowLayer
@@ -42,8 +45,10 @@ farming.SceneBody = function (game) {
         .appendChild(SETTINGS.createTitleImage('body'))
         .appendChild(this.description)
         .appendChild(this.statsButton)
+        .appendChild(this.statsHeading)
+        .appendChild(this.statsText)
         .appendChild(this.closeButton);
-    this.body = new farming.Body(1.25, this.game);
+    this.body = new farming.Body(1.35, this.game);
     this.windowLayer.appendChild(this.body);
 }
 goog.inherits(farming.SceneBody, farming.Scene);
@@ -58,7 +63,27 @@ farming.SceneBody.prototype.showStats = function(scene) {
     scene.game.source.dispatchEvent(scene.game.EventType.SHOW_BODYSTATS);
 }
 
+/*farming.SceneBody.prototype.redraw = function(body) {
+    this.statsText.//player.exercisesDone[year][month][day]
+        if (this.body)
+    this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
+}*/
 farming.SceneBody.prototype.redraw = function(body) {
+    var exercises = this.game.sceneStats.getExercisesSorted(this.game.player);
+    var text = '';
+    var limit = 5;
+    var append = '';
+    if(exercises.length > limit) {
+        exercises = exercises.slice(0,limit);
+        append = 'and more...';
+    }
+    for(var i in exercises) {
+        var exercise = EXERCISES[exercises[i].type];
+        text += (exercise.repetitions ? exercise.repetitions*exercises[i].count : Math.round(exercise.duration*exercises[i].count/60)+' minutes of') +' '+exercise.title + '\n';
+    }
+    console.log(text+append);
+    this.statsText.setText(text+append);
+
     if (this.body)
-        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y+5));
+        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
 }

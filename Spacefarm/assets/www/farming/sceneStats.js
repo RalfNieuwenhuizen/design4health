@@ -148,8 +148,7 @@ farming.SceneStats.prototype.nextPage = function(scene) {
     scene.redraw(scene.player);
 }
 
-farming.SceneStats.prototype.redraw = function(player) {
-    this.player = player;
+farming.SceneStats.prototype.getExercises = function(player) {
     if(this.filter) {
         var description = ' - ';
         switch(this.filter.length) {
@@ -187,7 +186,22 @@ farming.SceneStats.prototype.redraw = function(player) {
         }
     }
 
-    exercises.sort();
+    return exercises;
+}
+farming.SceneStats.prototype.getExercisesSorted = function(player) {
+    var exercises = this.getExercises(player);
+    var sorted = [];
+    for(var i in exercises) {
+        sorted.push({count: exercises[i], type: i});
+    }
+    sorted.sort(function(a,b){
+        return a.count < b.count;
+    })
+    return sorted;
+}
+farming.SceneStats.prototype.redraw = function(player) {
+    this.player = player;
+    var exercises = this.getExercises(player);
     var text = '';
     var keys = Object.keys(exercises);
     for(var i in keys) {

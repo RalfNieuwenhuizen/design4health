@@ -44,8 +44,9 @@ var SETTINGS = {
         //var itemLabel = new lime.Label().setPosition(160,5).setFontSize(18).setFontWeight(600).setAlign('left').setFontColor('#5e342b').setSize(200, 18).setText(ITEMS[item].name);
         return wrapper.removeAllChildren().appendChild(itemIcon).appendChild(itemPlus);
     },
-    drawBodyPoints : function(wrapper, type){
-        var exPlus = new lime.Label().setFontSize(18).setPosition(18,0).setFontWeight(800).setFontColor('#184e00').setSize(20, 20).setText('+1');
+    drawBodyPoints : function(wrapper, type, count){
+        var c = typeof count == 'undefined' ? 1 : count;
+        var exPlus = new lime.Label().setFontSize(18).setPosition(18,0).setFontWeight(800).setFontColor('#184e00').setSize(20, 20).setText('+'+c);
         var exRect = new lime.RoundedRect().setRadius(8).setPosition(65,0).setFill('#e3f0dd').setSize(130, 30).setStroke(new lime.fill.Stroke(2,'#a5c781'));
         wrapper.removeAllChildren().appendChild(exRect);
         var exLabel = new lime.Label().setPosition(180,-1).setFontSize(18)
