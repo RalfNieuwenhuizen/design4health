@@ -23,8 +23,8 @@ farming.SceneChallengeDetails = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = SETTINGS.createWindow();
-    this.o = SETTINGS.createOverlay().setSize(SETTINGS.size.background_layer.width-10,SETTINGS.size.background_layer.height-10);
-    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
+    this.o = SETTINGS.createOverlay();
+    this.title = SETTINGS.createTitle('Challenge');
     this.description = new lime.Label().setPosition(center.x, center.y * 0.45).setMultiline(true)
         .setFontSize(SETTINGS.font.text);
     this.insufficient = new lime.Label().setSize(220,70).setPosition(630,360).setMultiline(true)

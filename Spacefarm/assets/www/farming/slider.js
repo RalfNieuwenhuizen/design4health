@@ -28,7 +28,7 @@ goog.inherits(farming.Slider,lime.Layer);
 
 farming.Slider.prototype.slides = [];
 farming.Slider.prototype.bubbles = [];
-farming.Slider.prototype.bubblesHidden = false;
+farming.Slider.prototype.bubblesPosition = false;
 farming.Slider.prototype.index = 0;
 
 farming.Slider.prototype.setSize = function(param1, param2){
@@ -83,8 +83,8 @@ farming.Slider.prototype.clear = function(){
     this.index = 0;
     this.slidesLayer.removeAllChildren();
 }
-farming.Slider.prototype.setBubblesHidden = function(hidden){
-    this.bubblesHidden = hidden;
+farming.Slider.prototype.setBubblesPosition = function(position){
+    this.bubblesPosition = position;
     return this;
 }
 
@@ -99,10 +99,13 @@ farming.Slider.prototype.update = function(){
     var bw = 20;
     var bm = 10;
     var bubbleWidth = (this.slides.length-1) * bm + (this.slides.length) * bw;
+    var offset = this.bubblesPosition === 'left' ? -size.width/2 : - bubbleWidth/2;
     for(var i in this.slides) {
         this.slides[i].setHidden(i != this.index);
         this.slides[i].setPosition(0, i != this.index ? 1000 : 0);
-        this.bubbles[i].setHidden(this.bubblesHidden);
-        this.bubbles[i].setFill(i == this.index ? 'rgba(88,46,16,0.9)' : 'rgba(95,56,28,0.3)').setPosition(i * (bw+bm) - bubbleWidth/2 + bw/2, -size.height/2+20);
+        this.bubbles[i].setHidden(this.bubblesPosition === false);
+
+        this.bubbles[i].setFill(i == this.index ? 'rgba(88,46,16,0.9)' : 'rgba(95,56,28,0.3)')
+            .setPosition(i * (bw+bm)  + bw/2 + offset, -size.height/2+20);
     }
 }

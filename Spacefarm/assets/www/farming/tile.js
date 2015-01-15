@@ -55,10 +55,10 @@ farming.Tile.prototype.addCrop = function (crop) {
 farming.Tile.prototype.addLivestock = function (livestock) {
     if (!this.isEmpty() || !livestock) return false;
     this.livestock = livestock;
-    this.fence4 = new farming.Sprite('images/fence4.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
-    this.fence3 = new farming.Sprite('images/fence3.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
-    this.fence2 = new farming.Sprite('images/fence2.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
-    this.fence1 = new farming.Sprite('images/fence1.png').setSize(200,169).setAnchorPoint(0.5, 0.63);
+    this.fence4 = new farming.Sprite('images/fence4.png').setSize(200,169).setAnchorPoint(0.5, 0.645);
+    this.fence3 = new farming.Sprite('images/fence3.png').setSize(200,169).setAnchorPoint(0.5, 0.645);
+    this.fence2 = new farming.Sprite('images/fence2.png').setSize(200,169).setAnchorPoint(0.5, 0.645);
+    this.fence1 = new farming.Sprite('images/fence1.png').setSize(200,169).setAnchorPoint(0.5, 0.645);
 
     this.appendChild(this.fence4).appendChild(this.fence3)
         .appendChild(livestock).appendChild(this.fence2).appendChild(this.fence1);

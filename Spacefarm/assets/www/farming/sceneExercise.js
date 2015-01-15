@@ -31,7 +31,7 @@ farming.SceneExercise = function (game) {
         .setSize(0,0).setPosition(800,240).setAnchorPoint(1,0.5);
     this.barMask = new lime.Sprite(SETTINGS.color.background_layer)
         .setSize(0,0).setPosition(800,240).setAnchorPoint(1,0.5);
-    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title_full);
+    this.title = SETTINGS.createTitle('');
     this.description = new farming.Slider().setPosition(center.x*0.75, center.y).setSize(game.getFullSize(0.4));
     this.animation = new lime.Sprite();
     this.pointsLabel = new farming.Label().setSize(300,0).setPosition(440,430).setVerticalAlign(true).setAlign('right')

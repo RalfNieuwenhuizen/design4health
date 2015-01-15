@@ -35,9 +35,9 @@ farming.SceneClone = function (game) {
     this.windowLayer
         .appendChild(this.o)
         .appendChild(this.w)
-        .appendChild(this.title)
-        .appendChild(this.closeButton);
-    this.slider = new farming.Slider().setSize(700,320).setPosition(400,230).setBubblesHidden(true);
+        .appendChild(this.closeButton)
+        .appendChild(SETTINGS.createTitleImage('clone'));
+    this.slider = new farming.Slider().setSize(700,420).setPosition(400,230).setBubblesPosition('left');
     this.windowLayer.appendChild(this.slider);
     this.closeButton.setAction(this.closeClone, this);
 

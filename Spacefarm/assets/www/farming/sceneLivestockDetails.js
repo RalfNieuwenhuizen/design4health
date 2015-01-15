@@ -19,17 +19,31 @@ farming.SceneLivestockDetails = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     this.w = SETTINGS.createWindow();
-    this.o = SETTINGS.createOverlay().setSize(SETTINGS.size.background_layer.width-10,SETTINGS.size.background_layer.height-10);
+    this.o = SETTINGS.createOverlay()
+        .setPosition(400,240-30)
+        .setSize(SETTINGS.size.background_layer.width-10,SETTINGS.size.background_layer.height-10);
 
-    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
+    this.title = SETTINGS.createTitle('');
     this.title.setText('Livestock Details');
-    this.icon = new lime.Sprite();
-    this.details = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
-        .setPosition(center.x + 100, center.y - 20).setMultiline(true);
-    this.foodIcon = new lime.Sprite().setSize(40, 40).setPosition(center.x - 5, center.y + 75);
-    this.foodLabel = new lime.Label().setFontSize(18).setPosition(center.x + 25, center.y + 95).setSize(200, 40).setAlign('left');
-    this.revenueIcon = new lime.Sprite().setSize(40, 40).setPosition(center.x + 180, center.y - 75);
-    this.revenueLabel = new lime.Label().setFontSize(18).setPosition(center.x + 210, center.y - 58).setSize(150, 40).setAlign('left');
+
+    this.cropIcon = new lime.Sprite().setSize(200*1.0, 169*1.0).setPosition(145, 170);
+
+    this.exerciseIcon = new lime.Sprite();
+    this.foodIcon = new lime.Sprite().setSize(40,40).setPosition(443, 93+42);
+    //this.cropDetails = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
+    //    .setPosition(center.x + 100, center.y).setMultiline(true);
+    this.descriptionLayer = new lime.Layer().setPosition(10,0);
+    this.livestockDetails = new lime.Label().setFontSize(19).setSize(170,400).setFontColor('#666666')
+        .setAlign('right').setMultiline(true).setLineHeight(2.3).setFontWeight(600).setPosition(325,282);
+    this.costCoin = new lime.Layer().setPosition(440, 93);
+
+    this.revenueCoins = new lime.Layer().setPosition(443, 93+42*3);
+    this.revenueItem = new lime.Layer().setPosition(480,88+42*3);
+    this.timeLabel = new lime.Label().setFontSize(20).setFontWeight(600).setSize(250,20)
+        .setAlign('left').setPosition(550,135+42);
+    this.exercisePoints = new lime.Layer().setPosition(426,180+42*2);
+    this.exerciseLabel = new lime.Label().setFontSize(18).setFontWeight(600).setSize(150,20)
+        .setAlign('left').setPosition(640,181+42*2).setFontColor('#000000');
 
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)
@@ -51,12 +65,20 @@ farming.SceneLivestockDetails = function (game) {
         .appendChild(this.closeButton)
         .appendChild(this.cloneButton)
         .appendChild(this.backButton)
-        .appendChild(this.icon)
+        .appendChild(this.cropIcon)
+        .appendChild(this.exerciseIcon)
+        .appendChild(this.descriptionLayer);
+
+
+    this.descriptionLayer
+        .appendChild(this.costCoin)
+        .appendChild(this.livestockDetails)
+        .appendChild(this.timeLabel)
+        .appendChild(this.exercisePoints)
+        .appendChild(this.exerciseLabel)
+        .appendChild(this.revenueCoins)
+        .appendChild(this.revenueItem)
         .appendChild(this.foodIcon)
-        .appendChild(this.foodLabel)
-        .appendChild(this.revenueIcon)
-        .appendChild(this.revenueLabel)
-        .appendChild(this.details);
 }
 
 goog.inherits(farming.SceneLivestockDetails, farming.Scene);
@@ -76,7 +98,7 @@ farming.SceneLivestockDetails.prototype.closeDetails = function(scene) {
 }
 
 farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
-    this.title.setText('Details '+ livestock.name);
+    /*this.title.setText('Details '+ livestock.name);
     var text = 'Cost: '+livestock.cost + '\n\n';
     text += 'Revenue per harvest: '+livestock.revenue + '\n\n';
     text += 'Time between harvests: '+livestock.time_between_harvests/60 + ' min\n\n';
@@ -90,6 +112,25 @@ farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
 
     this.icon.setFill('images/livestock/'+livestock.key+livestock.appearances+'.png')
         .setSize(200*1.4, 169*1.4).setPosition(180, 210);
+    this.cloneButton.setAction(this.startClone, {'properties': livestock,'game': this.game} );
+    this.livestock = livestock;*/
+
+    this.title.setText('Clone '+ livestock.name);
+    this.livestockDetails.setText('Cost\nFood\nReady for harvest\nHarvest\nExercise');
+    SETTINGS.drawCoin(this.revenueCoins, 0.65, livestock.revenue);
+    SETTINGS.drawCoin(this.costCoin, 0.5, livestock.cost);
+    SETTINGS.drawItemRevenue(this.revenueItem, livestock.revenue_item);
+    SETTINGS.drawBodyPoints(this.exercisePoints, EXERCISES[livestock.exercise].type);
+    //SETTINGS.drawBodyPoints(this.cropIcon);
+    this.timeLabel.setText(Math.round(livestock.time_between_harvests/60) + ' min after feeding');
+    this.exerciseLabel.setText(EXERCISES[livestock.exercise].title);
+    //EXERCISES[crop.exercise].title + "\n"+ EXERCISES[crop.exercise].points + ' ' + EXERCISES[crop.exercise].type + (EXERCISES[crop.exercise].points > 1 ? ' points' : ' point')
+    this.cropIcon.setFill('images/livestock/'+livestock.key+livestock.appearances+'_harvestable.png');
+    this.foodIcon.setFill('images/items/'+livestock.food+'.png');
+    this.exerciseIcon.setFill('images/exercises/'+livestock.exercise+'/4.png')
+        .setSize(EXERCISES[livestock.exercise].horizontal ? new goog.math.Size(795*0.25,420*0.25) : new goog.math.Size(315*0.4,420*0.4))
+        .setPosition(115, EXERCISES[livestock.exercise].horizontal ? 240 : 210);
+
     this.cloneButton.setAction(this.startClone, {'properties': livestock,'game': this.game} );
     this.livestock = livestock;
 }

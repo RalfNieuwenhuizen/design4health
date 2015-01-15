@@ -23,7 +23,7 @@ farming.SceneStats = function (game) {
     var center = game.getCenterPosition();
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = SETTINGS.createWindow();
-    this.title = new farming.Label('Statistics').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
+    this.title = SETTINGS.createTitle('Statistics');
     this.description = new farming.Label('').setPosition(center).setMultiline(true).setFontSize(20).setAlign('center');
 
     this.monthNames = [ "January", "February", "March", "April", "May", "June",

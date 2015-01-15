@@ -20,8 +20,7 @@ farming.SceneSettings = function (game) {
     var center = game.getCenterPosition();
     this.w = SETTINGS.createWindow();
     this.o = SETTINGS.createOverlay();
-    this.title = new lime.Label().setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
-    this.title.setText('Settings');
+    this.title = SETTINGS.createTitle('Settings');
 
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button)

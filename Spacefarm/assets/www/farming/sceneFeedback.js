@@ -21,7 +21,7 @@ farming.SceneFeedback = function (game) {
     var center = game.getCenterPosition();
     this.w = SETTINGS.createWindow();
     this.o = SETTINGS.createOverlay();
-    this.title = new farming.Label('WELL DONE!').setFontSize(SETTINGS.font.title).setPosition(SETTINGS.position.title);
+    this.title = SETTINGS.createTitle('Well done!').setFontColor('#335300');
     this.description = new lime.Label().setPosition(SETTINGS.position.title.x, SETTINGS.position.title.y+30).setMultiline(true)
     		.setFontSize(15).setText('You gained the following body points:');
 

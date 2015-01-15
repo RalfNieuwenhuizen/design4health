@@ -32,7 +32,7 @@ farming.SceneFarm = function (game) {
 
     this.windowLayer
         .appendChild(this.o)
-        .appendChild(this.w).appendChild(this.title)
+        .appendChild(this.w).appendChild(SETTINGS.createTitleImage('items'))
         .appendChild(this.closeButton);
 
     this.redraw(this.game.player.inventory);
@@ -52,23 +52,26 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
     this.windowLayer.appendChild(this.drawLayer);
     var center = this.game.getCenterPosition();
     var items = 0;
-    var obj = Object.keys(inventory);
-    for (var item in obj) {
-        if (obj.hasOwnProperty(item)) {
-            if (inventory[obj[item]]) {
-                this.drawItem(obj[item], inventory[obj[item]], new goog.math.Coordinate(items * 100 + center.x * 0.3, center.y * 0.65));
-                items++;
-            }
-        }
+    var shelf1 = new lime.Sprite().setFill('images/shelf.png').setSize(722*0.9,80*0.9).setPosition(400,160);
+    var shelf2 = new lime.Sprite().setFill('images/shelf.png').setSize(722*0.9,80*0.9).setPosition(400,320);
+    this.drawLayer.appendChild(shelf1).appendChild(shelf2);
+    for(var i in Object.keys(inventory)) {
+        var type = Object.keys(inventory)[i];
+        if(!inventory[type]) continue;
+        var position = new goog.math.Coordinate((items % 5)*125+140,Math.floor((items%10) / 5)*160+105);
+        this.drawItem(type, inventory[type], position);
+        items++;
     }
+
     if (items == 0) {
         var noItems = new lime.Label('You have not collected any items yet, go harvesting!').setFontSize(14).setPosition(center.x, center.y * 0.7);
         this.drawLayer.appendChild(noItems);
     }
 }
 farming.SceneFarm.prototype.drawItem = function (item, number, position) {
-    var prop = ITEMS[item];
-    var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(60, 60).setPosition(position);
-    var itemLabel = new lime.Label().setText(number).setSize(10, 10).setPosition(position.x + 27, position.y - 27);
-    this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
+    var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(100, 100).setPosition(position);
+    var itemLabel = new lime.Label().setText(number).setSize(20, 20).setPosition(position.x+35, position.y+30).setFontSize(18).setFontWeight(600).setFontColor('#365905');
+    var itemCircle = new lime.Circle().setSize(35,35).setFill('#b0d887').setStroke(new lime.fill.Stroke(3,'#365905'))
+        .setPosition(position.x+35,position.y+30)
+    this.drawLayer.appendChild(itemIcon).appendChild(itemCircle).appendChild(itemLabel);
 }
