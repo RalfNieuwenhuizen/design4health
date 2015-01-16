@@ -91,7 +91,7 @@ farming.Introduction.prototype.buttonAction = function(scene) {
 farming.Introduction.prototype.intro1 = function(){
 	this.text.setText("2542 AD \n\n"
 					+ "Your uncle was one of the first people to buy "
-					+ "land in an unknown planet and decided to turn "
+					+ "land in the uninhabited planet Yeo and decided to turn "
 					+ "it into a profitable farm to facilitate the earth\'s growing "
 					+ "needs of food.  \n\n"
 					+ "You received a mail telling you that your uncle "
@@ -116,7 +116,7 @@ farming.Introduction.prototype.intro2 = function(){
 			+ "this farm, since you have to do \n"
 			+ "real exercises regularly yourself! \n"
 			+ "I hope you are ready for this challenge! \n \n"
-			+ "Ready? Then let's have a look \n at your farm.");
+			+ "Ready? Then let's have a look \n at your equipment.");
 
 
 	this.button.setText('Sure!');
@@ -157,8 +157,8 @@ farming.Introduction.prototype.intro3 = function(){
 			+ "regularly in a fun way.\n\n"
 			+ "The progress of your own "
 			+ "body is represented in "
-			+ "the BODY shown on the "
-			+ "right.\n\n"
+			+ "the B.O.D.Y., your own bionic outer dimension yeosuit, shown on the "
+			+ "left.\n\n"
 			+ "If you gain the required "
 			+ "points for all body parts, "
 			+ "the BODY levels up. This "
