@@ -9,6 +9,8 @@ goog.require('farming.Button');
 goog.require('farming.Label');
 goog.require('farming.Introduction');
 goog.require('lime.animation.FadeTo');
+goog.require('lime.animation.MoveBy');
+goog.require('lime.animation.ScaleTo');
 goog.require('goog.math.Box');
 
 /**
@@ -368,47 +370,44 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
     // When positive amount, show big coin in the middle of the screen
     if (amount > 0) {
         lime.scheduleManager.callAfter(function () {
+            var wrapper = new lime.Layer().setScale(0.2).setPosition(400,600);
             var image = new lime.Sprite().setFill('images/coin/0.png')
-                .setSize(300, 300)
-                .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height));
+                .setSize(270, 270)
+                .setPosition(new goog.math.Coordinate(-150, 0));
 
             var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
-                .setPosition(new goog.math.Coordinate(SETTINGS.screen.width / 2 + 150, SETTINGS.screen.height - SETTINGS.size.controls.height))
-                .setFontSize(150)
+                .setPosition(new goog.math.Coordinate(150, 0))
+                .setFontSize(130).setFontWeight(600).setShadow('#000000', 5, 1, 1)
                 .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
 
-            this.controlsLayer.appendChild(image).appendChild(numberLabel);
-
-            // Move up
-            var moveUp = new lime.animation.MoveBy(0, -(SETTINGS.screen.height / 2)).setDuration(3);
-            image.runAction(moveUp);
-            numberLabel.runAction(moveUp);
-            goog.events.listen(moveUp, lime.animation.Event.STOP, function () {
-                // Twist coin
-                var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
-                for (var i = 5; i >= 0; i--) {
-                    animation.addFrame('images/coin/' + i + '.png');
-                }
-                animation.setLooping(false);
-                image.runAction(animation);
-
-                goog.events.listen(animation, lime.animation.Event.STOP, function () {
-                    // Clean up coin
-                    for (var i in this.targets) {
-                        var target = this.targets[i];
-                        target.parent_.removeChild(numberLabel);
-                        target.parent_.removeChild(target);
-                    }
-                });
-            });
+            wrapper.appendChild(image).appendChild(numberLabel);
+            this.controlsLayer.appendChild(wrapper);
+            var scene = this;
+            var moveUp = new lime.animation.MoveBy(0, -(SETTINGS.screen.height / 2)-100).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
+            var scale = new lime.animation.ScaleTo(0.7).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
+            wrapper.runAction(moveUp);
+            wrapper.runAction(scale);
+            var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);
+            for (var i = 5; i >= 0; i--) {
+                animation.addFrame('images/coin/' + i + '.png');
+            }
+            animation.setLooping(true);
+            image.runAction(animation);
+            lime.scheduleManager.callAfter(function(){
+                var fade = new lime.animation.FadeTo(0).setDuration(0.5);
+                wrapper.runAction(fade);
+                lime.scheduleManager.callAfter(function(){
+                    wrapper.removeAllChildren();
+                }, this, 500)
+            }, this, 1500)
         }, this, 500);
     }
 }
 
 // Animation of decreasing or increasing item
 farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position) {
-    var itemPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 - 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
-    var labelPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 + 150, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    var itemPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 - 80, SETTINGS.screen.height - SETTINGS.size.controls.height);
+    var labelPos = new goog.math.Coordinate(SETTINGS.screen.width / 2 + 80, SETTINGS.screen.height - SETTINGS.size.controls.height);
     if (opt_position) {
         itemPos = new goog.math.Coordinate(opt_position.x, opt_position.y - 30);
         labelPos = new goog.math.Coordinate(opt_position.x - 30, opt_position.y - 30);
@@ -424,8 +423,8 @@ farming.SceneMap.prototype.itemAnimation = function (type, amount, opt_position)
         if (opt_position) {
             this.landLayer.appendChild(itemSprite).appendChild(numberLabel);
         } else {
-            itemSprite.setSize(300, 300);
-            numberLabel.setFontSize(150);
+            itemSprite.setSize(150, 150);
+            numberLabel.setFontSize(100).setFontWeight(600).setShadow('#000000', 5, 1, 1);
             this.controlsLayer.appendChild(itemSprite).appendChild(numberLabel);
         }
         var moveUp = new lime.animation.MoveBy(0, opt_position ? -100 : -(SETTINGS.screen.height / 2)).setDuration(3);
