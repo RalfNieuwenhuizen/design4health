@@ -44,7 +44,7 @@ farming.Game = function () {
         width: SETTINGS.screen.width,
         height: SETTINGS.screen.height
     }
-
+    var date = new Date();
     this.player = {
         coins: 150, // + 10000 * SETTINGS.TESTING,
         exercisesDone: {},
@@ -60,7 +60,7 @@ farming.Game = function () {
             space_apple: 3
         },
         currentChallenge: null,
-        daysLoggedIn: {},
+        lastLogin: date.getFullYear()+'-'+(date.getMonth() + 1)+'-'+date.getDate(),
         settings: {
             sound: true,
             music: true
@@ -160,7 +160,6 @@ farming.Game.prototype.music = false;
 farming.Game.prototype.isAndroid = function () {
     return (typeof device != 'undefined' && device.platform == "Android");
 }
-// General close function
 farming.Game.prototype.playMusic = function (file) {
     var f = typeof file == 'undefined' ? 'music.ogg' : file;
     this.stopMusic();
@@ -176,6 +175,20 @@ farming.Game.prototype.playMusic = function (file) {
     }
     if (this.player.settings.music == true) {
         this.music.play(true);
+    }
+}
+farming.Game.prototype.playSound = function (file) {
+    var sound = new lime.audio.Audio('sounds/' + file);
+    if (typeof device != 'undefined' && device.platform == "Android") {
+        var loop = function (status) {
+            if (status === Media.MEDIA_STOPPED) {
+                this.music.play();
+            }
+        };
+        sound = new Media('file:///android_asset/www/' + file, null, null, loop);
+    }
+    if (this.player.settings.sound == true) {
+        sound.play(false);
     }
 }
 farming.Game.prototype.stopMusic = function () {
@@ -198,17 +211,9 @@ farming.Game.prototype.close = function () {
 // Check for the daily money bonus
 farming.Game.prototype.checkDailyBonus = function () {
     var date = new Date();
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    if (!this.player.daysLoggedIn)
-        this.player.daysLoggedIn = [];
-    if (!this.player.daysLoggedIn[year])
-        this.player.daysLoggedIn[year] = [];
-    if (!this.player.daysLoggedIn[year][month])
-        this.player.daysLoggedIn[year][month] = [];
-    if (!this.player.daysLoggedIn[year][month][day]) {
-        this.player.daysLoggedIn[year][month][day] = true;
+    var current = date.getFullYear()+'-'+(date.getMonth() + 1)+'-'+date.getDate();
+    if (this.player.lastLogin != current) {
+        this.player.lastLogin = current;
         lime.scheduleManager.callAfter(function () {
             var bonus = new lime.Label("Welcome back bonus!")
                 .setPosition(SETTINGS.screen.width / 2, SETTINGS.screen.height - (SETTINGS.size.controls.height * 2))
@@ -219,9 +224,12 @@ farming.Game.prototype.checkDailyBonus = function () {
             lime.scheduleManager.callAfter(function () {
                 this.parent_.removeChild(this);
             }, bonus, 2000);
+
         }, this, 1000);
         this.addCoins(20);
         this.sceneTask.newDay = true;
+        this.sceneTask.taskPhase++;
+        this.sceneTask.task();
     }
 }
 farming.Game.prototype.load = function () {
@@ -232,8 +240,8 @@ farming.Game.prototype.load = function () {
     try {
         this.player = save.player;
         this.introduction.introPhase = save.introPhase;
-        this.sceneTask.tasks = save.tasks;
-        this.sceneTask.taskPhase = save.taskPhase;
+        this.sceneTask.tasks = save.tasks ? save.tasks : [false,false,false];
+        this.sceneTask.taskPhase = save.taskPhase ? save.taskPhase : 1;
         this.sceneTask.newDay = save.newDay;
         for (var x = 0; x < SETTINGS.mapSize; x++) {
             for (var y = 0; y < SETTINGS.mapSize; y++) {

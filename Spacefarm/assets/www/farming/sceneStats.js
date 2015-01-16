@@ -87,14 +87,15 @@ farming.SceneStats.prototype.filterYear = function(scene) {
     }
     scene.redraw(scene.player);
 }
-farming.SceneStats.prototype.filterMonth = function(scene) {
+farming.SceneStats.prototype.filterMonth = function(scene, redraw) {
+    var redrawing = typeof redraw == 'undefined' ? true : redraw;
     switch(scene.filter.length) {
         case 1: scene.filter = [scene.filter[0], 1]; break;
         case 2: scene.filter = [scene.getDate()[0], scene.getDate()[1]]; break;
         case 3: scene.filter = [scene.filter[0], scene.filter[1]]; break;
         default: break;
     }
-    scene.redraw(scene.player);
+    if(redrawing) scene.redraw(scene.player);
 }
 farming.SceneStats.prototype.filterDay = function(scene) {
     switch(scene.filter.length) {

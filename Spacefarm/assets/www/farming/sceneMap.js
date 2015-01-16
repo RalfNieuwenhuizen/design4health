@@ -166,6 +166,7 @@ farming.SceneMap.prototype.drawLand = function () {
                         } else if (LIVESTOCK[currentClone.key]) {
                             tile.addLivestock(new farming.Livestock(currentClone.key, null, tile));
                         }
+                        scene.game.playSound('clone.ogg');
                     }
                     else {
                         scene.noMoneyAnimation(tile.getPosition());

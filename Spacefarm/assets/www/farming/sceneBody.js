@@ -31,7 +31,7 @@ farming.SceneBody = function (game) {
         .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeBody, this);
     this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,135).setSize(300,20)
-        .setText('Today you did:');
+        .setText('This month you did:');
     this.statsText = new lime.Label().setFontSize(18).setLineHeight(1.2).setFontColor('#637706').setMultiline(true)
         .setPosition(580,265).setSize(300,220);
 
@@ -73,6 +73,7 @@ farming.SceneBody.prototype.showStats = function(scene) {
     this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
 }*/
 farming.SceneBody.prototype.redraw = function(body) {
+    this.game.sceneStats.filterMonth(this.game.sceneStats, false);
     var exercises = this.game.sceneStats.getExercisesSorted(this.game.player);
     var text = '';
     var limit = 5;
@@ -85,7 +86,6 @@ farming.SceneBody.prototype.redraw = function(body) {
         var exercise = EXERCISES[exercises[i].type];
         text += (exercise.repetitions ? exercise.repetitions*exercises[i].count : Math.round(exercise.duration*exercises[i].count/60)+' minutes of') +' '+exercise.title + '\n';
     }
-    console.log(text+append);
     this.statsText.setText(text+append);
 
     if (this.body)

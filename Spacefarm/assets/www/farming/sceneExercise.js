@@ -170,7 +170,7 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
                 progress += step;
                 scene.countdown -= step;
                 if(scene.countdown <= 0)
-                    scene.startHeartRate(scene);
+                    scene.finishExercise(scene);
                 scene.updateProgress(progress)
             };
             lime.scheduleManager.scheduleWithDelay(schedule, scene, 1000*step, scene.countdown/step);

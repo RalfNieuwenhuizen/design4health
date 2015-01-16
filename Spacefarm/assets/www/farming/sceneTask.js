@@ -30,7 +30,7 @@ farming.SceneTask = function (game) {
 	
 	this.center = game.getCenterPosition();
 	this.w = new lime.Sprite().setFill('images/textbox/left_arrow.png').setSize(350,100);
-	this.text = new lime.Label().setFontSize(18).setMultiline(true);//.setPosition(this.center.x, this.center.y-15);    
+	this.text = new farming.Label().setFontSize(18).setMultiline(true).setVerticalAlign(true);//.setPosition(this.center.x, this.center.y-15);
     
 	// Global variables to check for progression
 	this.tasks = [false, false, false];
@@ -71,7 +71,6 @@ farming.SceneTask.prototype.hide = function(){
 farming.SceneTask.prototype.show = function(){
     this.visible = true;
     this.taskLayer.setHidden(false);
-
     if (this['show'+this.taskPhase] && this.newDay){
     	this.taskLayer.removeAllChildren();
     	this['show'+this.taskPhase]();
@@ -171,15 +170,25 @@ farming.SceneTask.prototype.start1 = function(){
         scene.show();
 	},false,this.game.sceneTask);
 }
-
+// Day task 1
+farming.SceneTask.prototype.showText = function(text){
+    var middle = this.game.sceneMap.calculate('middleTile');
+    var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
+    this.text.setText(text).setPosition(60,90).setSize(340,180);
+    this.w.setPosition(middleCor.x+260, middleCor.y-200).setSize(500,100).appendChild(this.text);
+    this.taskLayer.appendChild(this.w);
+}
 // Day task 1
 farming.SceneTask.prototype.show2 = function(){
-	var middle = this.game.sceneMap.calculate('middleTile');
-	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
-	this.text.setText("This is your task of today: \n\n"
-			+ "Take the stairs instead \n of the elevator").setPosition(50,0);
-	this.w.setPosition(middleCor.x+260, middleCor.y-200).setSize(520,200).appendChild(this.text);
-	this.taskLayer.appendChild(this.w);
+    this.showText("This is your task of today: \n Take the stairs instead of the elevator");
+}
+// Day task 2
+farming.SceneTask.prototype.show3 = function(){
+    this.showText("This is your task of today: \n Take the stairs instead of the elevator");
+}
+// Day task 3
+farming.SceneTask.prototype.show4 = function(){
+    this.showText("This is your task of today: \n Take the stairs instead of the elevator");
 }
 
 // Get reward button
