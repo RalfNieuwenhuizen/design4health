@@ -19,8 +19,8 @@ farming.SceneFeedback = function (game) {
     this.windowLayer = new lime.Layer();
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
-    this.o = SETTINGS.createOverlay();
     this.w = SETTINGS.createWindow().setSize(200,300).setPosition(center).setOpacity(0.9);
+    this.o = new farming.Sprite().setSize(200,300).setPosition(center).setOpacity(0.01).setFill(SETTINGS.color.background_layer);
     this.title = new farming.Label('WELL DONE!').setFontSize(SETTINGS.font.title).setPosition(0,-120);
     this.description = new lime.Label().setPosition(0,-80).setMultiline(true)
     		.setFontSize(15).setText('You gained the following \n body points:');
@@ -50,16 +50,17 @@ farming.SceneFeedback.prototype.showFeedback = function(exercise){
 	
     this.windowLayer
     .appendChild(this.w)
-    .appendChild(this.body);
+    .appendChild(this.body)
+    .appendChild(this.o);
 	
 	if (this.body)
         this.body.redraw(this.game.player.body, new goog.math.Coordinate(this.game.getCenterPosition().x-40, this.game.getCenterPosition().y+50));
     
-    this.armsPoints.setText('arms: 5');
-    this.legsPoints.setText('legs: 5');
-    this.chestPoints.setText('chest: 8');
-    this.backPoints.setText('back: 7');
-    this.absPoints.setText('abs: 2');
+    this.armsPoints.setText('arms: 0');
+    this.legsPoints.setText('legs: 0');
+    this.chestPoints.setText('chest: 0');
+    this.backPoints.setText('back: 0');
+    this.absPoints.setText('abs: 0');
     
 	if(exercise && exercise.type && exercise.points) {
         if( Object.prototype.toString.call( exercise.type ) === '[object Array]' ) {
@@ -71,7 +72,9 @@ farming.SceneFeedback.prototype.showFeedback = function(exercise){
         	this[exercise.type+'Points'].setText(exercise.type + ': ' + exercise.points);
         }
     }
-    //this.game.sceneMap.setActiveButton(null);
+    goog.events.listen(this.o, ['mousedown', 'touchstart'], function (e) {
+    	this.game.sceneFeedback.closeFeedback();
+	 },false,this);
 }
 
 farming.SceneFeedback.prototype.closeFeedback = function() {
@@ -82,10 +85,12 @@ farming.SceneFeedback.prototype.bodyUpgraded = function() {
     var w = SETTINGS.createWindow();
     var text = new lime.Label().setFontSize(18).setMultiline(true).setText('GREAT! \n You upgraded your body with one level! \n New challenges and items to clone are available now')
     		.setPosition(0,-135).setFontWeight('bold');
-    var button = new farming.Button('THANKS').setColor(SETTINGS.color.button).setAction(function(){this.game.close()}, this.game).setSize(SETTINGS.size.button).setPosition(0,135);
+    var scene = this;
+    var button = new farming.Button('THANKS').setColor(SETTINGS.color.button).setAction(function(){scene.game.close()}, scene.game).setSize(SETTINGS.size.button).setPosition(0,135);
     var body = new farming.Body(1, this.game);
     body.redraw(this.game.player.body, new goog.math.Coordinate(this.game.getCenterPosition().x, this.game.getCenterPosition().y));
     w.appendChild(text).appendChild(button);//.appendChild(closeButton);
+	
     this.game.sceneMap.sceneLayer.appendChild(w).appendChild(body);
 }
 

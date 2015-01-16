@@ -146,8 +146,7 @@ farming.Game.prototype.EventType = {
     FARM_CLICK: goog.events.getUniqueId('farm_click'),
     CROP_CLONED: goog.events.getUniqueId('crop_cloned'),
     CROP_HARVESTED: goog.events.getUniqueId('crop_harvested'),
-    WINDOW_OPENED: goog.events.getUniqueId('window_opened'),
-    NEW_DAY: goog.events.getUniqueId('new_day')
+    WINDOW_OPENED: goog.events.getUniqueId('window_opened')
 };
 
 // Create source to fire events
@@ -463,7 +462,6 @@ farming.Game.prototype.completeChallenge = function () {
 
 // show the challenge details screen for input.challenge
 farming.Game.prototype.showChallengeDetails = function (challenge) {
-    //this.sceneChallengeDetails = new farming.SceneChallengeDetails(this);
     this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
     this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
     game = this;

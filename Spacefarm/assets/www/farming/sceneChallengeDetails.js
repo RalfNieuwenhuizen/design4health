@@ -113,12 +113,15 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             this.giveUpButton.setHidden(true);
             this.startNextButton.setHidden(true);
             this.completeChallenge(this);
-        }
-        else {
-        	goog.events.listen(this.w, ['mousedown', 'touchstart'], function (e) {
-        		this.game.sceneFeedback.closeFeedback();
-        	    //e.swallow(['touchend', 'touchcancel', 'mouseup'], drag);
-        	 },false,this);
+            this.game.sceneFeedback.closeFeedback();
+        } else{
+        	if(this.game.sceneMap.activeButton == 'challenge'){
+                var underLayer = SETTINGS.createWindow().setOpacity(0.6);
+                this.game.sceneFeedback.windowLayer.appendChild(underLayer);
+            	goog.events.listen(underLayer, ['mousedown', 'touchstart'], function (e) {
+            		this.game.sceneFeedback.closeFeedback();
+            	 },false,this);
+        	}
     	}
     } else if (this.sufficientItems(challenge)) {
         this.o.setHidden(true);

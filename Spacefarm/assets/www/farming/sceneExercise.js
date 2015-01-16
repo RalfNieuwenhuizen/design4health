@@ -258,7 +258,7 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
 
-    	scene.game.showFeedback(exercise);
+    scene.game.showFeedback(exercise);
     
     // Fire that exercise is done
     scene.game.source.dispatchEvent(scene.game.EventType.EXERCISE_DONE);
