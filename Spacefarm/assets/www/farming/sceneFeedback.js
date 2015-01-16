@@ -81,9 +81,9 @@ farming.SceneFeedback.prototype.closeFeedback = function() {
     this.windowLayer.removeAllChildren();
 }
 
-farming.SceneFeedback.prototype.bodyUpgraded = function() {
+farming.SceneFeedback.prototype.bodyUpgraded = function(bodyLevel) {
     var w = SETTINGS.createWindow();
-    var text = new lime.Label().setFontSize(18).setMultiline(true).setText('GREAT! \n You upgraded your body with one level! \n New challenges and items to clone are available now')
+    var text = new lime.Label().setFontSize(18).setMultiline(true).setText('GREAT! \n You upgraded your body to level '+ bodyLevel +'! \n New challenges and items to clone are available now.')
     		.setPosition(0,-135).setFontWeight('bold');
     var scene = this;
     var button = new farming.Button('THANKS').setColor(SETTINGS.color.button).setAction(function(){scene.game.close()}, scene.game).setSize(SETTINGS.size.button).setPosition(0,135);

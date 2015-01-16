@@ -94,7 +94,7 @@ farming.Introduction.prototype.intro1 = function(){
 					+ "You received a mail telling you that your uncle \n"
 					+ "had left you the farm already years ago. The \n"
 					+ "fields on planet Yeo are unused and empty. Are \n"
-					+ "you able to make the farm succesful again?\n");
+					+ "you able to make the farm succesfull again?\n");
 	this.w.setPosition(this.center.x, this.center.y);
 	this.text.setPosition(this.center.x, this.center.y-30);
 	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.37).height).setSize(SETTINGS.size.button).setText('Start');
@@ -108,17 +108,18 @@ farming.Introduction.prototype.intro1 = function(){
 farming.Introduction.prototype.intro2 = function(){
 	this.text.setFontWeight('bold').setPosition(this.center.x+58, this.center.y-30).setText(
 			"Hello, welcome to Spaceville! My \n"
-			+ "name is Phil, your great-uncle. I \n"
-			+ "will help you through the start. \n\n"
-			+ "You have to work hard on this farm, \n"
-			+ "therefore you have to do real \n"
-			+ "exercises regularly yourself! I hope \n "
-			+ "you are ready for this challenge! \n \n"
+			+ "name is Phil, an old friend of \n"
+			+ "your uncle. I will help you \n "
+			+ "through the start. \n\n"
+			+ "You will have to work hard on \n "
+			+ "this farm, since you have to do \n"
+			+ "real exercises regularly yourself! \n"
+			+ "I hope you are ready for this challenge! \n \n"
 			+ "Ready? Then let's have a look \n at your farm.");
 	
 	this.phil.setSize(150, 200).setPosition(this.center.x-165, this.center.y + 56);
 
-	this.button.setPosition(this.center.x+58, this.center.y + 120)
+	this.button.setPosition(this.center.x+58, this.center.y + 140)
 		.setSize(SETTINGS.size.button).setText('Let\'s go!');
 	
 	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.phil);

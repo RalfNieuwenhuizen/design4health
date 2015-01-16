@@ -363,7 +363,7 @@ farming.Game.prototype.showFeedback = function (exercise) {
     //this.sceneFeedback.redraw(this.player.body);
     if (this.sceneBody.bodyLevel < this.sceneMap.body.getBodyLevel(this.player.body)){
     	this.sceneBody.bodyLevel = this.sceneMap.body.getBodyLevel(this.player.body);
-    	this.sceneFeedback.bodyUpgraded();
+    	this.sceneFeedback.bodyUpgraded(this.sceneBody.bodyLevel);
     }
     else {
     	this.sceneFeedback.showFeedback(exercise);
