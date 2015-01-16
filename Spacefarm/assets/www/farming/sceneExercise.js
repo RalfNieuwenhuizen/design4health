@@ -152,7 +152,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
 
 farming.SceneExercise.prototype.startExercise = function(scene) {
     if(scene.exercise) return;
-    scene.finishButton.setHidden(!SETTINGS.TESTING);
+    scene.finishButton.setHidden(true);
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
     scene.updateProgress(0);
