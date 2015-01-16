@@ -1,0 +1,77 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=20mm,
+ right=20mm,
+ top=20mm,
+ bottom=20mm,
+ }
+
+\pdfinfo{
+  /Title    (Building Serious Games - Design4Health)
+  /Author   (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Creator  (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Producer (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Subject  (Building Serious Games)
+}
+
+
+%Game design report (no more than 8-10 pages)
+%1. serious game (purpose and reality)
+%- purpose of the game; what does it need to bring about beyond the context of the game?
+%- what is the strategy you chose to achieve that purpose?; how does it work, and why?
+%- what is the role of the main operations and game elements in that strategy? how are these elements
+%kept in balance?
+%- describe the model you have developed for your simulation, and explain the choices made
+%2. serious game (play)
+%- description of the game concept; goal(s) in the game
+%- main elements in the game mechanics; game rules
+%- essential feedback elements (in relation to the game goals)
+%- challenges and dilemmas presented to the player
+%- types of choices and actions available (and their role in relation to the game purpose)
+%3. from prototype to the final game (up scaling)
+%- what was left out in the prototype? what's the roadmap to the final game? what are the main
+%challenges on that path?
+%- (non-technical) recommendations and warnings
+
+\title{Building Serious Games: Final Game Design}
+\author{
+	R. Nieuwenhuizen \and
+    D. Prihoda  \and
+	I. Psychoula \and
+	A.S.C. Schutter \and
+	S. Shen
+ }
+\date{January 2015}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In this article our project group describes the final version of the game PhysioFun. The game encourages the users to live a healthier life. We aim to reach this goal by stimulating the user to execute exercises, provide feedback and give further suggestions for a healthy lifestyle. \\
+The progress of the user is integrated in the storyline of the game, which should eccentrically motivate the user to keep up the good behavior. The intrinsic motivation to live healthy is supported by supplying information and personal feedback. All the exercises serve different goals and train different bodyparts, this information is provided to the user.  \\
+The engaging interaction of the user with the game is supported by the sensors of the smartphone. The sensors are used to provide feedback to the user and give the feeling that all the effort is worth it.
+\end{abstract}
+
+\section{Introduction}
+\input{introduction}
+
+\section{Purpose of the game}
+\label{chap:GamePurpose}
+\input{purpose}
+
+\section{Gameplay}
+\input{gameplay}
+
+\section{Future Work}
+\label{sec:FutureWork}
+\input{recommendations}
+
+\end{document}

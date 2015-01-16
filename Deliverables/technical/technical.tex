@@ -1,0 +1,81 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{float}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=20mm,
+ right=20mm,
+ top=20mm,
+ bottom=20mm,
+ }
+
+
+\pdfinfo{
+  /Title    (Building Serious Games - Design4Health)
+  /Author   (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Creator  (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Producer (Ralf Nieuwenhuizen, David Prihoda, Ismini Psychoula, Arnold Schutter, Shen Shuheng)
+  /Subject  (Building Serious Games)
+}
+
+%Game technical report (no more than 8-10 pages)
+%- describe and justify each of the main technical choices made in the prototype (including engine,
+%libraries used, class structure, special-purpose algorithms, effects, user interaction, GUI, …)
+%- what will be the main technical challenges for further developing the final game ?
+%- (technical) recommendations and warnings; what did you try but failed? why ?
+
+\title{Building Serious Games: Technical Report}
+\author{
+	R. Nieuwenhuizen \and
+    D. Prihoda  \and
+	I. Psychoula \and
+	A.S.C. Schutter \and
+	S. Shen
+ }
+\date{January 2015}
+
+\begin{document}
+
+
+
+\maketitle
+\begin{abstract}
+This report concerns the development of PhysioFun, a mobile phone game designed to encourage the users to exercise regularly. The software is based on Phonegap, a free and open source framework that allows the creation of mobile apps using standardized web APIs. 
+
+The idea for the application originated from the project specifications set to us by Design4Health, a company that aims to ``apply user-centered design tools and methods to the field of healthcare, through a careful study of digital touch-points, behavioral science and a combination of digital and physical products to shape a new and better healthcare experience.''
+
+It has been identified from the start that the software will be in a prototype stage upon submission, and it has only been tested with an Emulator and Android smartphones.
+\end{abstract}
+
+\renewcommand{\abstractname}{Acknowledgements}
+\begin{abstract}
+We would like to take the opportunity to thank our instructor Professor Bidarra and our mentors Mr. Dukalski and Mr. Ringard for their valuable guidance, stimulating suggestions and encouragement that helped us complete this project. We also would like to thank Mr. Barlage for the view on the exercises from the perspective of physiotherapy. 
+\end{abstract}
+
+\section{Introduction}
+\input{introduction}
+
+\section{Decisions}
+\input{decisions}
+
+\section{Technologies Used}
+\input{technologies}
+
+\section{Code structure}
+\input{structure}
+
+\section{User Interface}
+\input{interface}
+
+\section{Sensors}
+\input{sensors}
+
+\section{Challenges and Future Development}
+\input{future}
+
+\end{document}

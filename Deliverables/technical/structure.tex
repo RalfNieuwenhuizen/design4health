@@ -1,0 +1,20 @@
+The source code of the project is divided into two parts, the actual game, and the part to make it run on Android. Both parts will be explained in the next paragraphs.
+
+\subsection{Android code}
+The outer structure of the source code is defined by the rules of Java, PhoneGap (Cordova), and Android. Here are the Android manifest and all the plugins needed for the game to run on the phone. More about these plugins can be read in paragraph~\ref{subsec:cordova-plugins}
+
+\subsection{Game code}
+Inside the assets folder is where the game is located. The structure of the game is defined by LimeJS.
+LimeJS lets the user make an interface really fast and easy. You can just define shapes and buttons, customize them and put them on the screen. The game is composed of two types of components, objects and scenes, and also there are the images and sounds. All of these will be explained below. More on LimeJS can be read in paragraph~\ref{subsec:limejs}
+
+\subsubsection{Objects}
+Object contain information of the different game components. Example are exercise, items, crops, livestock, body and challenge. Each object can have methods assigned to it. For example, a challenge has methods to check whether all required items are available, and whether all exercises have been completed. It might be worth mentioning that there is also a separate settings file, where most of the major parameters for the gameplay and the user interface can be set. One of these settings is testing, which speeds up the game, and enables some shortcuts when set to true.
+
+\subsubsection{Scenes}
+At first, we used the LimeJS director for all of the screens, but it turned out that this way you could not click outside of the focused layer to click the menu buttons, so it was decided to change the structure a bit. Now, layers are simple pushed on top of the other screen, allowing the user to easily switch between each screen. All of these screen have their own file.
+
+\subsubsection{Images}
+The images are also divided into several folders. The crops and livestock for example have their own folders. Each exercise also has a separate folder, so the looping animation can be created easily.
+
+\subsubsection{Sounds}
+The sounds are located both in the game folder and the root folder, because Android/PhoneGap could not reach the sounds when they were in the game folder. The other way around, when testing the game in the browser, as was done, the sounds had to be in the game folder.
