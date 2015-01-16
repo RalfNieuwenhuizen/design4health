@@ -34,9 +34,6 @@ farming.SceneHarvest.prototype.startExercise = function(scene) {
     farming.SceneExercise.prototype.startExercise(scene);
 }
 
-farming.SceneHarvest.prototype.closeExercise = function(scene) {
-    scene.hideHarvest(scene);
-}
 
 farming.SceneHarvest.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;

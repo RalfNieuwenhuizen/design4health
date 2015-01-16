@@ -5,7 +5,7 @@ goog.provide('farming.Settings');
 goog.require('farming.RoundedRect');
 
 var SETTINGS = {
-    TESTING: false,
+    TESTING: true,
 
     timeUnit: function() {
         return SETTINGS.TESTING === true ? 1 : 60;

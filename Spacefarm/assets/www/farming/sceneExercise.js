@@ -99,7 +99,7 @@ farming.SceneExercise.prototype.showExercise = function(key) {
         this.description.setSize(700,160).setPosition(400,135);
         this.animation.setSize(795*0.55,420*0.55).setPosition(400,300);
     } else {
-        this.description.setSize(490,250).setPosition(515,240);
+        this.description.setSize(490,250).setPosition(515,250);
         this.animation.setSize(315*0.9,420*0.9).setPosition(130,220);
 
     }
@@ -212,6 +212,7 @@ farming.SceneExercise.prototype.closeExercise = function(scene) {
     if(scene.exercise) scene.exercise.stopWatch();
     scene.exercise = null;
     scene.countdown = null;
+    scene.game.hideHarvest();
 }
 
 farming.SceneExercise.prototype.finishExercise = function(scene) {

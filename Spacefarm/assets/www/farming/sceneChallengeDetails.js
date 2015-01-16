@@ -25,8 +25,8 @@ farming.SceneChallengeDetails = function (game) {
     this.w = SETTINGS.createWindow();
     this.o = SETTINGS.createOverlay();
     this.title = SETTINGS.createTitle('Challenge');
-    this.description = new lime.Label().setPosition(center.x, center.y * 0.45).setMultiline(true)
-        .setFontSize(SETTINGS.font.text);
+    this.description = new lime.Label().setPosition(center.x, center.y * 0.46).setMultiline(true)
+        .setFontSize(16);
     this.insufficient = new lime.Label().setSize(220,70).setPosition(630,360).setMultiline(true)
         .setFontSize(19).setFontWeight(600).setFontColor('#877b72').setText('Required items missing,\n harvest them first!').setHidden(true);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
