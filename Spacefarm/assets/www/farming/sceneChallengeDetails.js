@@ -187,7 +187,7 @@ farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt
 farming.SceneChallengeDetails.prototype.drawReward = function (reward, position) {
     var image = reward.type === 'coins' ? 'images/coin_small/0.png' : 'images/items/'+reward.key+'.png'
     var itemIcon = new lime.Sprite().setFill(image).setSize(60, 60).setPosition(position);
-    var itemLabel = new lime.Label().setText(reward.number).setFontSize(26).setSize(30, 30).setPosition(position);
+    var itemLabel = new lime.Label().setText(reward.number).setFontSize(26).setSize(30, 30).setPosition(position.x + 1, position.y + 3);
 
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }

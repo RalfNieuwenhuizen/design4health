@@ -101,7 +101,7 @@ farming.SceneClone.prototype.drawItem = function(slide, item, position) {
         var icon = new farming.Sprite('images/coin_bright.png')
             .setSize(40, 40).setPosition(position.x + 75, position.y - 55);
         if(item.cost > this.game.player.coins) icon.setSize(50,50).setFill('images/coin_insufficient.png');
-        var coins = new lime.Label(item.cost).setSize(20, 20).setPosition(position.x + 75, position.y - 56).setFontSize(20)
+        var coins = new lime.Label(item.cost).setSize(20, 20).setPosition(position.x + 75, position.y - 53).setFontSize(20)
         slide.appendChild(icon).appendChild(coins);
         if(!isCrop) this.drawFood(slide, item.food, position);
         bg.setColor('clone').setAction(this.showItemDetails, {'properties': item,'game': this.game} );

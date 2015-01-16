@@ -26,10 +26,10 @@ farming.SceneLivestockDetails = function (game) {
     this.title = SETTINGS.createTitle('');
     this.title.setText('Livestock Details');
 
-    this.cropIcon = new lime.Sprite().setSize(200*1.0, 169*1.0).setPosition(145, 170);
+    this.cropIcon = new lime.Sprite().setSize(200*1.0, 169*1.0).setPosition(145, 150);
 
     this.exerciseIcon = new lime.Sprite();
-    this.foodIcon = new lime.Sprite().setSize(40,40).setPosition(443, 93+42);
+    this.foodIcon = new lime.Sprite().setSize(40,40).setPosition(443, 127);
     //this.cropDetails = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
     //    .setPosition(center.x + 100, center.y).setMultiline(true);
     this.descriptionLayer = new lime.Layer().setPosition(10,0);
@@ -129,7 +129,7 @@ farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
     this.foodIcon.setFill('images/items/'+livestock.food+'.png');
     this.exerciseIcon.setFill('images/exercises/'+livestock.exercise+'/4.png')
         .setSize(EXERCISES[livestock.exercise].horizontal ? new goog.math.Size(795*0.25,420*0.25) : new goog.math.Size(315*0.4,420*0.4))
-        .setPosition(115, EXERCISES[livestock.exercise].horizontal ? 240 : 210);
+        .setPosition(115, EXERCISES[livestock.exercise].horizontal ? 260 : 220);
 
     this.cloneButton.setAction(this.startClone, {'properties': livestock,'game': this.game} );
     this.livestock = livestock;
