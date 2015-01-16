@@ -18,22 +18,22 @@ goog.require('goog.events');
  *
  */
 farming.SceneTask = function (game) {
-	goog.base(this);
-	this.game = game;
+    goog.base(this);
+    this.game = game;
 
-	// This layer is attached to the landscape and scrolls with it
-	this.taskLayer = new lime.Layer().setHidden(true);
-	game.sceneMap.landLayer.appendChild(this.taskLayer);
+    // This layer is attached to the landscape and scrolls with it
+    this.taskLayer = new lime.Layer().setHidden(true);
+    game.sceneMap.landLayer.appendChild(this.taskLayer);
 
-	this.taskPhase = 1;
-	this.newDay = true;
-	
-	this.center = game.getCenterPosition();
-	this.w = new lime.Sprite().setFill('images/textbox/left_arrow.png').setSize(350,100);
-	this.text = new farming.Label().setFontSize(18).setMultiline(true).setVerticalAlign(true);//.setPosition(this.center.x, this.center.y-15);
-    
-	// Global variables to check for progression
-	this.tasks = [false, false, false];
+    this.taskPhase = 1;
+    this.newDay = true;
+
+    this.center = game.getCenterPosition();
+    this.w = new lime.Sprite().setFill('images/textbox/left_arrow.png').setSize(350, 100);
+    this.text = new farming.Label().setFontSize(18).setMultiline(true).setVerticalAlign(true);//.setPosition(this.center.x, this.center.y-15);
+
+    // Global variables to check for progression
+    this.tasks = [false, false, false];
 
     // Run the task startup function right at the start (to bind the listeners even if you dont open the bubble)
     this.startupTask();
@@ -46,94 +46,93 @@ farming.SceneTask.prototype.game = null;
 farming.SceneTask.prototype.visible = false;
 
 // The task function has been called by pressing the farm
-farming.SceneTask.prototype.task = function(){
-    if(this.visible){
-    	this.hide();
+farming.SceneTask.prototype.task = function () {
+    if (this.visible) {
+        this.hide();
     } else {
         this.show();
     }
 }
- 
-farming.SceneTask.prototype.startupTask = function(){
-    if (this['start'+this.taskPhase]){
-        this['start'+this.taskPhase]();
+
+farming.SceneTask.prototype.startupTask = function () {
+    if (this['start' + this.taskPhase]) {
+        this['start' + this.taskPhase]();
     }
 }
 
-farming.SceneTask.prototype.hide = function(){
-    if(!(this.tasks[0] && this.tasks[1] && this.tasks[2])){
-    	this.visible = false;
-    	this.taskLayer.setHidden(true);
-    }
+farming.SceneTask.prototype.hide = function () {
+    if (this.taskPhase == 1 && this.tasks[0] && this.tasks[1] && this.tasks[2]) return;
+    this.visible = false;
+    this.taskLayer.setHidden(true);
 }
 
 // Show next task
-farming.SceneTask.prototype.show = function(){
+farming.SceneTask.prototype.show = function () {
     this.visible = true;
     this.taskLayer.setHidden(false);
-    if (this['show'+this.taskPhase] && this.newDay){
-    	this.taskLayer.removeAllChildren();
-    	this['show'+this.taskPhase]();
-    }    
-    else if(!this.newDay){
-    	console.log('it\'s not a new day in show()');
-    	this.wait();
+    if (this['show' + this.taskPhase] && this.newDay) {
+        this.taskLayer.removeAllChildren();
+        this['show' + this.taskPhase]();
+    }
+    else if (!this.newDay) {
+        console.log('it\'s not a new day in show()');
+        this.wait();
     }
 }
 
 // Wait for next day
-farming.SceneTask.prototype.wait = function(){
-	if (this['show'+this.taskPhase] && this.newDay){
-		this.show();
-	}    
-	else{
-		this.visible = true;
-		this.taskLayer.setHidden(false);
-		var middle = this.game.sceneMap.calculate('middleTile');
-		var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
-		this.text.setText("If you login tomorrow you \n will receive a new task.").setPosition(40,0);
-		this.w.setPosition(middleCor.x+260, middleCor.y-200).appendChild(this.text);
-		this.taskLayer.appendChild(this.w);
-		this.tasks = [false, false, false];
-	}
+farming.SceneTask.prototype.wait = function () {
+    if (this['show' + this.taskPhase] && this.newDay) {
+        this.show();
+    }
+    else {
+        this.visible = true;
+        this.taskLayer.setHidden(false);
+        var middle = this.game.sceneMap.calculate('middleTile');
+        var middleCor = this.game.sceneMap.twoDToScreen(middle.x, middle.y);
+        this.text.setText("If you login tomorrow you \n will receive a new task.").setPosition(40, 0);
+        this.w.setPosition(middleCor.x + 260, middleCor.y - 200).appendChild(this.text);
+        this.taskLayer.appendChild(this.w);
+        this.tasks = [false, false, false];
+    }
 }
 
 // Task1: Todo screen: show todo-list
-farming.SceneTask.prototype.show1 = function(){
-	var middle = this.game.sceneMap.calculate('middleTile');
-	var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
+farming.SceneTask.prototype.show1 = function () {
+    var middle = this.game.sceneMap.calculate('middleTile');
+    var middleCor = this.game.sceneMap.twoDToScreen(middle.x, middle.y);
 
-	var textbox = new lime.Sprite().setFill('#FFFFFF');
-    var text1 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
-    var text2 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500,100);
-	var button = new farming.Button('Get Reward').setColor(SETTINGS.color.button).setAction(this.getReward, this).setPosition(50,50).setSize(SETTINGS.size.button);
-	
+    var textbox = new lime.Sprite().setFill('#FFFFFF');
+    var text1 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500, 100);
+    var text2 = new lime.Label().setFontSize(18).setMultiline(true).setSize(500, 100);
+    var button = new farming.Button('Get Reward').setColor(SETTINGS.color.button).setAction(this.getReward, this).setPosition(50, 50).setSize(SETTINGS.size.button);
+
     textbox.setFill('images/textbox/left_arrow.png')
-        .setPosition(middleCor.x+260, middleCor.y-200).setOpacity(1).setSize(520,200);
-    var checkbox_1 = new farming.Sprite('images/checkbox_'+this.tasks[0]+'.png').setSize(30, 30).setPosition(-77,-02).setOpacity(0.8);
-	var checkbox_2 = new farming.Sprite('images/checkbox_'+this.tasks[1]+'.png').setSize(30, 30).setPosition(-77, 38).setOpacity(0.8);
-	var checkbox_3 = new farming.Sprite('images/checkbox_'+this.tasks[2]+'.png').setSize(30, 30).setPosition(-77, 78).setOpacity(0.8);
+        .setPosition(middleCor.x + 260, middleCor.y - 200).setOpacity(1).setSize(520, 200);
+    var checkbox_1 = new farming.Sprite('images/checkbox_' + this.tasks[0] + '.png').setSize(30, 30).setPosition(-77, -02).setOpacity(0.8);
+    var checkbox_2 = new farming.Sprite('images/checkbox_' + this.tasks[1] + '.png').setSize(30, 30).setPosition(-77, 38).setOpacity(0.8);
+    var checkbox_3 = new farming.Sprite('images/checkbox_' + this.tasks[2] + '.png').setSize(30, 30).setPosition(-77, 78).setOpacity(0.8);
 
-    text1.setFontWeight('bold').setPosition(150,-40).setAlign('left');
+    text1.setFontWeight('bold').setPosition(150, -40).setAlign('left');
 
-    text2.setFontWeight('bold').setPosition(200,38).setAlign('left').setText(
+    text2.setFontWeight('bold').setPosition(200, 38).setAlign('left').setText(
         "Clone a crop\n\n"
             + "   Do a challenge\n\n"
             + "   Harvest a crop\n\n");
     var text = '';
     //var button;
-    
-    if(this.tasks[0] && this.tasks[1] && this.tasks[2]) {
-    	text = "Perfect! You are learning fast. \n Finally I can go take a nap, \n take care of everything! \n\n Let me reward you for this:";
+
+    if (this.tasks[0] && this.tasks[1] && this.tasks[2]) {
+        text = "Perfect! You are learning fast. \n Finally I can go take a nap, \n take care of everything! \n\n Let me reward you for this:";
         checkbox_1.setHidden(true);
         checkbox_2.setHidden(true);
         checkbox_3.setHidden(true);
         text2.setHidden(true);
-        textbox.setSize(400,200);
-        text1.setPosition(50,-40).setAlign('center');
+        textbox.setSize(400, 200);
+        text1.setPosition(50, -40).setAlign('center');
         button.setHidden(false);
-    	textbox.appendChild(button);
-    } else if(this.tasks[0] || this.tasks[1] || this.tasks[2]) {
+        textbox.appendChild(button);
+    } else if (this.tasks[0] || this.tasks[1] || this.tasks[2]) {
         text = "Good job! You'll make a great farmer.\n Now continue with the others!";
     } else {
         text = "Now it\'s up to you to explore your farm. \n For a start, try out these three things.\n Good luck!\n\n";
@@ -144,59 +143,58 @@ farming.SceneTask.prototype.show1 = function(){
 }
 
 // Start1 is executed at the start of the game to bind the listeners
-farming.SceneTask.prototype.start1 = function(){
+farming.SceneTask.prototype.start1 = function () {
     var scene = this;
-    goog.events.listen(this.game.source,this.game.EventType.WINDOW_OPENED,function(){
+    goog.events.listen(this.game.source, this.game.EventType.WINDOW_OPENED, function () {
         scene.hide();
-    },false,this.game.sceneTask);
-	
+    }, false, this.game.sceneTask);
+
     // Listen to a crop to be cloned
-	goog.events.listenOnce(this.game.source,this.game.EventType.CLOSE_CLONE,function(){
-        if(!scene.tasks[0]) {
+    goog.events.listenOnce(this.game.source, this.game.EventType.CLOSE_CLONE, function () {
+        if (!scene.tasks[0]) {
             scene.tasks[0] = true;
             scene.show();
         }
-	},false,this.game.sceneTask);
+    }, false, this.game.sceneTask);
 
-	// Listen to a crop to be harvested
-	goog.events.listenOnce(this.game.source,this.game.EventType.CROP_HARVESTED,function(){
+    // Listen to a crop to be harvested
+    goog.events.listenOnce(this.game.source, this.game.EventType.CROP_HARVESTED, function () {
         scene.tasks[2] = true;
         scene.show();
-	},false,this.game.sceneTask);
+    }, false, this.game.sceneTask);
 
-	// Listen to a challenge to be completed
-	goog.events.listenOnce(this.game.source,this.game.EventType.COMPLETE_CHALLENGE,function(){
+    // Listen to a challenge to be completed
+    goog.events.listenOnce(this.game.source, this.game.EventType.COMPLETE_CHALLENGE, function () {
         scene.tasks[1] = true;
         scene.show();
-	},false,this.game.sceneTask);
+    }, false, this.game.sceneTask);
 }
 // Day task 1
-farming.SceneTask.prototype.showText = function(text){
+farming.SceneTask.prototype.showText = function (text) {
     var middle = this.game.sceneMap.calculate('middleTile');
-    var middleCor = this.game.sceneMap.twoDToScreen(middle.x,middle.y);
-    this.text.setText(text).setPosition(60,90).setSize(340,180);
-    this.w.setPosition(middleCor.x+260, middleCor.y-200).setSize(500,100).appendChild(this.text);
+    var middleCor = this.game.sceneMap.twoDToScreen(middle.x, middle.y);
+    this.text.setText(text).setPosition(60, 90).setSize(340, 180);
+    this.w.setPosition(middleCor.x + 260, middleCor.y - 200).setSize(500, 100).appendChild(this.text);
     this.taskLayer.appendChild(this.w);
 }
 // Day task 1
-farming.SceneTask.prototype.show2 = function(){
+farming.SceneTask.prototype.show2 = function () {
     this.showText("This is your task of today: \n Take the stairs instead of the elevator");
 }
 // Day task 2
-farming.SceneTask.prototype.show3 = function(){
+farming.SceneTask.prototype.show3 = function () {
     this.showText("This is your task of today: \n Take the stairs instead of the elevator");
 }
 // Day task 3
-farming.SceneTask.prototype.show4 = function(){
+farming.SceneTask.prototype.show4 = function () {
     this.showText("This is your task of today: \n Take the stairs instead of the elevator");
 }
 
 // Get reward button
-farming.SceneTask.prototype.getReward = function(scene){
-	scene.newDay = false;
-   	scene.game.addCoins(100);
-	scene.tasks = [false, false, false];
-	scene.taskPhase++;
-	scene.taskLayer.removeAllChildren();
-	scene.wait();
+farming.SceneTask.prototype.getReward = function (scene) {
+    scene.newDay = false;
+    scene.game.addCoins(100);
+    scene.taskPhase++;
+    scene.taskLayer.removeAllChildren();
+    scene.wait();
 }

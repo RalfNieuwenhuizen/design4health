@@ -213,19 +213,20 @@ farming.Introduction.prototype.intro4 = function(){
 farming.Introduction.prototype.intro6 = function(){
 	
 	// Listen to the show_farm event
-	goog.events.listenOnce(this.game.source,this.game.EventType.COMPLETE_CHALLENGE,goog.partial(this.completedChallenge,this.game.introduction));	
+	goog.events.listenOnce(
+        this.game.source,this.game.EventType.COMPLETE_CHALLENGE,goog.partial(this.completedChallenge,this.game.introduction));
 }
 
 // completedChallenge screen
-farming.Introduction.prototype.completedChallenge = function(){
+farming.Introduction.prototype.completedChallenge = function(scene){
 	
-	var position = {x: this.center.x+20,y: this.center.y + 150};
-	this.text.setFontWeight('bold').setPosition(position.x + 0, position.y-45).setText(
+	var position = {x: scene.center.x+20,y: scene.center.y + 150};
+    scene.text.setFontWeight('bold').setPosition(position.x + 0, position.y-45).setText(
 			"Congratulations! You completed \n your first challenge. \n \n Check out your progress \n in the BODY screen");
-	this.w.setFill('images/textbox/down_arrow.png').setSize(this.game.getFullSize(0.40).width, this.game.getFullSize(0.4).height)
-		.setPosition(position.x, position.y -15 ).setOpacity(0.8);		
-	
-	this.introLayer.appendChild(this.w).appendChild(this.text);
+    scene.w.setFill('images/textbox/down_arrow.png').setSize(scene.game.getFullSize(0.40).width, scene.game.getFullSize(0.4).height)
+		.setPosition(position.x, position.y -15 ).setOpacity(0.8);
+
+    scene.introLayer.appendChild(scene.w).appendChild(scene.text);
 	// Listen to open BODY
 	// goog.events.listenOnce(this.game.source,this.game.EventType.OPEN_BODY,goog.partial(this.buttonAction,this.game.introduction));
 }

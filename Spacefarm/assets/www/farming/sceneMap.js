@@ -143,7 +143,7 @@ farming.SceneMap.prototype.drawLand = function () {
                     }
                 } else {
                     scene.game.sceneTask.hide();
-                    scene.game.sceneFeedback.closeFeedback(scene.game);
+                    scene.game.sceneFeedback.closeFeedback();
                 }
                 if (tile.canBeHarvested()) {
                     tile.playSound();
@@ -400,7 +400,7 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
                     wrapper.removeAllChildren();
                 }, this, 500)
             }, this, 1500)
-        }, this, 500);
+        }, this, 1500);
     }
 }
 

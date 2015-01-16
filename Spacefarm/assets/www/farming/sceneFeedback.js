@@ -8,6 +8,8 @@ goog.require('farming.Button');
 goog.require('lime.Layer');
 goog.require('farming.Scene');
 goog.require('farming.Body');
+goog.require('lime.animation.MoveBy');
+goog.require('lime.animation.FadeTo');
 
 /**
  * Scene elements
@@ -20,7 +22,7 @@ farming.SceneFeedback = function (game) {
     this.appendChild(this.windowLayer);
     var center = game.getCenterPosition();
     this.w = SETTINGS.createWindow().setSize(200,300).setPosition(center).setOpacity(0.9);
-    this.o = new farming.Sprite().setSize(200,300).setPosition(center).setOpacity(0.01).setFill(SETTINGS.color.background_layer);
+    this.o = new farming.Sprite().setSize(200,300).setPosition(0,0).setOpacity(0.01).setFill(SETTINGS.color.background_layer);
     this.title = new farming.Label('WELL DONE!').setFontSize(SETTINGS.font.title).setPosition(0,-120);
     this.description = new lime.Label().setPosition(0,-80).setMultiline(true)
     		.setFontSize(15).setText('You gained the following \n body points:');
@@ -44,17 +46,19 @@ farming.SceneFeedback.prototype.game = null;
 
 farming.SceneFeedback.prototype.showFeedback = function(exercise){
     this.w.appendChild(this.title)
-    .appendChild(this.description)
-    .appendChild(this.closeButton)
-    .appendChild(this.armsPoints).appendChild(this.legsPoints).appendChild(this.chestPoints).appendChild(this.backPoints).appendChild(this.absPoints);
+        .appendChild(this.description)
+        .appendChild(this.closeButton)
+        .appendChild(this.body)
+        .appendChild(this.o)
+    .appendChild(this.armsPoints).appendChild(this.legsPoints)
+        .appendChild(this.chestPoints).appendChild(this.backPoints).appendChild(this.absPoints)
+        .setOpacity(1).setPosition(this.game.getCenterPosition());
 	
     this.windowLayer
-    .appendChild(this.w)
-    .appendChild(this.body)
-    .appendChild(this.o);
+    .appendChild(this.w);
 	
 	if (this.body)
-        this.body.redraw(this.game.player.body, new goog.math.Coordinate(this.game.getCenterPosition().x-40, this.game.getCenterPosition().y+50));
+        this.body.redraw(this.game.player.body, new goog.math.Coordinate(-40, +50));
     
     this.armsPoints.setText('arms: 0');
     this.legsPoints.setText('legs: 0');
@@ -72,13 +76,29 @@ farming.SceneFeedback.prototype.showFeedback = function(exercise){
         	this[exercise.type+'Points'].setText(exercise.type + ': ' + exercise.points);
         }
     }
+    var scene = this;
     goog.events.listen(this.o, ['mousedown', 'touchstart'], function (e) {
-    	this.game.sceneFeedback.closeFeedback();
+        scene.game.sceneFeedback.closeFeedback();
+        e.swallow(['touchend', 'mouseup'], function () {
+            e.preventDefault();
+        }, true);
 	 },false,this);
+
+    lime.scheduleManager.callAfter(function(){
+        scene.game.sceneFeedback.closeFeedback();
+    }, this, 3000);
 }
 
 farming.SceneFeedback.prototype.closeFeedback = function() {
-    this.windowLayer.removeAllChildren();
+    console.log('closing');
+    if(!this.windowLayer.children_ || !this.windowLayer.children_.length) return;
+    var fadeAway = new lime.animation.FadeTo(0).setDuration(0.5);
+    var move = new lime.animation.MoveBy(0,-200).setDuration(0.5);
+    this.w.runAction(fadeAway);
+    this.w.runAction(move);
+    lime.scheduleManager.callAfter(function(){
+        this.windowLayer.removeAllChildren();
+    }, this, 500);
 }
 
 farming.SceneFeedback.prototype.bodyUpgraded = function() {

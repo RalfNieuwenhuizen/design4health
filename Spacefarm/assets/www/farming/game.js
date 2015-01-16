@@ -60,7 +60,7 @@ farming.Game = function () {
             space_apple: 3
         },
         currentChallenge: null,
-        lastLogin: date.getFullYear()+'-'+(date.getMonth() + 1)+'-'+date.getDate(),
+        lastLogin: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
         settings: {
             sound: true,
             music: true
@@ -211,7 +211,7 @@ farming.Game.prototype.close = function () {
 // Check for the daily money bonus
 farming.Game.prototype.checkDailyBonus = function () {
     var date = new Date();
-    var current = date.getFullYear()+'-'+(date.getMonth() + 1)+'-'+date.getDate();
+    var current = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     if (this.player.lastLogin != current) {
         this.player.lastLogin = current;
         lime.scheduleManager.callAfter(function () {
@@ -228,365 +228,367 @@ farming.Game.prototype.checkDailyBonus = function () {
         }, this, 1000);
         this.addCoins(20);
         this.sceneTask.newDay = true;
-        this.sceneTask.taskPhase++;
+        if (this.sceneTask.tasks[0] && this.sceneTask.tasks[1] && this.sceneTask.tasks[2]) {
+            this.sceneTask.taskPhase++;
+        }
         this.sceneTask.task();
+        }
     }
-}
-farming.Game.prototype.load = function () {
-    var savedString = localStorage.getItem('save');
-    if (!savedString || savedString == 'null') return;
-    var save = JSON.parse(savedString);
+    farming.Game.prototype.load = function () {
+        var savedString = localStorage.getItem('save');
+        if (!savedString || savedString == 'null') return;
+        var save = JSON.parse(savedString);
 
-    try {
-        this.player = save.player;
-        this.introduction.introPhase = save.introPhase;
-        this.sceneTask.tasks = save.tasks ? save.tasks : [false,false,false];
-        this.sceneTask.taskPhase = save.taskPhase ? save.taskPhase : 1;
-        this.sceneTask.newDay = save.newDay;
+        try {
+            this.player = save.player;
+            this.introduction.introPhase = save.introPhase;
+            this.sceneTask.tasks = save.tasks ? save.tasks : [false, false, false];
+            this.sceneTask.taskPhase = save.taskPhase ? save.taskPhase : 1;
+            this.sceneTask.newDay = save.newDay;
+            for (var x = 0; x < SETTINGS.mapSize; x++) {
+                for (var y = 0; y < SETTINGS.mapSize; y++) {
+                    this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
+                }
+            }
+        } catch (e) {
+            if (!this.isAndroid()) alert('incompatible save, restarting');
+            this.reset();
+        }
+        this.checkDailyBonus();
+        this.sceneMap.updateControls();
+        this.sceneBody.bodyLevel = save.bodyLevel;
+        this.sceneBody.redraw(this.player.body);
+        this.sceneMap.body.redraw(this.player.body);
+    }
+    farming.Game.prototype.loadWrapper = function (game) {
+        game.load();
+    }
+    farming.Game.prototype.reset = function () {
+        localStorage.setItem('save', null);
+        this.saveAtClose = false;
+        window.location.reload();
+    }
+    farming.Game.prototype.save = function () {
+        var save = {};
+        save.player = this.player;
+        save.introPhase = this.introduction.introPhase;
+        save.tasks = this.sceneTask.tasks;
+        save.taskPhase = this.sceneTask.taskPhase;
+        save.newDay = this.sceneTask.newDay;
+        save.bodyLevel = this.sceneBody.bodyLevel;
+        save.tiles = [];
         for (var x = 0; x < SETTINGS.mapSize; x++) {
+            save.tiles[x] = [];
             for (var y = 0; y < SETTINGS.mapSize; y++) {
-                this.sceneMap.tiles[x][y].deserialize(save.tiles[x][y]);
+                save.tiles[x][y] = this.sceneMap.tiles[x][y].serialize();
             }
         }
-    } catch (e) {
-        if (!this.isAndroid()) alert('incompatible save, restarting');
-        this.reset();
+        var string = JSON.stringify(save);
+        localStorage.setItem('save', string);
     }
-    this.checkDailyBonus();
-    this.sceneMap.updateControls();
-    this.sceneBody.bodyLevel = save.bodyLevel;
-    this.sceneBody.redraw(this.player.body);
-    this.sceneMap.body.redraw(this.player.body);
-}
-farming.Game.prototype.loadWrapper = function (game) {
-    game.load();
-}
-farming.Game.prototype.reset = function () {
-    localStorage.setItem('save', null);
-    this.saveAtClose = false;
-    window.location.reload();
-}
-farming.Game.prototype.save = function () {
-    var save = {};
-    save.player = this.player;
-    save.introPhase = this.introduction.introPhase;
-    save.tasks = this.sceneTask.tasks;
-    save.taskPhase = this.sceneTask.taskPhase;
-    save.newDay = this.sceneTask.newDay;
-    save.bodyLevel = this.sceneBody.bodyLevel;
-    save.tiles = [];
-    for (var x = 0; x < SETTINGS.mapSize; x++) {
-        save.tiles[x] = [];
-        for (var y = 0; y < SETTINGS.mapSize; y++) {
-            save.tiles[x][y] = this.sceneMap.tiles[x][y].serialize();
-        }
+    farming.Game.prototype.saveWrapper = function (game) {
+        game.save();
     }
-    var string = JSON.stringify(save);
-    localStorage.setItem('save', string);
-}
-farming.Game.prototype.saveWrapper = function (game) {
-    game.save();
-}
 
 // -- settings --
-farming.Game.prototype.showSettings = function () {
-    this.close();
-    this.sceneMap.setActiveButton('settings');
-    this.sceneSettings.redraw(this.player.settings);
-    this.sceneMap.sceneLayer.appendChild(this.sceneSettings.windowLayer);
-}
+    farming.Game.prototype.showSettings = function () {
+        this.close();
+        this.sceneMap.setActiveButton('settings');
+        this.sceneSettings.redraw(this.player.settings);
+        this.sceneMap.sceneLayer.appendChild(this.sceneSettings.windowLayer);
+    }
 // -- end settings --
 // -- farm --
-farming.Game.prototype.showFarm = function () {
-    this.close();
-    this.sceneMap.setActiveButton('farm');
-    // Fire the event that farm is showed, listened to by introduction.intro3
-    this.source.dispatchEvent(this.EventType.SHOW_FARM);
-    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
-    this.sceneFarm.redraw(this.player.inventory);
-    //this.director.pushScene(this.sceneFarm);
-    this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
-}
+    farming.Game.prototype.showFarm = function () {
+        this.close();
+        this.sceneMap.setActiveButton('farm');
+        // Fire the event that farm is showed, listened to by introduction.intro3
+        this.source.dispatchEvent(this.EventType.SHOW_FARM);
+        this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
+        this.sceneFarm.redraw(this.player.inventory);
+        //this.director.pushScene(this.sceneFarm);
+        this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
+    }
 // -- end farm --
 
 //-- click on farm --
-farming.Game.prototype.showFarmClick = function () {
-    this.source.dispatchEvent(this.EventType.FARM_CLICK);
-    this.sceneTask.task();
-    //this.director.pushScene(this.sceneFarm);
-    //this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
-}
+    farming.Game.prototype.showFarmClick = function () {
+        this.source.dispatchEvent(this.EventType.FARM_CLICK);
+        this.sceneTask.task();
+        //this.director.pushScene(this.sceneFarm);
+        //this.sceneMap.sceneLayer.appendChild(this.sceneFarm.windowLayer);
+    }
 //-- end click on farm --
 
 // -- BODY --
-farming.Game.prototype.showBody = function () {
-    this.close();
-    this.sceneMap.setActiveButton('body');
-    this.sceneBody.redraw(this.player.body);
-    this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
-    this.source.dispatchEvent(this.EventType.OPEN_BODY);
-    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
-}
+    farming.Game.prototype.showBody = function () {
+        this.close();
+        this.sceneMap.setActiveButton('body');
+        this.sceneBody.redraw(this.player.body);
+        this.sceneMap.sceneLayer.appendChild(this.sceneBody.windowLayer);
+        this.source.dispatchEvent(this.EventType.OPEN_BODY);
+        this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
+    }
 
-farming.Game.prototype.showStats = function () {
-    this.sceneStats.filter = this.sceneStats.getDate();
-    this.sceneStats.redraw(this.player);
-    this.sceneMap.sceneLayer.appendChild(this.sceneStats.windowLayer);
-}
+    farming.Game.prototype.showStats = function () {
+        this.sceneStats.filter = this.sceneStats.getDate();
+        this.sceneStats.redraw(this.player);
+        this.sceneMap.sceneLayer.appendChild(this.sceneStats.windowLayer);
+    }
 // -- end BODY --
 
 // -- harvest --
-farming.Game.prototype.showHarvest = function (tile) {
-    this.close();
-    this.sceneHarvest.showExercise(tile);
-    this.director.pushScene(this.sceneHarvest);
-}
+    farming.Game.prototype.showHarvest = function (tile) {
+        this.close();
+        this.sceneHarvest.showExercise(tile);
+        this.director.pushScene(this.sceneHarvest);
+    }
 
-farming.Game.prototype.hideHarvest = function () {
-    if (this.director.getCurrentScene() == this.sceneHarvest) this.director.popScene();
-}
+    farming.Game.prototype.hideHarvest = function () {
+        if (this.director.getCurrentScene() == this.sceneHarvest) this.director.popScene();
+    }
 // -- end harvest --
 
 // -- exercise --
-farming.Game.prototype.showExercise = function (exercise) {
-    this.sceneExercise.showExercise(exercise);
-    this.director.pushScene(this.sceneExercise);
-}
+    farming.Game.prototype.showExercise = function (exercise) {
+        this.sceneExercise.showExercise(exercise);
+        this.director.pushScene(this.sceneExercise);
+    }
 
-farming.Game.prototype.hideExercise = function () {
-    if (this.director.getCurrentScene() == this.sceneExercise) this.director.popScene();
-}
+    farming.Game.prototype.hideExercise = function () {
+        if (this.director.getCurrentScene() == this.sceneExercise) this.director.popScene();
+    }
 // -- end exercise --
 
 // -- show feedback --
-farming.Game.prototype.showFeedback = function (exercise) {
-    //this.sceneFeedback.redraw(this.player.body);
-    if (this.sceneBody.bodyLevel < this.sceneMap.body.getBodyLevel(this.player.body)){
-    	this.sceneBody.bodyLevel = this.sceneMap.body.getBodyLevel(this.player.body);
-    	this.sceneFeedback.bodyUpgraded();
+    farming.Game.prototype.showFeedback = function (exercise) {
+        //this.sceneFeedback.redraw(this.player.body);
+        if (this.sceneBody.bodyLevel < this.sceneMap.body.getBodyLevel(this.player.body)) {
+            this.sceneBody.bodyLevel = this.sceneMap.body.getBodyLevel(this.player.body);
+            this.sceneFeedback.bodyUpgraded();
+        }
+        else {
+            this.sceneFeedback.showFeedback(exercise);
+        }
+        this.sceneMap.sceneLayer.appendChild(this.sceneFeedback.windowLayer);
     }
-    else {
-    	this.sceneFeedback.showFeedback(exercise);
-    }
-    this.sceneMap.sceneLayer.appendChild(this.sceneFeedback.windowLayer);
-}
 
 // -- end feedback-- 
 
 // -- clone --
-farming.Game.prototype.showClone = function () {
-    this.close();
-    this.sceneMap.setActiveButton('clone');
-    this.source.dispatchEvent(this.EventType.GO_CLONE);
-    this.sceneClone.drawItems(this.player.body);
-    this.sceneMap.sceneLayer.appendChild(this.sceneClone);
-    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
-}
+    farming.Game.prototype.showClone = function () {
+        this.close();
+        this.sceneMap.setActiveButton('clone');
+        this.source.dispatchEvent(this.EventType.GO_CLONE);
+        this.sceneClone.drawItems(this.player.body);
+        this.sceneMap.sceneLayer.appendChild(this.sceneClone);
+        this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
+    }
 
 // Start cloning a crop
-farming.Game.prototype.startCloning = function (properties) {
-    this.close();
-    this.currentClone = properties;
-    this.sceneMap.startCloning(properties);
-    this.source.dispatchEvent(this.EventType.CLONE_CROP);
-}
+    farming.Game.prototype.startCloning = function (properties) {
+        this.close();
+        this.currentClone = properties;
+        this.sceneMap.startCloning(properties);
+        this.source.dispatchEvent(this.EventType.CLONE_CROP);
+    }
 // -- end clone --
 
 // -- cropdetails --
-farming.Game.prototype.showItemDetails = function (item) {
-    if (typeof item.food == 'undefined') {
-        this.sceneCropDetails.showDetails(item);
-        this.sceneMap.sceneLayer.appendChild(this.sceneCropDetails.windowLayer);
-    } else {
-        this.sceneLivestockDetails.showDetails(item);
-        this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
+    farming.Game.prototype.showItemDetails = function (item) {
+        if (typeof item.food == 'undefined') {
+            this.sceneCropDetails.showDetails(item);
+            this.sceneMap.sceneLayer.appendChild(this.sceneCropDetails.windowLayer);
+        } else {
+            this.sceneLivestockDetails.showDetails(item);
+            this.sceneMap.sceneLayer.appendChild(this.sceneLivestockDetails.windowLayer);
+        }
+        this.source.dispatchEvent(this.EventType.CLONE_DETAILS);
     }
-    this.source.dispatchEvent(this.EventType.CLONE_DETAILS);
-}
 
-farming.Game.prototype.backCropDetails = function () {
-    this.sceneMap.sceneLayer.removeChild(this.sceneCropDetails.windowLayer);
-}
+    farming.Game.prototype.backCropDetails = function () {
+        this.sceneMap.sceneLayer.removeChild(this.sceneCropDetails.windowLayer);
+    }
 
-farming.Game.prototype.backLivestockDetails = function () {
-    this.sceneMap.sceneLayer.removeChild(this.sceneLivestockDetails.windowLayer);
-}
+    farming.Game.prototype.backLivestockDetails = function () {
+        this.sceneMap.sceneLayer.removeChild(this.sceneLivestockDetails.windowLayer);
+    }
 // -- end livestockdetails --
 
 // -- Challenge screen --
 // if there is no current challenge, show the list of challenges, otherwise show the current challenge
-farming.Game.prototype.showChallenge = function () {
-    this.close();
-    this.sceneMap.setActiveButton('challenge');
-    if (!this.player.currentChallenge) {
-        this.sceneChallenge.redraw(this.player.body);
-        this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
-    } else {
-        this.showChallengeDetails(this.player.currentChallenge);
+    farming.Game.prototype.showChallenge = function () {
+        this.close();
+        this.sceneMap.setActiveButton('challenge');
+        if (!this.player.currentChallenge) {
+            this.sceneChallenge.redraw(this.player.body);
+            this.sceneMap.sceneLayer.appendChild(this.sceneChallenge.windowLayer);
+        } else {
+            this.showChallengeDetails(this.player.currentChallenge);
+        }
+        this.source.dispatchEvent(this.EventType.OPEN_CHALLENGES);
+        this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
     }
-    this.source.dispatchEvent(this.EventType.OPEN_CHALLENGES);
-    this.source.dispatchEvent(this.EventType.WINDOW_OPENED);
-}
 
 // set the current challenge and close all challenge screens
-farming.Game.prototype.selectChallenge = function (challenge) {
-    for (var i in challenge.requirements) {
-        var requirement = challenge.requirements[i];
-        if (requirement.type === 'item') {
-            lime.scheduleManager.callAfter(function () {
-                this.game.removeItem(this.requirement.key, this.requirement.number);
-            }, {game: this, requirement: requirement}, i * 1000);
+    farming.Game.prototype.selectChallenge = function (challenge) {
+        for (var i in challenge.requirements) {
+            var requirement = challenge.requirements[i];
+            if (requirement.type === 'item') {
+                lime.scheduleManager.callAfter(function () {
+                    this.game.removeItem(this.requirement.key, this.requirement.number);
+                }, {game: this, requirement: requirement}, i * 1000);
+            }
         }
+        this.player.currentChallenge = challenge;
+        this.player.currentChallenge.exercisesDone = [];
+        this.showChallenge();
     }
-    this.player.currentChallenge = challenge;
-    this.player.currentChallenge.exercisesDone = [];
-    this.showChallenge();
-}
 
 // remove the current challenge and close all challenge screens
-farming.Game.prototype.giveUpChallenge = function () {
-    this.player.currentChallenge = null;
-    this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
-    this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
-    this.showChallenge();
-}
-
-// complete the current challenge, remove all the items and close all challenge screens
-farming.Game.prototype.completeChallenge = function () {
-    for (var i in this.player.currentChallenge.rewards) {
-        var reward = this.player.currentChallenge.rewards[i];
-        if (reward.type === 'item') {
-            this.addItem(reward.key, reward.number);
-        }
-        if (reward.type === 'coins') {
-            this.addCoins(reward.number);
-        }
+    farming.Game.prototype.giveUpChallenge = function () {
+        this.player.currentChallenge = null;
+        this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
+        this.sceneMap.sceneLayer.removeChild(this.sceneChallenge.windowLayer);
+        this.showChallenge();
     }
 
-    this.player.currentChallenge = null;
-    this.close();
-    //this.showChallenge();
-}
+// complete the current challenge, remove all the items and close all challenge screens
+    farming.Game.prototype.completeChallenge = function () {
+        for (var i in this.player.currentChallenge.rewards) {
+            var reward = this.player.currentChallenge.rewards[i];
+            if (reward.type === 'item') {
+                this.addItem(reward.key, reward.number);
+            }
+            if (reward.type === 'coins') {
+                this.addCoins(reward.number);
+            }
+        }
+
+        this.player.currentChallenge = null;
+        this.close();
+        //this.showChallenge();
+    }
 
 // show the challenge details screen for input.challenge
-farming.Game.prototype.showChallengeDetails = function (challenge) {
-    this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
-    this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
-    game = this;
-    console.log('sceneChallengeDetails2: ' + goog.dom.contains(game.sceneMap.sceneLayer,game.sceneChallengeDetails.windowLayer));
-    this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
-}
+    farming.Game.prototype.showChallengeDetails = function (challenge) {
+        this.sceneChallengeDetails.setChallenge(challenge, !!(this.player.currentChallenge));
+        this.sceneMap.sceneLayer.appendChild(this.sceneChallengeDetails.windowLayer);
+        game = this;
+        console.log('sceneChallengeDetails2: ' + goog.dom.contains(game.sceneMap.sceneLayer, game.sceneChallengeDetails.windowLayer));
+        this.source.dispatchEvent(this.EventType.CHALLENGE_DETAILS);
+    }
 
 // go back from the details screen to the overview screen
-farming.Game.prototype.backChallengeDetails = function () {
-    this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
-}
+    farming.Game.prototype.backChallengeDetails = function () {
+        this.sceneMap.sceneLayer.removeChild(this.sceneChallengeDetails.windowLayer);
+    }
 
 // -- end challenge screen --
 
 // -- start introduction screen --
-farming.Game.prototype.showIntroduction = function () {
-    this.director.pushScene(this.introduction);
-}
-
-farming.Game.prototype.closeIntroduction = function () {
-    if (this.director.getCurrentScene() == this.introduction) {
-        this.director.popScene();
+    farming.Game.prototype.showIntroduction = function () {
+        this.director.pushScene(this.introduction);
     }
-}
+
+    farming.Game.prototype.closeIntroduction = function () {
+        if (this.director.getCurrentScene() == this.introduction) {
+            this.director.popScene();
+        }
+    }
 // -- end introduction screen --
 
-farming.Game.prototype.addCoins = function (amount) {
-    this.sceneMap.moneyAnimation(amount);
-    this.player.coins += amount;
-    this.sceneMap.updateControls();
-    return this.player.coins;
-}
-farming.Game.prototype.removeCoins = function (amount) {
-    if (this.player.coins < amount) return false;
-    this.sceneMap.moneyAnimation(-amount);
-    this.player.coins -= amount;
-    this.sceneMap.updateControls();
-    return this.player.coins;
-}
-farming.Game.prototype.getCoins = function () {
-    return this.player.coins;
-}
-farming.Game.prototype.hasCoins = function (amount) {
-    return this.player.coins >= amount;
-}
+    farming.Game.prototype.addCoins = function (amount) {
+        this.sceneMap.moneyAnimation(amount);
+        this.player.coins += amount;
+        this.sceneMap.updateControls();
+        return this.player.coins;
+    }
+    farming.Game.prototype.removeCoins = function (amount) {
+        if (this.player.coins < amount) return false;
+        this.sceneMap.moneyAnimation(-amount);
+        this.player.coins -= amount;
+        this.sceneMap.updateControls();
+        return this.player.coins;
+    }
+    farming.Game.prototype.getCoins = function () {
+        return this.player.coins;
+    }
+    farming.Game.prototype.hasCoins = function (amount) {
+        return this.player.coins >= amount;
+    }
 
 // -- Inventory --
-farming.Game.prototype.addItem = function (type, amount, opt_positionOnMap) {
-    if (!this.hasItem(type, amount)) {
-        this.player.inventory[type] = amount;
-    } else {
-        this.player.inventory[type] += amount;
+    farming.Game.prototype.addItem = function (type, amount, opt_positionOnMap) {
+        if (!this.hasItem(type, amount)) {
+            this.player.inventory[type] = amount;
+        } else {
+            this.player.inventory[type] += amount;
+        }
+        this.sceneMap.itemAnimation(type, amount, opt_positionOnMap);
+        return this.player.inventory[type];
     }
-    this.sceneMap.itemAnimation(type, amount, opt_positionOnMap);
-    return this.player.inventory[type];
-}
-farming.Game.prototype.removeItem = function (type, amount, opt_positionOnMap) {
-    if (!amount)
-        amount = 1;
+    farming.Game.prototype.removeItem = function (type, amount, opt_positionOnMap) {
+        if (!amount)
+            amount = 1;
 
-    if (!this.hasItem(type, amount)) return false;
-    this.player.inventory[type] -= amount;
-    this.sceneMap.itemAnimation(type, -amount, opt_positionOnMap);
-    return this.player.inventory[type];
-}
-farming.Game.prototype.getInventory = function (type) {
-    if (type) {
-        if (this.hasItem(type))
-            return this.player.inventory[type];
-        else
-            return 0;
+        if (!this.hasItem(type, amount)) return false;
+        this.player.inventory[type] -= amount;
+        this.sceneMap.itemAnimation(type, -amount, opt_positionOnMap);
+        return this.player.inventory[type];
     }
-    return this.player.inventory;
-}
-farming.Game.prototype.hasItem = function (type, amount) {
-    if (!amount)
-        amount = 1;
-    return this.player.inventory[type] >= amount;
-}
+    farming.Game.prototype.getInventory = function (type) {
+        if (type) {
+            if (this.hasItem(type))
+                return this.player.inventory[type];
+            else
+                return 0;
+        }
+        return this.player.inventory;
+    }
+    farming.Game.prototype.hasItem = function (type, amount) {
+        if (!amount)
+            amount = 1;
+        return this.player.inventory[type] >= amount;
+    }
 
 // -- BODY --
-farming.Game.prototype.addPoints = function (bodypart, amount) {
-    if (!this.player.body[bodypart]) this.player.body[bodypart] = 0;
-    var max = this.sceneMap.body.getTargetXP(this.player.body[bodypart]);
-    this.player.body[bodypart] = Math.min(max, this.player.body[bodypart] + amount);
-    this.sceneMap.body.redraw(this.player.body);
-    
-    return this.player.body[bodypart];
-}
-farming.Game.prototype.getPoints = function (bodypart) {
-    if (this.player.body[bodypart])
+    farming.Game.prototype.addPoints = function (bodypart, amount) {
+        if (!this.player.body[bodypart]) this.player.body[bodypart] = 0;
+        var max = this.sceneMap.body.getTargetXP(this.player.body[bodypart]);
+        this.player.body[bodypart] = Math.min(max, this.player.body[bodypart] + amount);
+        this.sceneMap.body.redraw(this.player.body);
+
         return this.player.body[bodypart];
+    }
+    farming.Game.prototype.getPoints = function (bodypart) {
+        if (this.player.body[bodypart])
+            return this.player.body[bodypart];
 
-    return 0;
-}
+        return 0;
+    }
 
-farming.Game.prototype.putStatistics = function (exercise) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
-    if (!this.player.exercisesDone[yyyy])
-        this.player.exercisesDone[yyyy] = {};
-    if (!this.player.exercisesDone[yyyy][mm])
-        this.player.exercisesDone[yyyy][mm] = {};
-    if (!this.player.exercisesDone[yyyy][mm][dd])
-        this.player.exercisesDone[yyyy][mm][dd] = [];
-    this.player.exercisesDone[yyyy][mm][dd].push(exercise);
-}
+    farming.Game.prototype.putStatistics = function (exercise) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (!this.player.exercisesDone[yyyy])
+            this.player.exercisesDone[yyyy] = {};
+        if (!this.player.exercisesDone[yyyy][mm])
+            this.player.exercisesDone[yyyy][mm] = {};
+        if (!this.player.exercisesDone[yyyy][mm][dd])
+            this.player.exercisesDone[yyyy][mm][dd] = [];
+        this.player.exercisesDone[yyyy][mm][dd].push(exercise);
+    }
 
 // -- Game methods --
-farming.Game.prototype.getFullSize = function (percent) {
-    var ratio = typeof percent == 'undefined' ? 1 : percent;
-    return new goog.math.Size(this.screen.width * ratio, this.screen.height * ratio);
-}
+    farming.Game.prototype.getFullSize = function (percent) {
+        var ratio = typeof percent == 'undefined' ? 1 : percent;
+        return new goog.math.Size(this.screen.width * ratio, this.screen.height * ratio);
+    }
 
-farming.Game.prototype.getCenterPosition = function (controls) {
-    var c = typeof controls == 'undefined' ? 1 : +controls;
-    return new goog.math.Coordinate(this.screen.width / 2, (this.screen.height - c * SETTINGS.size.controls.height) / 2)
-}
+    farming.Game.prototype.getCenterPosition = function (controls) {
+        var c = typeof controls == 'undefined' ? 1 : +controls;
+        return new goog.math.Coordinate(this.screen.width / 2, (this.screen.height - c * SETTINGS.size.controls.height) / 2)
+    }
