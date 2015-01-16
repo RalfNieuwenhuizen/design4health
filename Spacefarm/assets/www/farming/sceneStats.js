@@ -24,7 +24,8 @@ farming.SceneStats = function (game) {
     //var bg = new lime.Sprite().setFill('rgba(0,0,0,0.3)').setSize(game.getFullSize(1)).setPosition(game.getCenterPosition());
     this.w = SETTINGS.createWindow();
     this.title = SETTINGS.createTitle('Statistics');
-    this.description = new farming.Label('').setPosition(center).setMultiline(true).setFontSize(20).setAlign('center');
+    this.leftColumn = new farming.Label('').setSize(550,270).setPosition(center).setMultiline(true).setFontSize(20).setAlign('left');
+    this.rightColumn = new farming.Label('').setSize(550,270).setPosition(center).setMultiline(true).setFontSize(20).setAlign('right');
 
     this.monthNames = [ "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December" ];
@@ -63,7 +64,8 @@ farming.SceneStats = function (game) {
     this.windowLayer
         .appendChild(this.w)
         .appendChild(this.title)
-        .appendChild(this.description)
+        .appendChild(this.leftColumn)
+        .appendChild(this.rightColumn)
         .appendChild(this.prevButton)
         .appendChild(this.yearButton)
         .appendChild(this.monthButton)
@@ -203,13 +205,19 @@ farming.SceneStats.prototype.getExercisesSorted = function(player) {
 farming.SceneStats.prototype.redraw = function(player) {
     this.player = player;
     var exercises = this.getExercises(player);
-    var text = '';
+    var left = '';
+    var right = '';
     var keys = Object.keys(exercises);
+    var items = 0;
     for(var i in keys) {
         var exercise = EXERCISES[keys[i]];
-        text += exercise.title + ': ' + exercises[keys[i]] + '\n';
+        if(items++ % 2 == 0)
+            left += exercise.title + ': ' + exercises[keys[i]] + '\n';
+        else
+            right += exercise.title + ': ' + exercises[keys[i]] + '\n';
     }
-    this.description.setText(text ? text : 'You have not done any exercises in this period.');
+    this.leftColumn.setText(left ? left : 'You have not done any exercises in this period.');
+    this.rightColumn.setText(right ? right : '');
 }
 
 farming.SceneStats.prototype.getDate = function(dd, mm, yyyy) {
