@@ -87,6 +87,13 @@ farming.SceneBody.prototype.redraw = function(body) {
         exercises = exercises.slice(0,limit);
         append = 'and more...';
     }
+    if (exercises.length == 0) {
+        this.statsHeading.setHidden(true);
+        this.statsText.setHidden(true);
+    } else {
+        this.statsHeading.setHidden(false);
+        this.statsText.setHidden(false);
+    }
     for(var i in exercises) {
         var exercise = EXERCISES[exercises[i].type];
         text += (exercise.repetitions ? exercise.repetitions*exercises[i].count : Math.round(exercise.duration*exercises[i].count/60)+' minutes of') +' '+exercise.title + '\n';
