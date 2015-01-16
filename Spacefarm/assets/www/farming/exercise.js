@@ -117,7 +117,7 @@ last=acc[acc.length-1];
     {
         rep=0;
         acc=[];
-        navigator.notification.vibrate(2500);
+        navigator.notification.vibrate(1000);
        farming.Exercise.prototype.playEndSound();
 
         exercise.onExerciseSuccess(exercise.target);
@@ -328,7 +328,7 @@ farming.Exercise.prototype.bear_hug = function (acceleration, exercise)
     if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
     {
         //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
+        navigator.notification.vibrate(1000);
         farming.Exercise.prototype.playEndSound();
         rep=0;
         acc=[];
@@ -560,7 +560,7 @@ farming.Exercise.prototype.walking = function (acceleration, exercise) {
 
      if (steps>=20){
              steps=0;
-             navigator.notification.vibrate(2500);
+             navigator.notification.vibrate(1000);
              strechsound.pause();
 
             steps_prevVal = 1.0;
