@@ -30,10 +30,14 @@ farming.SceneBody = function (game) {
         .setPosition(SETTINGS.position.close_button)
         .setSize(SETTINGS.size.close_button);
     this.closeButton.setAction(this.closeBody, this);
-    this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,135).setSize(300,20)
+
+    this.dailyTip = new lime.Label().setFontSize(18).setStyle('italic').setMultiline(true)
+        .setPosition(580,135).setSize(300,100);
+
+    this.statsHeading = new lime.Label().setFontSize(20).setFontWeight(600).setPosition(580,185).setSize(300,20)
         .setText('This month you did:');
     this.statsText = new lime.Label().setFontSize(18).setLineHeight(1.2).setFontColor('#637706').setMultiline(true)
-        .setPosition(580,265).setSize(300,220);
+        .setPosition(580,310).setSize(300,220);
 
     this.statsButton = new farming.Button('More statistics').setColor('green')
         .setPosition(580,345)
@@ -48,10 +52,11 @@ farming.SceneBody = function (game) {
         .appendChild(this.statsButton)
         .appendChild(this.statsHeading)
         .appendChild(this.statsText)
+        .appendChild(this.dailyTip)
         .appendChild(this.closeButton);
     this.body = new farming.Body(1.35, this.game);
     this.windowLayer.appendChild(this.body);
-    
+
     // Remember the current body level
     this.bodyLevel = 1;
 }
@@ -68,15 +73,15 @@ farming.SceneBody.prototype.showStats = function(scene) {
 }
 
 /*farming.SceneBody.prototype.redraw = function(body) {
-    this.statsText.//player.exercisesDone[year][month][day]
-        if (this.body)
-    this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
-}*/
+ this.statsText.//player.exercisesDone[year][month][day]
+ if (this.body)
+ this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
+ }*/
 farming.SceneBody.prototype.redraw = function(body) {
     this.game.sceneStats.filterMonth(this.game.sceneStats, false);
     var exercises = this.game.sceneStats.getExercisesSorted(this.game.player);
     var text = '';
-    var limit = 5;
+    var limit = 4;
     var append = '';
     if(exercises.length > limit) {
         exercises = exercises.slice(0,limit);
@@ -88,6 +93,21 @@ farming.SceneBody.prototype.redraw = function(body) {
     }
     this.statsText.setText(text+append);
 
-    if (this.body)
-        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x-180, this.game.getCenterPosition().y-5));
+    if (this.body) {
+        this.body.redraw(body, new goog.math.Coordinate(this.game.getCenterPosition().x - 180, this.game.getCenterPosition().y - 5));
+
+        var suggestions = {
+            'arms': 'picking space apples',
+            'back': 'harvesting space wheat',
+            'chest': 'gathering eggs from polychicks',
+            'abs': 'harvesting space carrots',
+            'legs': 'doing the space cookies challenge'
+        };
+
+        this.dailyTip.setText(
+            (Math.random() > 0.5) ?
+            "Good job on your "+this.body.getBestBodyPart()+",\n don\`t forget your other body parts! \n Try for example "+suggestions[this.body.getWorstBodyPart()]+"." :
+            "Try to focus a little more on your "+this.body.getWorstBodyPart()+", for example by "+suggestions[this.body.getWorstBodyPart()]+".\n Keep up the good work!"
+        );
+    }
 }
