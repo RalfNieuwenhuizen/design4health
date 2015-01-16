@@ -143,15 +143,18 @@ farming.Tile.prototype.playSound = function () {
 farming.Tile.prototype.scheduleNotification = function (item) {
     var settings = {
         //icon: 'file://android_asset/www/farming/images/'+(item.prop.food ? 'livestock/'+item.type+'1_harvestable.png' : 'crops/'+item.type+'_ripe.png'),
+        icon: 'icon2.jpg',
         id : 'harvest_'+item.type,
         title: 'Your '+item.prop.name+' is ready!' ,
         message: 'Spare a minute for '+EXERCISES[item.prop.exercise].title+'?' ,
         date : new Date(item.getHarvestTime()*1000),
+        autoCancel: true,
         sound: null
     };
     console.log(EXERCISES[item.prop.exercise]);
     if(!window.plugin || !window.plugin.notification) return;
     window.plugin.notification.local.add(settings);
+
 }
 farming.Tile.prototype.showProgress = function() {
     var progress = this.getItem().getTimeTillHarvest();
