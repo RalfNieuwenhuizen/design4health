@@ -129,7 +129,7 @@ farming.SceneLivestockDetails.prototype.showDetails = function(livestock) {
     this.foodIcon.setFill('images/items/'+livestock.food+'.png');
     this.exerciseIcon.setFill('images/exercises/'+livestock.exercise+'/4.png')
         .setSize(EXERCISES[livestock.exercise].horizontal ? new goog.math.Size(795*0.25,420*0.25) : new goog.math.Size(315*0.4,420*0.4))
-        .setPosition(115, EXERCISES[livestock.exercise].horizontal ? 240 : 210);
+        .setPosition(115, EXERCISES[livestock.exercise].horizontal ? 260 : 220);
 
     this.cloneButton.setAction(this.startClone, {'properties': livestock,'game': this.game} );
     this.livestock = livestock;

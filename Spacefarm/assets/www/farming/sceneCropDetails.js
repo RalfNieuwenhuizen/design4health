@@ -109,7 +109,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
     this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png');
     this.exerciseIcon.setFill('images/exercises/'+crop.exercise+'/4.png')
         .setSize(EXERCISES[crop.exercise].horizontal ? new goog.math.Size(795*0.25,420*0.25) : new goog.math.Size(315*0.4,420*0.4))
-        .setPosition(115, EXERCISES[crop.exercise].horizontal ? 240 : 210);
+        .setPosition(115, EXERCISES[crop.exercise].horizontal ? 260 : 220);
 
     this.cloneButton.setAction(this.startClone, {'cropProps': crop,'game': this.game} );
     this.crop = crop;
