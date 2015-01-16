@@ -37,14 +37,19 @@ farming.Introduction = function (game) {
     this.introPhase = 1;
     
     this.center = game.getCenterPosition();
-    this.w = SETTINGS.createWindow().setSize(game.getFullSize().scale(1.5));//.setPosition(this.center.x, this.center.y-10);
-    this.text = new lime.Label().setFontSize(18).setMultiline(true);//.setPosition(this.center.x, this.center.y-15);
-    this.button = new farming.Button(' ').setColor(SETTINGS.color.button).setAction(this.buttonAction, this);
-	this.phil = new farming.Sprite('images/phil_speaking1.png');
-	var talkingPhil = new lime.animation.KeyframeAnimation().setDelay(0.5);
-	for(var i = 1; i < 3; i++) {
-		talkingPhil.addFrame('images/phil_speaking'+i+'.png');
-	}
+    this.w = SETTINGS.createWindow().setSize(game.getFullSize().scale(1.5)).setOpacity(0.9);//.setPosition(this.center.x, this.center.y-10);
+    this.text = new farming.Label().setVerticalAlign(true).setFontWeight(600)
+        .setSize(390,0).setPosition(550,190).setLineHeight(1.3).setFontSize(18).setMultiline(true);//.setPosition(this.center.x, this.center.y-15);
+    this.button = new farming.Button(' ').setColor(SETTINGS.color.button).setSize(220,80).setColor('green').setPosition(550,400).setAction(this.buttonAction, this);
+    this.image = new lime.Sprite().setSize(422*0.7,330*0.7).setPosition(190,220);
+    this.phil = new farming.Sprite('images/phil_speaking1.png').setSize(401*0.4,651*0.4).setPosition(140,355);
+	var talkingPhil = new lime.animation.KeyframeAnimation().setDelay(0.3);
+    talkingPhil.addFrame('images/phil_speaking1.png');
+    talkingPhil.addFrame('images/phil_speaking2.png');
+    talkingPhil.addFrame('images/phil_speaking3.png');
+    talkingPhil.addFrame('images/phil_speaking2.png');
+    talkingPhil.addFrame('images/phil_speaking3.png');
+    talkingPhil.addFrame('images/phil_speaking2.png');
 	this.phil.runAction(talkingPhil);
 }
 
@@ -84,44 +89,39 @@ farming.Introduction.prototype.buttonAction = function(scene) {
 
 // First introduction screen: general story
 farming.Introduction.prototype.intro1 = function(){
-	this.text.setFontWeight('bold').setText("2542 AD \n \n"
-					+ "Your uncle was one of the first people to buy \n"
-					+ "land in an unknown planet and decided to turn \n"
-					+ "it into a farm to facilitate the earth\'s growing \n"
-					+ "needs of food. Your uncle made the farm very \n "
-					+ "profitable and he produced the best products \n"
-					+ "available on earth.  \n\n"
-					+ "You received a mail telling you that your uncle \n"
-					+ "had left you the farm already years ago. The \n"
-					+ "fields on planet Yeo are unused and empty. Are \n"
-					+ "you able to make the farm succesful again?\n");
-	this.w.setPosition(this.center.x, this.center.y);
-	this.text.setPosition(this.center.x, this.center.y-30);
-	this.button.setPosition(this.center.x, this.center.y + this.game.getFullSize(0.37).height).setSize(SETTINGS.size.button).setText('Start');
+	this.text.setText("2542 AD \n\n"
+					+ "Your uncle was one of the first people to buy "
+					+ "land in an unknown planet and decided to turn "
+					+ "it into a profitable farm to facilitate the earth\'s growing "
+					+ "needs of food.  \n\n"
+					+ "You received a mail telling you that your uncle "
+					+ "had left you the farm already years ago. The "
+					+ "fields on planet Yeo are unused and empty. Are "
+					+ "you able to make the farm succesfull again?");
+	this.button.setText('Start');
 	//this.game.sceneMap.introLayer.setOpacity(1);
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button);
-	
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.image);
+	this.image.setFill('images/intro1.png')
 	this.game.showIntroduction();
 }
 
 // Second screen: meet the uncle
 farming.Introduction.prototype.intro2 = function(){
-	this.text.setFontWeight('bold').setPosition(this.center.x+58, this.center.y-30).setText(
+	this.text.setText(
 			"Hello, welcome to Spaceville! My \n"
-			+ "name is Phil, your great-uncle. I \n"
-			+ "will help you through the start. \n\n"
-			+ "You have to work hard on this farm, \n"
-			+ "therefore you have to do real \n"
-			+ "exercises regularly yourself! I hope \n "
-			+ "you are ready for this challenge! \n \n"
+			+ "name is Phil, an old friend of \n"
+			+ "your uncle. I will help you \n "
+			+ "through the start. \n\n"
+			+ "You will have to work hard on \n "
+			+ "this farm, since you have to do \n"
+			+ "real exercises regularly yourself! \n"
+			+ "I hope you are ready for this challenge! \n \n"
 			+ "Ready? Then let's have a look \n at your farm.");
-	
-	this.phil.setSize(150, 200).setPosition(this.center.x-165, this.center.y + 56);
 
-	this.button.setPosition(this.center.x+58, this.center.y + 120)
-		.setSize(SETTINGS.size.button).setText('Let\'s go!');
-	
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.phil);
+
+	this.button.setText('Sure!');
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.image).appendChild(this.phil);
+    this.image.setFill('images/intro2.png').setPosition(190,190)
 	
 	this.game.showIntroduction();
 }
@@ -150,9 +150,7 @@ farming.Introduction.prototype.intro3 = function(){
 farming.Introduction.prototype.intro3 = function(){
 
 
-	this.text.setFontSize(18).setMultiline(true)
-        .setSize(350,500)
-        .setPosition(250,350).setText(
+	this.text.setText(
 			"This game will help you "
 			+ "gain a healthy lifestyle "
 			+ "by letting you exercise "
@@ -167,12 +165,11 @@ farming.Introduction.prototype.intro3 = function(){
 			+ "also unlocks new products "
 			+ "and challenges!")
 
-    this.body = new farming.Body(1.3, this.game).setPosition(600,160);
-
-    this.button.setPosition(600, 400)
-        .setSize(SETTINGS.size.button).setText('Sure!');
-	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.body);
+    this.phil.setHidden(true);
+    this.button.setText('Let\'s go!');
+	this.windowLayer.appendChild(this.w).appendChild(this.text).appendChild(this.button).appendChild(this.image);
     this.game.showIntroduction();
+    this.image.setFill('images/intro3.png').setPosition(190,220)
 
 
 }

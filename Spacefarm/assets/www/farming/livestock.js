@@ -126,7 +126,7 @@ farming.Livestock.prototype.playSound = function(){
         return;
     }
 
-    if (typeof device != 'undefined' && device.platform == "Android") {
+    if (typeof Media != 'undefined') {
         var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
         sound.play();
     } else {

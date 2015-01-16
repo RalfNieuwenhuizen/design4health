@@ -42,12 +42,11 @@ farming.SceneExercise = function (game) {
         .setRotation(90).setOpacity(0.8);
     this.numberLabelDuring2 = new lime.Label().setSize(350, 150).setPosition(400,240).setFontWeight(600)
         .setRotation(90).setFontColor('#efeada').setMask(this.barMask).setOpacity(0.8);
-    this.heartRate = new lime.Label().setPosition(center.x, center.y).setFontSize(30).setHidden(true);
     this.closeButton = new farming.Button('X').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.close_button_full)
         .setSize(SETTINGS.size.close_button);
     this.closeButton2 = new farming.Button('X').setColor(SETTINGS.color.button)
-        .setPosition(40,40)
+        .setPosition(40,40).setRotation(90)
         .setSize(SETTINGS.size.close_button);
     this.startButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary).setSize(SETTINGS.size.button).setPosition(700,430);
     this.finishButton = new farming.Button('Fake finish').setColor(SETTINGS.color.button).setSize(SETTINGS.size.button).setPosition(50,380).setRotation(90);
@@ -70,7 +69,6 @@ farming.SceneExercise = function (game) {
         .appendChild(this.barMask)
         .appendChild(this.numberLabelDuring2)
         .appendChild(this.finishButton)
-        .appendChild(this.heartRate)
         .appendChild(this.closeButton2);
 
     this.startButton.setAction(this.startExercise, this);
@@ -166,6 +164,8 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
             scene.game.playMusic('ex_walking2.ogg');
+            var walkingsound = new Media('file:///android_asset/www/walking2.ogg');
+            walkingsound.play();
             var schedule = function () {
                 progress += step;
                 scene.countdown -= step;
@@ -209,30 +209,14 @@ farming.SceneExercise.prototype.closeExercise = function(scene) {
     scene.game.hideExercise();
     scene.game.playMusic();
     scene.windowLayer.removeChild(this.during);
+    if(scene.exercise) scene.exercise.stopWatch();
     scene.exercise = null;
     scene.countdown = null;
-    scene.heartRate.setHidden(true);
-    if(scene.exercise) scene.exercise.stopWatch();
-}
-farming.SceneExercise.prototype.startHeartRate = function(scene) {
-    //scene.waitMessage.setText('Place your finger on the camera to measure your heart rate.');
-    lime.scheduleManager.callAfter(function () {
-        lime.scheduleManager.scheduleWithDelay(function () {
-            scene.updateHeartRate(scene);
-        }, this, 800, 10);
-        lime.scheduleManager.callAfter(function () {
-            scene.finishExercise(scene);
-        }, this, 8000);
-    }, this, 1000);
-}
-farming.SceneExercise.prototype.updateHeartRate = function(scene) {
-    scene.heartRate.setText('Heart rate: '+(Math.round(Math.random()*50+70))).setHidden(false);
 }
 
 farming.SceneExercise.prototype.finishExercise = function(scene) {
     if(!scene.exercise) return;
     scene.exercise.stopWatch();
-    scene.heartRate.setHidden(true);
     scene.game.playMusic();
     scene.game.putStatistics(scene.exerciseKey);
     var exercise = EXERCISES[scene.exerciseKey];
@@ -254,7 +238,6 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.exercise = null;
     scene.countdown = null;
     scene.game.hideExercise();
-    scene.heartRate.setHidden(true);
     scene.windowLayer.removeChild(scene.during);
     if (scene.game.player.currentChallenge)
         scene.game.sceneChallengeDetails.setChallenge(scene.game.player.currentChallenge, true);
@@ -265,3 +248,18 @@ farming.SceneExercise.prototype.finishExercise = function(scene) {
     scene.game.source.dispatchEvent(scene.game.EventType.EXERCISE_DONE);
 }
 
+
+/*farming.SceneExercise.prototype.startHeartRate = function(scene) {
+ //scene.waitMessage.setText('Place your finger on the camera to measure your heart rate.');
+ lime.scheduleManager.callAfter(function () {
+ lime.scheduleManager.scheduleWithDelay(function () {
+ scene.updateHeartRate(scene);
+ }, this, 800, 10);
+ lime.scheduleManager.callAfter(function () {
+ scene.finishExercise(scene);
+ }, this, 8000);
+ }, this, 1000);
+ }
+ farming.SceneExercise.prototype.updateHeartRate = function(scene) {
+ scene.heartRate.setText('Heart rate: '+(Math.round(Math.random()*50+70))).setHidden(false);
+ }*/

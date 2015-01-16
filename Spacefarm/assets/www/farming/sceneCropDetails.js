@@ -25,7 +25,7 @@ farming.SceneCropDetails = function (game) {
 
     this.title = SETTINGS.createTitle('Crop');
     this.title.setText('Crop Details');
-    this.cropIcon = new lime.Sprite().setSize(200*1.2, 169*1.2).setPosition(175, 170);
+    this.cropIcon = new lime.Sprite().setSize(200*1.2, 169*1.2).setPosition(175, 150);
 
     this.exerciseIcon = new lime.Sprite();
     //this.cropDetails = new lime.Label().setFontSize(18).setSize(350,200).setAlign('left')
@@ -109,7 +109,7 @@ farming.SceneCropDetails.prototype.showDetails = function(crop) {
     this.cropIcon.setFill('images/crops/'+crop.key+'_ripe.png');
     this.exerciseIcon.setFill('images/exercises/'+crop.exercise+'/4.png')
         .setSize(EXERCISES[crop.exercise].horizontal ? new goog.math.Size(795*0.25,420*0.25) : new goog.math.Size(315*0.4,420*0.4))
-        .setPosition(115, EXERCISES[crop.exercise].horizontal ? 240 : 210);
+        .setPosition(115, EXERCISES[crop.exercise].horizontal ? 260 : 220);
 
     this.cloneButton.setAction(this.startClone, {'cropProps': crop,'game': this.game} );
     this.crop = crop;

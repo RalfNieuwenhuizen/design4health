@@ -28,7 +28,7 @@ goog.inherits(farming.Slider,lime.Layer);
 
 farming.Slider.prototype.slides = [];
 farming.Slider.prototype.bubbles = [];
-farming.Slider.prototype.bubblesPosition = false;
+farming.Slider.prototype.bubblesPosition = true;
 farming.Slider.prototype.index = 0;
 
 farming.Slider.prototype.setSize = function(param1, param2){

@@ -28,7 +28,6 @@ farming.SceneHarvest.prototype.showExercise = function(tile) {
     this.tile = tile;
     goog.base(this, 'showExercise', tile.getExercise());
     // update title for harvest screen only
-    this.title.setText(this.title.getText() + ' (Harvesting ' + tile.getName() + ')')
 }
 
 farming.SceneHarvest.prototype.startExercise = function(scene) {

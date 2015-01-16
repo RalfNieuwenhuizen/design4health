@@ -201,7 +201,7 @@ farming.SceneMap.prototype.drawLand = function () {
     this.body = new farming.Body(0.6, this.game);
     var farmPos = scene.farm.getPosition();
     var bodyFence = new lime.Sprite().setFill('images/body_fence.png').setSize(37,36).setPosition(farmPos.x + 260, farmPos.y+100);
-    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 260, farmPos.y+50), false);
+    this.body.redraw(this.game.player.body, new goog.math.Coordinate(farmPos.x + 263, farmPos.y+49), false);
     this.landLayer.appendChild(this.body).appendChild(bodyFence);
 }
 
@@ -370,7 +370,7 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
     // When positive amount, show big coin in the middle of the screen
     if (amount > 0) {
         lime.scheduleManager.callAfter(function () {
-            var wrapper = new lime.Layer().setScale(0.2).setPosition(400,600);
+            var wrapper = new lime.Layer().setScale(0.1).setPosition(250,200+400);
             var image = new lime.Sprite().setFill('images/coin/0.png')
                 .setSize(270, 270)
                 .setPosition(new goog.math.Coordinate(-150, 0));
@@ -378,13 +378,13 @@ farming.SceneMap.prototype.moneyAnimation = function (amount) {
             var numberLabel = new lime.Label(amount < 0 ? amount : '+' + amount)
                 .setPosition(new goog.math.Coordinate(150, 0))
                 .setFontSize(130).setFontWeight(600).setShadow('#000000', 5, 1, 1)
-                .setFontColor(amount < 0 ? SETTINGS.color.red : SETTINGS.color.green);
+                .setFontColor(amount < 0 ? SETTINGS.color.red : '#fbc728');
 
             wrapper.appendChild(image).appendChild(numberLabel);
             this.controlsLayer.appendChild(wrapper);
             var scene = this;
-            var moveUp = new lime.animation.MoveBy(0, -(SETTINGS.screen.height / 2)-100).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
-            var scale = new lime.animation.ScaleTo(0.7).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
+            var moveUp = new lime.animation.MoveBy(0, -400).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
+            var scale = new lime.animation.ScaleTo(0.6).setDuration(1).setEasing(lime.animation.Easing.EASEOUT);
             wrapper.runAction(moveUp);
             wrapper.runAction(scale);
             var animation = new lime.animation.KeyframeAnimation().setDelay(0.02);

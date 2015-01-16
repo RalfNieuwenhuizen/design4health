@@ -38,7 +38,7 @@ farming.SceneChallengeDetails = function (game) {
     this.giveUpButton = new farming.Button('Give up').setColor(SETTINGS.color.button)
         .setPosition(SETTINGS.position.left_button)
         .setSize(SETTINGS.size.button).setHidden(true);
-    this.startNextButton = new farming.Button('Start next\n exercise').setColor(SETTINGS.color.button_primary)
+    this.startNextButton = new farming.Button('Start').setColor(SETTINGS.color.button_primary)
         .setPosition(SETTINGS.position.right_button)
         .setSize(SETTINGS.size.button).setHidden(true);
     this.selectButton = new farming.Button('Accept').setColor(SETTINGS.color.button_primary)
@@ -98,7 +98,6 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
     this.title.setText(title);
     this.description.setText(challenge.description);
 
-
     this.selectButton.setHidden(true);
     this.backButton.setHidden(false);
     this.giveUpButton.setHidden(true);
@@ -114,7 +113,8 @@ farming.SceneChallengeDetails.prototype.setChallenge = function (challenge, opt_
             this.startNextButton.setHidden(true);
             this.completeChallenge(this);
             this.game.sceneFeedback.closeFeedback();
-        } else{
+        } else {
+            this.startNextButton.setText(this.challengeStarted() ? 'Start next\nexercise': 'Start');
         	if(this.game.sceneMap.activeButton == 'challenge'){
                 var underLayer = SETTINGS.createWindow().setOpacity(0.6);
                 this.game.sceneFeedback.windowLayer.appendChild(underLayer);
@@ -187,7 +187,7 @@ farming.SceneChallengeDetails.prototype.drawItem = function (item, position, opt
 farming.SceneChallengeDetails.prototype.drawReward = function (reward, position) {
     var image = reward.type === 'coins' ? 'images/coin_small/0.png' : 'images/items/'+reward.key+'.png'
     var itemIcon = new lime.Sprite().setFill(image).setSize(60, 60).setPosition(position);
-    var itemLabel = new lime.Label().setText(reward.number).setFontSize(26).setSize(30, 30).setPosition(position);
+    var itemLabel = new lime.Label().setText(reward.number).setFontSize(26).setSize(30, 30).setPosition(position.x + 1, position.y + 3);
 
     this.drawLayer.appendChild(itemIcon).appendChild(itemLabel);
 }
@@ -266,4 +266,14 @@ farming.SceneChallengeDetails.prototype.challengeDone = function () {
         }
     }
     return true;
+}
+farming.SceneChallengeDetails.prototype.challengeStarted = function () {
+    for(var i in this.challenge.requirements) {
+        var requirement = this.challenge.requirements[i];
+        if(requirement.type === 'exercise') {
+            if(this.exerciseDone(requirement.key))
+                return true;
+        }
+    }
+    return false;
 }

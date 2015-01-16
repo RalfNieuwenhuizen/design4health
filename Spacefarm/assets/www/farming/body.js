@@ -20,7 +20,7 @@ farming.Body = function(scale, game) {
     this.scale = scale;
     this.appendChild(this.bodyLayer);
     this.redraw(this.game.player.body, null);
-    
+
 }
 goog.inherits(farming.Body,lime.Layer);
 
@@ -54,7 +54,7 @@ farming.Body.prototype.drawBack = function (number, center) {
     var level = this.getBodyLevel();
     var icon = new farming.Sprite().setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
-    icon.appendChild(this.getProgressBar('Back', number, this.getTargetXP(number), 40, 8, 65, 0));
+        icon.appendChild(this.getProgressBar('Back', number, this.getTargetXP(number), 40, 8, 65, 0));
     this.bodyLayer.appendChild(icon);
 
 }
@@ -62,28 +62,28 @@ farming.Body.prototype.drawArms = function (number, center) {
     var level = this.getBodyLevel();
     var icon = new lime.Sprite().setSize(this.scale*74, this.scale*50).setPosition(center);
     if(this.scale > 1)
-    icon.appendChild(this.getProgressBar('Arms', number, this.getTargetXP(number), 40, 8, 85, -10));
+        icon.appendChild(this.getProgressBar('Arms', number, this.getTargetXP(number), 40, 8, 85, -10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawLegs = function (number, center) {
     var level = this.getBodyLevel();
     var icon = new lime.Sprite().setSize(this.scale*55, this.scale*85).setPosition(center);
     if(this.scale > 1)
-    icon.appendChild(this.getProgressBar('Legs', number, this.getTargetXP(number), 40, 8, -65, 0));
+        icon.appendChild(this.getProgressBar('Legs', number, this.getTargetXP(number), 40, 8, -65, 0));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawChest = function (number, center) {
     var level = this.getBodyLevel();
     var icon = new lime.Sprite().setSize(this.scale*60, this.scale*30).setPosition(center);
     if(this.scale > 1)
-    icon.appendChild(this.getProgressBar('Chest', number, this.getTargetXP(number), 40, 8, -85, 10));
+        icon.appendChild(this.getProgressBar('Chest', number, this.getTargetXP(number), 40, 8, -85, 10));
     this.bodyLayer.appendChild(icon);
 }
 farming.Body.prototype.drawAbs = function (number, center) {
     var level = this.getBodyLevel();
     var icon = new lime.Sprite().setSize(this.scale*50, this.scale*50).setPosition(center);
     if(this.scale > 1)
-    icon.appendChild(this.getProgressBar('Abs', number, this.getTargetXP(number), 40, 8, -85, 10));
+        icon.appendChild(this.getProgressBar('Abs', number, this.getTargetXP(number), 40, 8, -85, 10));
     this.bodyLayer.appendChild(icon);
 }
 
@@ -98,25 +98,6 @@ farming.Body.prototype.getProgressBar = function (type, number, max, width, heig
     return bg;
 
 }
-
-
-
-/*
-// Mouseover / mouseout
-farming.Body.prototype.addPopup = function (target, text, yPos) {
-    var xPos = 110;
-    var position = yPos ? new goog.math.Coordinate(xPos, yPos) : new goog.math.Coordinate(xPos, 0)
-    var popup = new farming.Label(text).setPosition(position).setHidden(true);
-    target.appendChild(popup);
-
-    goog.events.listen(target, ['mousedown', 'touchstart'], function (e) {
-        popup.setHidden(false);
-        e.swallow(['touchend', 'mouseup'], function(){
-            popup.setHidden(true)
-        }, true);
-    });
-    return this;
-}*/
 
 var LEVELS = [0, 5, 15, 30, 50, 80, 120, 200, 300];
 var LEVEL_TEXTS = [null,'Rusted iron body','Water body','EcoPower body','Fire body',
@@ -151,4 +132,25 @@ farming.Body.prototype.getMinLevelXP = function (points) {
 // Function that returns the required xp for next level
 farming.Body.prototype.getTargetXP = function (points) {
     return LEVELS[this.getBodyLevel()];
+}
+
+farming.Body.prototype.getBestBodyPart = function () {
+    var best = -1;
+    var b = this.game.player.body;
+    for(var i in b) {
+        if(best == -1 || b[i] > b[best] || (Math.random() > 0.5 && b[i] == b[best])) {
+            best = i;
+        }
+    }
+    return best;
+}
+farming.Body.prototype.getWorstBodyPart = function () {
+    var worst = -1;
+    var b = this.game.player.body;
+    for(var i in b) {
+        if(worst == -1 || b[i] < b[worst] || (Math.random() > 0.5 && b[i] == b[worst])) {
+            worst = i;
+        }
+    }
+    return worst;
 }
