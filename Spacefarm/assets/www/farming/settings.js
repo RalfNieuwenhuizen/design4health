@@ -34,7 +34,7 @@ var SETTINGS = {
     },
     drawCoin : function(wrapper, scale, coins){
         var costIcon = new lime.Sprite().setFill('images/coin_small/0.png').setSize(60*scale, 60*scale);
-        var costLabel = new lime.Label().setFontSize(31*scale).setSize(30, 30).setText(coins).setPosition(0,15-13.5*scale);
+        var costLabel = new lime.Label().setFontSize(31*scale).setSize(30, 30).setText(coins).setPosition(0,15-18*scale);
 
         return wrapper.removeAllChildren().appendChild(costIcon).appendChild(costLabel);
     },
