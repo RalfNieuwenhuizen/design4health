@@ -70,7 +70,7 @@ farming.SceneFarm.prototype.redraw = function (inventory) {
 }
 farming.SceneFarm.prototype.drawItem = function (item, number, position) {
     var itemIcon = new lime.Sprite().setFill('images/items/'+item+'.png').setSize(100, 100).setPosition(position);
-    var itemLabel = new lime.Label().setText(number).setSize(20, 20).setPosition(position.x+35, position.y+32).setFontSize(18).setFontWeight(600).setFontColor('#365905');
+    var itemLabel = new lime.Label().setText(number).setSize(20, 20).setPosition(position.x+35, position.y+30).setFontSize(18).setFontWeight(600).setFontColor('#365905');
     var itemCircle = new lime.Circle().setSize(35,35).setFill('#b0d887').setStroke(new lime.fill.Stroke(3,'#365905'))
         .setPosition(position.x+35,position.y+30)
     this.drawLayer.appendChild(itemIcon).appendChild(itemCircle).appendChild(itemLabel);

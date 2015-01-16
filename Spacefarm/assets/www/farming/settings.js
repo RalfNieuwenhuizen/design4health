@@ -34,7 +34,7 @@ var SETTINGS = {
     },
     drawCoin : function(wrapper, scale, coins){
         var costIcon = new lime.Sprite().setFill('images/coin_small/0.png').setSize(60*scale, 60*scale);
-        var costLabel = new lime.Label().setFontSize(31*scale).setSize(30, 30).setText(coins).setPosition(0,15-13.5*scale);
+        var costLabel = new lime.Label().setFontSize(31*scale).setSize(30, 30).setText(coins).setPosition(0,15-16*scale);
 
         return wrapper.removeAllChildren().appendChild(costIcon).appendChild(costLabel);
     },
@@ -46,17 +46,17 @@ var SETTINGS = {
     },
     drawBodyPoints : function(wrapper, type, count){
         var c = typeof count == 'undefined' ? 1 : count;
-        var exPlus = new lime.Label().setFontSize(18).setPosition(18,2).setFontWeight(800).setFontColor('#184e00').setSize(20, 20).setText('+'+c);
+        var exPlus = new lime.Label().setFontSize(18).setPosition(18,0).setFontWeight(800).setFontColor('#184e00').setSize(20, 20).setText('+'+c);
         var exRect = new lime.RoundedRect().setRadius(8).setPosition(65,0).setFill('#e3f0dd').setSize(130, 30).setStroke(new lime.fill.Stroke(2,'#a5c781'));
         wrapper.removeAllChildren().appendChild(exRect);
-        var exLabel = new lime.Label().setPosition(180,1).setFontSize(18)
+        var exLabel = new lime.Label().setPosition(180,-1).setFontSize(18)
             .setAlign('left').setFontColor('#184e00').setSize(200, 18);
         if(typeof type == 'string') {
             var exIcon = new lime.Sprite().setSize(37, 37).setPosition(53,-1).setFill('images/body/'+type+'.png');
             wrapper.appendChild(exIcon);
             exLabel.setText(type);
         } else {
-            exLabel.setText(type.join(', ')).setPosition(136,1);
+            exLabel.setText(type.join(', ')).setPosition(136,-1);
         }
 
         return wrapper.appendChild(exLabel).appendChild(exPlus);
