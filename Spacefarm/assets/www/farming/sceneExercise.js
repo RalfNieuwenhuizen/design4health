@@ -164,6 +164,8 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
             scene.game.playMusic('ex_walking2.ogg');
+            var walkingsound = new Media('file:///android_asset/www/walking2.ogg');
+            walkingsound.play();
             var schedule = function () {
                 progress += step;
                 scene.countdown -= step;

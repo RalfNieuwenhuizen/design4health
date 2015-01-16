@@ -157,29 +157,35 @@ farming.Exercise.prototype.dynamic_chest = function (acceleration, exercise)
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.x);
-    first= acc[0];
 
 
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
+
+   
+
+exercise.checkRepetition(exercise, acc, 3);
+    // first= acc[0];
+
+
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
 
     
-    if(Math.abs(last-first)> 3)
-    {
-        exercise.addRepetition();
-    }
+    // if(Math.abs(last-first)> 3)
+    // {
+    //     exercise.addRepetition();
+    // }
 
     
-    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
+    // if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+    //     //navigator.notification.beep(3);
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    // }
 
 }
 farming.Exercise.prototype.situps = function (acceleration, exercise) 
@@ -232,27 +238,32 @@ farming.Exercise.prototype.rocket_jumps = function (acceleration, exercise)
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.y);
-    first= acc[0];
 
 
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
+console.log('array length is:' +acc.length);
 
-    if(Math.abs(last-first)> 5) {
-        exercise.addRepetition();
-    }
+exercise.checkRepetition(exercise, acc, 5);
+    // first= acc[0];
 
 
-    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
+
+    // if(Math.abs(last-first)> 5) {
+    //     exercise.addRepetition();
+    // }
+
+
+    // if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
+    //     //navigator.notification.beep(3);
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    // }
 }
 
 
@@ -263,11 +274,12 @@ farming.Exercise.prototype.high_knees = function (acceleration, exercise)
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
 
+   var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
+
     acc.push(acceleration.z);
-    first= acc[0];
+    first= Math.abs( acc[0] - currMagnitude);
 
-
-    last= acc[acc.length-1];
+    last= Math.abs(acc[acc.length-1] - currMagnitude);
     console.log('first value of array' +first + 'last value of array' +last);
     console.log('array length is:' +acc.length);
 
@@ -295,10 +307,12 @@ farming.Exercise.prototype.bear_hug = function (acceleration, exercise)
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
 
-    acc.push(acceleration.z);
-    first= acc[0];
+   var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
 
-    last= acc[acc.length-1];
+    acc.push(acceleration.z);
+    first= Math.abs( acc[0] - currMagnitude);
+
+    last= Math.abs(acc[acc.length-1] - currMagnitude);
     console.log('first value of array' +first + 'last value of array' +last);
     console.log('array length is:' +acc.length);
 
@@ -329,29 +343,34 @@ farming.Exercise.prototype.mason_twist = function (acceleration, exercise)
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.x);
-    first= acc[0];
+
+
    
 
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
+exercise.checkRepetition(exercise, acc, 3);
+    // first= acc[0];
+   
 
-        if(Math.abs(last-first)> 3)
-        {
-            exercise.addRepetition();
-        }
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
+
+    //     if(Math.abs(last-first)> 3)
+    //     {
+    //         exercise.addRepetition();
+    //     }
 
  
-        if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
-        {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-        }
+    //     if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
+    //     {
+    //     //navigator.notification.beep(3);
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    //     }
 }
 
 
@@ -363,29 +382,34 @@ farming.Exercise.prototype.wall_flapping = function (acceleration, exercise)
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.y);
-    first= acc[0];
-
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
 
 
-    if(Math.abs(last-first)> 3) 
-    {
-        exercise.addRepetition();
-    }
 
 
-    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
-    {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
+exercise.checkRepetition(exercise, acc, 3);
+    // first= acc[0];
+
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
+
+
+    // if(Math.abs(last-first)> 3) 
+    // {
+    //     exercise.addRepetition();
+    // }
+
+
+    // if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
+    // {
+    //     //navigator.notification.beep(3);
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    // }
 }
 
 
@@ -396,26 +420,29 @@ farming.Exercise.prototype.wall_ears = function (acceleration, exercise) {
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.y);
-    first= acc[0];
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
 
-    if(Math.abs(last-first)> 3) 
-    {
-        exercise.addRepetition();
-    }
 
-    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
-    {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
+exercise.checkRepetition(exercise, acc, 3);
+    // first= acc[0];
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
+
+    // if(Math.abs(last-first)> 3) 
+    // {
+    //     exercise.addRepetition();
+    // }
+
+    // if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
+    // {
+    //     //navigator.notification.beep(3);
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    // }
 }
 
 farming.Exercise.prototype.wall_arm_pulls = function (acceleration, exercise)
@@ -426,28 +453,33 @@ farming.Exercise.prototype.wall_arm_pulls = function (acceleration, exercise)
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.y);
-    first= acc[0];
 
 
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
+   
 
-    if(Math.abs(last-first)> 5) {
-        exercise.addRepetition();
-    }
+exercise.checkRepetition(exercise, acc, 3);
+    // first= acc[0];
 
 
-    if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
-    {
+    // last= acc[acc.length-1];
+    // console.log('first value of array' +first + 'last value of array' +last);
+    // console.log('array length is:' +acc.length);
 
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
+    // if(Math.abs(last-first)> 5) {
+    //     exercise.addRepetition();
+    // }
+
+
+    // if (rep >= farming.Exercise.prototype.getRepetitions(exercise))
+    // {
+
+    //     navigator.notification.vibrate(2500);
+    //     farming.Exercise.prototype.playEndSound();
+    //     rep=0;
+    //     acc=[];
+    //     exercise.onExerciseSuccess(exercise.target);
+    //     exercise.stopWatch();
+    // }
 }
 
 
@@ -457,8 +489,8 @@ farming.Exercise.prototype.walking = function (acceleration, exercise) {
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
 
-    var strechsound = new Media('file:///android_asset/www/ex_strech.wav');
-    strechsound.play();
+    // var strechsound = new Media('file:///android_asset/www/ex_strech.wav');
+    // strechsound.play();
 
     // var currMagnitude = Math.sqrt(Math.pow(acceleration.x,2) + Math.pow(acceleration.y,2) + Math.pow(acceleration.z,2));
 
@@ -578,7 +610,7 @@ farming.Exercise.prototype.addRepetition = function() {
 }
 farming.Exercise.prototype.playEndSound = function() {
     if(this.target && this.target.game && this.target.game.player.settings.sound == true) {
-        var endsound = new Media('file:///android_asset/www/ex_end.wav');
+        var endsound = new Media('file:///android_asset/www/ex_end.ogg');
         endsound.play();
     }
 }
