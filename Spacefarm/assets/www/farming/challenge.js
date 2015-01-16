@@ -267,7 +267,7 @@ var CHALLENGES = {
     wool_socks : {
         name: 'Woolysocks',
         key: 'wool_socks',
-        description: 'You are cold, make some socks. \nYou would not expect it, but the comfortable warmth is very good for your back!',
+        description: 'You are cold, make some socks. \nYou would not expect it, but the comfortable warmth is very good for your back!\nEssential for repairing your posture after hunching in front of the computer.',
         required_level: 2,
         requirements: [
             {
