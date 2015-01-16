@@ -156,8 +156,9 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
     scene.updateProgress(0);
-    scene.game.playMusic('exercise.ogg');
+    scene.game.stopMusic();
     if(scene.countdown) {
+        scene.game.playMusic('exercise.ogg');
         var step = 0.2;
         var progress = 0;
         scene.updateProgress(0);
