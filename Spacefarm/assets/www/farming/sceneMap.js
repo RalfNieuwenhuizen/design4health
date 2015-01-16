@@ -169,6 +169,8 @@ farming.SceneMap.prototype.drawLand = function () {
                             tile.addLivestock(new farming.Livestock(currentClone.key, null, tile));
                         }
                         scene.game.playSound('clone.ogg');
+                        var clonesound = new Media('file:///android_asset/www/clone.ogg');
+                        clonesound.play();
                     }
                     else {
                         scene.noMoneyAnimation(tile.getPosition());
