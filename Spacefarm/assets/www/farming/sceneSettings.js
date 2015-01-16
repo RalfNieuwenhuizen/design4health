@@ -85,9 +85,29 @@ farming.SceneSettings.prototype.redraw = function (settings) {
 
     // RESETButton
     this.resetButton = new farming.Button('Reset game').setColor('red')
-        .setPosition(160, 340)
-        .setSize(200, SETTINGS.size.button.height).setAction(function(scene){ scene.game.reset(); }, this);
+        .setPosition(180, 340)
+        .setSize(240, SETTINGS.size.button.height).setAction(this.askReset, this);
     this.drawLayer.appendChild(this.resetButton);
+    // CONFIRMButton
+    this.confirmButton = new farming.Button('Confirm').setColor('red')
+        .setPosition(120, 340).setHidden(true)
+        .setSize(120, SETTINGS.size.button.height).setAction(function(scene){ scene.game.reset(); }, this);
+    this.cancelButton = new farming.Button('Cancel').setColor('green')
+        .setPosition(240, 340).setHidden(true)
+        .setSize(120, SETTINGS.size.button.height).setAction(this.cancelReset, this);
+    this.drawLayer.appendChild(this.confirmButton).appendChild(this.cancelButton);
+}
+
+farming.SceneSettings.prototype.askReset = function(scene) {
+    scene.resetButton.setHidden(true);
+    scene.confirmButton.setHidden(false);
+    scene.cancelButton.setHidden(false);
+}
+
+farming.SceneSettings.prototype.cancelReset = function(scene) {
+    scene.resetButton.setHidden(false);
+    scene.confirmButton.setHidden(true);
+    scene.cancelButton.setHidden(true);
 }
 
 farming.SceneSettings.prototype.switchSound = function(scene) {

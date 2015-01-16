@@ -14,6 +14,11 @@ goog.provide('farming.Exercise');
  var steps_samplesSinceLowPeak = 0;
  var steps = 0;
 
+ var numPrevSample = 4;
+ var goingDown = true;
+ var peakMinSamplesBetween2 = 7;
+ var lastRise = 0;
+
  var peakMinSamplesBetween = 15;
  var highLowPeakDiff = .2;
  var accelerometerZNeutral = -1.1;
@@ -38,11 +43,11 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
     this.onExerciseSuccess = onExerciseSuccess;
     this.onExerciseCancel = onExerciseCancel;
     var exercise = this;
-    var options = typeof EXERCISES[callbackName].options == 'undefined' ? { frequency: 800 } : EXERCISES[callbackName].options;
+    var options = typeof EXERCISES[callbackName].options == 'undefined' ? { frequency: 100 } : EXERCISES[callbackName].options;
     //var options = { frequency: 1000};
-    if ((typeof device != 'undefined' && device.platform == "Android")) {
+    if ((typeof device == 'undefined' && device.platform != "Android")) {
 
-    } else {
+    
         window.navigator.notification = {vibrate : function(){}, beep:function(){}}
         Media = function(){}
         Media.prototype.play = function(){};
@@ -58,6 +63,9 @@ farming.Exercise = function (callbackName, target, onExerciseSuccess, onExercise
         return;
     }
     rep = 0;
+    acc=[];
+    goingDown = false;
+    lastRise = 0;
     this.watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
         if(target.exercise == null) {
             exercise.stopWatch();
@@ -87,97 +95,61 @@ farming.Exercise.prototype.getAnimation = function (key, delay) {
     }
     return animation;
 }
+farming.Exercise.prototype.checkRepetition = function (exercise, acc, threshold) {
+ first=  acc[0];
+last=acc[acc.length-1];
+    for (var i = 1; i <= numPrevSample; i++){
+        if(acc.length == 1) continue;
+        var before = acc.length < i ? first : acc[acc.length-i];
+        var prev = acc[acc.length-2];
+        if(last-before > threshold && prev-before > threshold && goingDown && lastRise + peakMinSamplesBetween2 < acc.length) {
+                goingDown = false;
+                lastRise = acc.length;
+                exercise.addRepetition();
+        }
+        if(before-last > threshold && before-prev > threshold) {
+            goingDown = true;
+        }
+
+    }
+
+
+    if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
+    {
+        rep=0;
+        acc=[];
+        navigator.notification.vibrate(2500);
+       farming.Exercise.prototype.playEndSound();
+
+        exercise.onExerciseSuccess(exercise.target);
+        exercise.stopWatch();
+        //window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
+    }
+
+}
 farming.Exercise.prototype.arm_stretches = function (acceleration, exercise) {
 
-
-    //navigator.plugin.notification.local.add({ sound: null });
-
-//      navigator.plugin.notification.local.add({
-//     id:         1,  // A unique id of the notifiction
-//        // This expects a date object
-//     message:    Testing,  // The message that is displayed
-//     title:      Test,  // The title of the message
-//       // Either 'secondly', 'minutely', 'hourly', 'daily', 'weekly', 'monthly' or 'yearly'
-//      // Displays number badge to notification
-//     sound:      null,  // A sound to be played
-//       // Data to be passed through the notification
-//     autoCancel: true, // Setting this flag and the notification is automatically canceled when the user clicks it
-//     ongoing:    false, // Prevent clearing of notification (Android only)
-// });
-
-// var now                  = new Date().getTime(),
-//     _60_seconds_from_now = new Date(now + 60*1000);
-//      navigator.plugin.notification.local.add({
-//     id:      1,
-//     title:   'Reminder',
-//     message: 'Dont forget to buy some flowers.',
-//     repeat:  'weekly',
-//     date:    _60_seconds_from_now
-// });
 if(!exercise.watchID && !exercise.fakeWebWatchID) return;
-console.log('Apple picking callback:' + "\n" + 'Acceleration X: ' + acceleration.x + "\n" +
-    'Acceleration Y: ' + acceleration.y + "\n" +
-    'Acceleration Z: ' + acceleration.z + "\n" +
-    'Timestamp: ' + acceleration.timestamp + "\n");
+console.log('Acceleration jjY: ' + acceleration.y );
 
 
 acc.push(acceleration.y);
-first= acc[0];
-last= acc[acc.length-1];
-console.log('first value of array' +first + 'last value of array' +last);
 console.log('array length is:' +acc.length);
 
-if(Math.abs(last-first)> 3)
-{
-    exercise.addRepetition();
-
-}
-
-
-if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) 
-{
-    rep=0;
-    acc=[];
-    navigator.notification.vibrate(2500);
-   farming.Exercise.prototype.playEndSound();
-
-    exercise.onExerciseSuccess(exercise.target);
-    exercise.stopWatch();
-    //window.plugin.notification.local.add({ message: 'You picked an apple yay!' , sound: null });
-}
+exercise.checkRepetition(exercise, acc, 6);
 
 
 }
 farming.Exercise.prototype.back_circles = function (acceleration, exercise) 
 {
     if(!exercise.watchID && !exercise.fakeWebWatchID) return;
-    console.log('Arm circles callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
+    console.log('Arm circlesjjj callback:' + " " + 'Acceleration X: ' + acceleration.x + ' Acceleration Y: ' + acceleration.y + " " +
         'Acceleration Z: ' + acceleration.z + " " +
         'Timestamp: ' + acceleration.timestamp);
 
     acc.push(acceleration.x);
-    first= acc[0];
 
-    last= acc[acc.length-1];
-    console.log('first value of array' +first + 'last value of array' +last);
-    console.log('array length is:' +acc.length);
-
-    if(Math.abs(last-first)> 3)
-    {
-        exercise.addRepetition();
-    }
-
-    
-        if (rep >= farming.Exercise.prototype.getRepetitions(exercise)) {
-        //navigator.notification.beep(3);
-        navigator.notification.vibrate(2500);
-        farming.Exercise.prototype.playEndSound();
-        rep=0;
-        acc=[];
-        exercise.onExerciseSuccess(exercise.target);
-        exercise.stopWatch();
-    }
-
+exercise.checkRepetition(exercise, acc, 3);
 }
 farming.Exercise.prototype.dynamic_chest = function (acceleration, exercise) 
 {
@@ -520,56 +492,58 @@ farming.Exercise.prototype.walking = function (acceleration, exercise) {
 
      //AddTapMessageRow("val: " + magnitude);
 
-     if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
-     steps_peakHigh = steps_prevVal;
-     steps_samplesSinceHighPeak = 0;
-     //AddTapMessageRow("HighPeak: " + steps_peakHigh);
-     if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
+     if (magnitude < steps_prevVal && steps_prevprevVal < steps_prevVal && steps_samplesSinceHighPeak > peakMinSamplesBetween 
+        && steps_prevVal > accelerometerZNeutral + accelerometerZNeutralHighOffset&& lastpeak == 1) {
+         steps_peakHigh = steps_prevVal;
+         steps_samplesSinceHighPeak = 0;
+         //AddTapMessageRow("HighPeak: " + steps_peakHigh);
+         if (Math.abs(steps_peakHigh - steps_peakLow) > highLowPeakDiff) {
 
-     steps++;
-     console.log("Steps: "+steps);
-     navigator.notification.beep(1);
-     }
-     lastpeak = 0;
-     }
-     else
-     steps_samplesSinceHighPeak++;
-     if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
-     steps_peakLow = steps_prevVal;
-     //AddTapMessageRow("LowPeak: " + steps_peakLow);
-     steps_samplesSinceLowPeak = 0;
-     lastpeak =1;
+             steps++;
+             console.log("Steps: "+steps);
+             navigator.notification.beep(1);
+         }
+         lastpeak = 0;
      }
      else
-     steps_samplesSinceLowPeak++;
+         steps_samplesSinceHighPeak++;
+     if (magnitude > steps_prevVal && steps_prevprevVal > steps_prevVal && steps_samplesSinceLowPeak > peakMinSamplesBetween 
+        && steps_prevVal < accelerometerZNeutral + accelerometerZNeutralLowOffset && lastpeak == 0) {
+         steps_peakLow = steps_prevVal;
+         //AddTapMessageRow("LowPeak: " + steps_peakLow);
+         steps_samplesSinceLowPeak = 0;
+         lastpeak =1;
+     }
+     else
+         steps_samplesSinceLowPeak++;
      if (magnitude != steps_prevVal) {
-     steps_prevprevVal = steps_prevVal;
-     steps_prevVal = magnitude;
+         steps_prevprevVal = steps_prevVal;
+         steps_prevVal = magnitude;
      }
 
 
      if (steps>=20){
-     steps=0;
-     navigator.notification.vibrate(2500);
-     strechsound.pause();
+             steps=0;
+             navigator.notification.vibrate(2500);
+             strechsound.pause();
 
-    steps_prevVal = 1.0;
- steps_prevprevVal = 1.0;
-steps_peakLow = 0;
-  steps_peakHigh = 0;
- steps_samplesSinceHighPeak = 0;
-  steps_samplesSinceLowPeak = 0;
- 
+            steps_prevVal = 1.0;
+         steps_prevprevVal = 1.0;
+        steps_peakLow = 0;
+          steps_peakHigh = 0;
+         steps_samplesSinceHighPeak = 0;
+          steps_samplesSinceLowPeak = 0;
+         
 
- peakMinSamplesBetween = 15;
- highLowPeakDiff = .2;
- accelerometerZNeutral = -1.1;
-  accelerometerZNeutralLowOffset = -.04;
-  accelerometerZNeutralHighOffset = .06;
- lastpeak = 1;// 1 is low 0 is high
-     exercise.onExerciseSuccess(exercise.target);
-     exercise.stopWatch();
-     
+         peakMinSamplesBetween = 15;
+         highLowPeakDiff = .2;
+         accelerometerZNeutral = -1.1;
+          accelerometerZNeutralLowOffset = -.04;
+          accelerometerZNeutralHighOffset = .06;
+         lastpeak = 1;// 1 is low 0 is high
+             exercise.onExerciseSuccess(exercise.target);
+             exercise.stopWatch();
+             
 
  }
 }
