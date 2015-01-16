@@ -156,6 +156,7 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
     scene.windowLayer.appendChild(scene.during);
     scene.stopWatch = {};
     scene.updateProgress(0);
+    scene.game.playMusic('exercise.ogg');
     if(scene.countdown) {
         var step = 0.2;
         var progress = 0;
@@ -163,9 +164,6 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
         scene.numberLabelDuring1.setText('Get ready!').setFontSize(80);
         lime.scheduleManager.callAfter(function(){
             scene.updateProgress(0);
-            scene.game.playMusic('ex_walking2.ogg');
-            var walkingsound = new Media('file:///android_asset/www/walking2.ogg');
-            walkingsound.play();
             var schedule = function () {
                 progress += step;
                 scene.countdown -= step;
@@ -180,8 +178,6 @@ farming.SceneExercise.prototype.startExercise = function(scene) {
         }, scene, 3000);
 
 
-    } else {
-        scene.game.stopMusic();
     }
     scene.exercise = new farming.Exercise(scene.exerciseKey, scene,  scene.finishExercise, scene.closeExercise);
 }

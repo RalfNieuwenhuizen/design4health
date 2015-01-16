@@ -122,21 +122,10 @@ farming.Livestock.prototype.harvest = function(){
 }
 
 farming.Livestock.prototype.playSound = function(){
-    if(this.parent_ && this.parent_.game && this.parent_.game.player.settings.sound === false) {
-        return;
-    }
+    if(!(this.tile && this.tile.game)) return;
 
-    if (typeof Media != 'undefined') {
-        var sound = new Media('file:///android_asset/www/'+this.type+'.ogg');
-        sound.play();
-    } else {
-        var sound = new lime.audio.Audio('sounds/'+this.type+'.ogg');
-        if (sound.isLoaded() && !sound.isPlaying()) {
-            sound.play();
-        }
-    }
+    this.tile.game.playSound(this.type+'.ogg');
 }
-
 
 farming.Livestock.prototype.tick = function(){
     this.showProgress();
